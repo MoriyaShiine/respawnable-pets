@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -68,25 +67,21 @@ public class ExtendedWorld extends WorldSavedData
 		}
 	}
 	
-	public void trySpawn(World world, EntityPlayer owner)
+	public void trySpawn(World world, EntityPlayer player)
 	{
-		BlockPos pos = owner.getBedLocation();
-		if (pos != null)
+		for (int i = PETS.size() - 1; i >= 0; i--)
 		{
-			for (int i = PETS.size() - 1; i > 0; i--)
+			NBTTagCompound tag = PETS.get(i);
+			if (tag.getString("owner").equals(player.getUniqueID().toString()))
 			{
-				NBTTagCompound tag = PETS.get(i);
-				if (tag.getString("owner").equals(owner.getUniqueID().toString()))
+				EntityTameable entity = (EntityTameable) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(tag.getString("class"))).newInstance(world);
+				entity.deserializeNBT(tag.getCompoundTag("entity"));
+				entity.setPositionAndRotation(player.posX, player.posY, player.posZ, world.rand.nextInt(360), 0);
+				entity.setHealth(entity.getMaxHealth());
+				if (world.spawnEntity(entity))
 				{
-					EntityTameable entity = (EntityTameable) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(tag.getString("class"))).newInstance(world);
-					entity.deserializeNBT(tag.getCompoundTag("entity"));
-					entity.setPositionAndRotation(pos.getX(), pos.getY(), pos.getZ(), world.rand.nextInt(360), 0);
-					entity.setHealth(entity.getMaxHealth());
-					if (world.spawnEntity(entity))
-					{
-						PETS.remove(i);
-						markDirty();
-					}
+					PETS.remove(i);
+					markDirty();
 				}
 			}
 		}
