@@ -36,7 +36,7 @@ public class ExtendedWorld extends WorldSavedData
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		NBTTagCompound tag = (NBTTagCompound) nbt;
-		for (int i = 0; i < PETS.size(); i++) PETS.set(i, (NBTTagCompound) tag.getTag("petTag" + i));
+		for (int i = 0; i < PETS.size(); i++) PETS.set(i, tag.getCompoundTag("petTag" + i));
 	}
 	
 	public static ExtendedWorld get(World world)
