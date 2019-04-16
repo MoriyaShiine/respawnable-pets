@@ -7,10 +7,12 @@ import java.util.List;
 import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
@@ -26,16 +28,19 @@ public class ExtendedWorld extends WorldSavedData
 	}
 	
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		for (int i = 0; i < PETS.size(); i++) compound.setTag("petTag" + i, PETS.get(i));
-		return compound;
+		NBTTagList list = new NBTTagList();
+		for (int i = 0; i < PETS.size(); i++) list.appendTag(PETS.get(i));
+		nbt.setTag("pets", list);
+		return nbt;
 	}
 	
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		for (int i = 0; i < PETS.size(); i++) PETS.set(i, nbt.getCompoundTag("petTag" + i));
+		NBTTagList list = nbt.getTagList("pets", NBT.TAG_COMPOUND);
+		for (int i = 0; i < list.tagCount(); i++) PETS.set(i, list.getCompoundTagAt(i));
 	}
 	
 	public static ExtendedWorld get(World world)
