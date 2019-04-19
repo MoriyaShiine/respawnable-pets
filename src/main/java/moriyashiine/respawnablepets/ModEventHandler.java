@@ -23,6 +23,15 @@ public class ModEventHandler
 	{
 		EntityLivingBase living = event.getEntityLiving();
 		World world = living.world;
-		if (!world.isRemote && living instanceof EntityTameable) ExtendedWorld.get(world).addEntity((EntityTameable) living);
+		if (!world.isRemote && living instanceof EntityTameable)
+		{
+			EntityTameable tameable = (EntityTameable) living;
+			if (tameable.getOwnerId() != null)
+			{
+				event.setCanceled(true);
+				ExtendedWorld.get(world).addEntity(tameable);
+				tameable.setDead();
+			}
+		}
 	}
 }

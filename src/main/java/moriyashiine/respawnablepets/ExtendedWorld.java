@@ -56,7 +56,7 @@ public class ExtendedWorld extends WorldSavedData
 	public void addEntity(EntityTameable entity)
 	{
 		String name = EntityRegistry.getEntry(entity.getClass()).getRegistryName().toString();
-		if (entity.getOwnerId() != null && !Arrays.asList(RespawnablePets.config.blacklist).contains(name))
+		if (!Arrays.asList(RespawnablePets.config.blacklist).contains(name))
 		{
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setTag("entity", entity.serializeNBT());
