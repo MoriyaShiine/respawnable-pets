@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 @Mod(modid = RespawnablePets.MODID, name = RespawnablePets.NAME, version = RespawnablePets.VERSION)
 public class RespawnablePets
 {
-	public static final String MODID = "respawnablepets", NAME = "Respawnable Pets", VERSION = "1.0.1";
+	public static final String MODID = "respawnablepets", NAME = "Respawnable Pets", VERSION = "1.0.2";
 	
 	public static ModConfig config;
 	
