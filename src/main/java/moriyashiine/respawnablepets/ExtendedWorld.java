@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.entity.passive.EntityTameable;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -53,7 +54,7 @@ public class ExtendedWorld extends WorldSavedData
 		return data;
 	}
 	
-	public void addEntity(EntityTameable entity)
+	public void addEntity(EntityLivingBase entity)
 	{
 		if (!Arrays.asList(RespawnablePets.config.name_blacklist).contains(entity.getCustomNameTag()))
 		{
@@ -63,7 +64,7 @@ public class ExtendedWorld extends WorldSavedData
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setTag("entity", entity.serializeNBT());
 				tag.setString("class", name);
-				tag.setString("owner", entity.getOwnerId().toString());
+				tag.setString("owner", ((IEntityOwnable) entity).getOwnerId().toString());
 				PETS.add(tag);
 				markDirty();
 			}
@@ -77,7 +78,7 @@ public class ExtendedWorld extends WorldSavedData
 			NBTTagCompound tag = PETS.get(i);
 			if (tag.getString("owner").equals(player.getUniqueID().toString()))
 			{
-				EntityTameable entity = (EntityTameable) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(tag.getString("class"))).newInstance(world);
+				EntityLivingBase entity = (EntityLivingBase) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(tag.getString("class"))).newInstance(world);
 				entity.deserializeNBT(tag.getCompoundTag("entity"));
 				entity.setPositionAndRotation(player.posX, player.posY, player.posZ, world.rand.nextInt(360), 0);
 				entity.setHealth(entity.getMaxHealth());

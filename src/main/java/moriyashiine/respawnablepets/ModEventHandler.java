@@ -1,7 +1,7 @@
 package moriyashiine.respawnablepets;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityTameable;
+import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -23,14 +23,13 @@ public class ModEventHandler
 	{
 		EntityLivingBase living = event.getEntityLiving();
 		World world = living.world;
-		if (!world.isRemote && living instanceof EntityTameable)
+		if (!world.isRemote && living instanceof IEntityOwnable)
 		{
-			EntityTameable tameable = (EntityTameable) living;
-			if (tameable.getOwnerId() != null)
+			if (((IEntityOwnable) living).getOwnerId() != null)
 			{
 				event.setCanceled(true);
-				ExtendedWorld.get(world).addEntity(tameable);
-				tameable.setDead();
+				ExtendedWorld.get(world).addEntity(living);
+				living.setDead();
 			}
 		}
 	}
