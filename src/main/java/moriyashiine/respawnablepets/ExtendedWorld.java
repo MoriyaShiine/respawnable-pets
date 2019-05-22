@@ -16,6 +16,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
+@SuppressWarnings({"ConstantConditions", "WeakerAccess", "NullableProblems"})
 public class ExtendedWorld extends WorldSavedData
 {
 	public static final String TAG = RespawnablePets.MODID + ".world_data";
@@ -31,7 +32,7 @@ public class ExtendedWorld extends WorldSavedData
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		NBTTagList list = new NBTTagList();
-		for (int i = 0; i < PETS.size(); i++) list.appendTag(PETS.get(i));
+		for (NBTTagCompound pet : PETS) list.appendTag(pet);
 		nbt.setTag("pets", list);
 		return nbt;
 	}
@@ -40,7 +41,7 @@ public class ExtendedWorld extends WorldSavedData
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		NBTTagList list = nbt.getTagList("pets", NBT.TAG_COMPOUND);
-		for (int i = 0; i < list.tagCount(); i++) PETS.set(i, list.getCompoundTagAt(i));
+		for (int i = 0; i < list.tagCount(); i++) PETS.add(i, list.getCompoundTagAt(i));
 	}
 	
 	public static ExtendedWorld get(World world)
@@ -64,7 +65,6 @@ public class ExtendedWorld extends WorldSavedData
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setTag("entity", entity.serializeNBT());
 				tag.setString("class", name);
-				tag.setString("owner", ((IEntityOwnable) entity).getOwnerId().toString());
 				PETS.add(tag);
 				markDirty();
 			}
@@ -76,12 +76,15 @@ public class ExtendedWorld extends WorldSavedData
 		for (int i = PETS.size() - 1; i >= 0; i--)
 		{
 			NBTTagCompound tag = PETS.get(i);
-			if (tag.getString("owner").equals(player.getUniqueID().toString()))
+			NBTTagCompound entityTag = tag.getCompoundTag("entity");
+			if (entityTag.getString("OwnerUUID").equals(player.getUniqueID().toString()))
 			{
 				EntityLivingBase entity = (EntityLivingBase) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(tag.getString("class"))).newInstance(world);
-				entity.deserializeNBT(tag.getCompoundTag("entity"));
+				entity.deserializeNBT(entityTag);
 				entity.setPositionAndRotation(player.posX, player.posY, player.posZ, world.rand.nextInt(360), 0);
 				entity.setHealth(entity.getMaxHealth());
+				entity.extinguish();
+				entity.clearActivePotions();
 				if (world.spawnEntity(entity))
 				{
 					PETS.remove(i);

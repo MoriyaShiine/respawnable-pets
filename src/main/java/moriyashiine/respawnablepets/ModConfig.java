@@ -4,6 +4,7 @@ import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
 
+@SuppressWarnings("WeakerAccess")
 public class ModConfig extends Configuration
 {
 	public final String[] blacklist;
