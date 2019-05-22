@@ -1,0 +1,21 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+	"N N",
+	"NEN",
+	" N "
+  ],
+  "key": {
+	"N": {
+	  "type": "forge:ore_dict",
+	  "ore": "nuggetGold"
+	},
+	"E": {
+	  "type": "forge:ore_dict",
+	  "ore": "enderpearl"
+	}
+  },
+  "result": {
+	"item": "respawnablepets:etheric_gem"
+  }
+}
