@@ -29,10 +29,10 @@ import java.util.List;
 @SuppressWarnings({"unused", "WeakerAccess", "ConstantConditions"})
 @Mod(modid = RespawnablePets.MODID, name = RespawnablePets.NAME, version = RespawnablePets.VERSION)
 public class RespawnablePets {
-	public static final String MODID = "respawnablepets", NAME = "Respawnable Pets", VERSION = "1.0.4";
+	public static final String MODID = "respawnablepets", NAME = "Respawnable Pets", VERSION = "1.0.4.2";
 	
-	@SidedProxy(serverSide = "moriyashiine.respawnablepets.CommonProxy", clientSide = "moriyashiine.respawnablepets.ClientProxy")
-	public static CommonProxy proxy;
+	@SidedProxy(serverSide = "moriyashiine.respawnablepets.ServerProxy", clientSide = "moriyashiine.respawnablepets.ClientProxy")
+	public static ServerProxy proxy;
 	
 	public static ModConfig config;
 	
@@ -43,7 +43,7 @@ public class RespawnablePets {
 			@Override
 			public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
 				if (!player.world.isRemote) {
-					if (target.serializeNBT().getString("OwnerUUID").equals(player.getUniqueID().toString())) {
+					if (target.serializeNBT().getString("OwnerUUID").equals(player.getPersistentID().toString())) {
 						String name = EntityRegistry.getEntry(target.getClass()).getRegistryName().toString();
 						if (Arrays.asList(config.blacklist).contains(name)) player.sendStatusMessage(new TextComponentTranslation("pet_blacklist", name), true);
 						else {
@@ -53,11 +53,12 @@ public class RespawnablePets {
 								player.sendStatusMessage(new TextComponentTranslation("pet_added", target.getDisplayName()), true);
 							}
 							else {
-								for (int i = ext.PETS.size() - 1; i >= 0; i--)
+								for (int i = ext.PETS.size() - 1; i >= 0; i--) {
 									if (ext.PETS.get(i).getString("uuid").equals(target.getUniqueID().toString())) {
 										ext.PETS.remove(i);
 										ext.markDirty();
 									}
+								}
 								player.sendStatusMessage(new TextComponentTranslation("pet_removed", target.getDisplayName()), true);
 							}
 						}

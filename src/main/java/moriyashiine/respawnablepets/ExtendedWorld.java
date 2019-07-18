@@ -35,7 +35,7 @@ public class ExtendedWorld extends WorldSavedData {
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		NBTTagList list = nbt.getTagList("pets", NBT.TAG_COMPOUND);
-		for (int i = 0; i < list.tagCount(); i++) PETS.add(i, list.getCompoundTagAt(i));
+		for (int i = 0; i < list.tagCount(); i++) PETS.add(list.getCompoundTagAt(i));
 	}
 	
 	public static ExtendedWorld get(World world) {
@@ -51,13 +51,13 @@ public class ExtendedWorld extends WorldSavedData {
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setTag("entity", entity.serializeNBT());
 		tag.setString("class", EntityRegistry.getEntry(entity.getClass()).getRegistryName().toString());
-		tag.setString("uuid", entity.getUniqueID().toString());
+		tag.setString("uuid", entity.getPersistentID().toString());
 		PETS.add(tag);
 		markDirty();
 	}
 	
 	public boolean containsEntity(EntityLivingBase entity) {
-		for (NBTTagCompound nbt : PETS) if (nbt.getString("uuid").equals(entity.getUniqueID().toString())) return true;
+		for (NBTTagCompound nbt : PETS) if (nbt.getString("uuid").equals(entity.getPersistentID().toString())) return true;
 		return false;
 	}
 	
@@ -65,7 +65,7 @@ public class ExtendedWorld extends WorldSavedData {
 		for (int i = PETS.size() - 1; i >= 0; i--) {
 			NBTTagCompound tag = PETS.get(i);
 			NBTTagCompound entityTag = tag.getCompoundTag("entity");
-			if (entityTag.getString("OwnerUUID").equals(player.getUniqueID().toString())) {
+			if (entityTag.getString("OwnerUUID").equals(player.getPersistentID().toString())) {
 				EntityLivingBase entity = (EntityLivingBase) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(tag.getString("class"))).newInstance(world);
 				entity.deserializeNBT(entityTag);
 				entity.setPositionAndRotation(player.posX, player.posY, player.posZ, world.rand.nextInt(360), 0);

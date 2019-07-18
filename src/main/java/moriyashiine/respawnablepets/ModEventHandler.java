@@ -26,6 +26,7 @@ public class ModEventHandler {
 			if (ExtendedWorld.get(world).containsEntity(living) && living.getHealth() - event.getAmount() <= 0 && !living.serializeNBT().getString("OwnerUUID").isEmpty()) {
 				event.setCanceled(true);
 				living.setDead();
+				if (!living.isDead) living.isDead = true;
 				if (world.getGameRules().getBoolean("showDeathMessages")) {
 					EntityPlayer player = world.getPlayerEntityByUUID(UUID.fromString(living.serializeNBT().getString("OwnerUUID")));
 					if (player != null) player.sendMessage(living.getCombatTracker().getDeathMessage());
