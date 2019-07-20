@@ -1,85 +1,94 @@
 package moriyashiine.respawnablepets;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
+import net.minecraft.item.Rarity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.List;
 
-@SuppressWarnings({"unused", "WeakerAccess", "ConstantConditions"})
-@Mod(modid = RespawnablePets.MODID, name = RespawnablePets.NAME, version = RespawnablePets.VERSION)
+@SuppressWarnings("unused")
+@Mod("respawnablepets")
 public class RespawnablePets {
-	public static final String MODID = "respawnablepets", NAME = "Respawnable Pets", VERSION = "1.0.4.2";
-	
-	@SidedProxy(serverSide = "moriyashiine.respawnablepets.ServerProxy", clientSide = "moriyashiine.respawnablepets.ClientProxy")
-	public static ServerProxy proxy;
-	
-	public static ModConfig config;
-	
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		config = new ModConfig(event.getSuggestedConfigurationFile());
-		Item item = new Item() {
-			@Override
-			public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
-				if (!player.world.isRemote) {
-					if (target.serializeNBT().getString("OwnerUUID").equals(player.getPersistentID().toString())) {
-						String name = EntityRegistry.getEntry(target.getClass()).getRegistryName().toString();
-						if (Arrays.asList(config.blacklist).contains(name)) player.sendStatusMessage(new TextComponentTranslation("pet_blacklist", name), true);
-						else {
-							ExtendedWorld ext = ExtendedWorld.get(player.world);
-							if (!ext.containsEntity(target)) {
-								ext.addEntity(target);
-								player.sendStatusMessage(new TextComponentTranslation("pet_added", target.getDisplayName()), true);
-							}
-							else {
-								for (int i = ext.PETS.size() - 1; i >= 0; i--) {
-									if (ext.PETS.get(i).getString("uuid").equals(target.getUniqueID().toString())) {
-										ext.PETS.remove(i);
-										ext.markDirty();
-									}
-								}
-								player.sendStatusMessage(new TextComponentTranslation("pet_removed", target.getDisplayName()), true);
-							}
-						}
-					}
-					else player.sendStatusMessage(new TextComponentTranslation("pet_fail", target.getDisplayName()), true);
-				}
-				return true;
-			}
-			
-			@Override
-			@SideOnly(Side.CLIENT)
-			public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag advanced) {
-				tooltip.add(I18n.format("tooltip.respawnablepets.etheric_gem"));
-			}
-		}.setRegistryName(new ResourceLocation(MODID, "etheric_gem")).setTranslationKey(MODID + ".etheric_gem").setCreativeTab(CreativeTabs.MISC);
-		ForgeRegistries.ITEMS.register(item);
-		proxy.registerTexture(item);
+	public RespawnablePets() {
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC);
 	}
 	
-	@EventHandler
-	public void init(FMLInitializationEvent event) {
+	private void setup(final FMLCommonSetupEvent event) {
 		MinecraftForge.EVENT_BUS.register(new ModEventHandler());
+	}
+	
+	@SuppressWarnings("ConstantConditions")
+	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+	public static class RegistryEvents {
+		@SubscribeEvent
+		public static void registerItems(final RegistryEvent.Register<Item> event) {
+			event.getRegistry().register(new Item(new Item.Properties().group(ItemGroup.MISC).rarity(Rarity.RARE).maxStackSize(1)) {
+				@Override
+				public boolean itemInteractionForEntity(ItemStack stack, PlayerEntity player, LivingEntity target, Hand hand) {
+					if (!player.world.isRemote) {
+						if (target.serializeNBT().getString("OwnerUUID").equals(player.getUniqueID().toString())) {
+							ResourceLocation loc = ForgeRegistries.ENTITIES.getKey(target.getType());
+							if (loc == null) player.sendStatusMessage(new TranslationTextComponent("no_entry"), true);
+							else {
+								String name = loc.toString();
+								if (Config.COMMON.blacklist.get().contains(name)) player.sendStatusMessage(new TranslationTextComponent("pet_blacklist", name), true);
+								else {
+									ExtendedWorld ext = ExtendedWorld.get(player.world);
+									if (!ext.containsEntity(target)) {
+										CompoundNBT tag = new CompoundNBT();
+										tag.put("entity", target.serializeNBT());
+										tag.putString("class", target.getType().getRegistryName().toString());
+										tag.putString("uuid", target.getUniqueID().toString());
+										ext.PETS.add(tag);
+										ext.markDirty();
+										player.sendStatusMessage(new TranslationTextComponent("pet_added", target.getDisplayName()), true);
+									}
+									else {
+										for (int i = ext.PETS.size() - 1; i >= 0; i--) {
+											if (ext.PETS.get(i).getString("uuid").equals(target.getUniqueID().toString())) {
+												ext.PETS.remove(i);
+												ext.markDirty();
+											}
+										}
+										player.sendStatusMessage(new TranslationTextComponent("pet_removed", target.getDisplayName()), true);
+									}
+								}
+							}
+						}
+						else player.sendStatusMessage(new TranslationTextComponent("pet_fail", target.getDisplayName()), true);
+					}
+					return true;
+				}
+				
+				@Override
+				@OnlyIn(Dist.CLIENT)
+				public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+					tooltip.add(new TranslationTextComponent("tooltip.respawnablepets.etheric_gem"));
+				}
+			}.setRegistryName("etheric_gem"));
+		}
 	}
 }

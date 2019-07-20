@@ -1,0 +1,8 @@
+{
+  "item.respawnablepets.etheric_gem": "Etheric Gem",
+  "tooltip.respawnablepets.etheric_gem": "Allows you to toggle pet respawning by right clicking",
+  "pet_added": "%s will now respawn on death",
+  "pet_removed": "%s will no longer respawn on death",
+  "pet_fail": "%s does not belong to you",
+  "pet_blacklist": "%s is a blacklisted entity"
+}

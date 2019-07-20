@@ -1,77 +1,63 @@
 package moriyashiine.respawnablepets;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.WorldSavedData;
-import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings({"ConstantConditions", "WeakerAccess", "NullableProblems"})
+@SuppressWarnings({"NullableProblems", "ConstantConditions"})
 public class ExtendedWorld extends WorldSavedData {
-	public static final String TAG = RespawnablePets.MODID + ".world_data";
+	private static final String TAG = "respawnablepets.world_data";
 	
-	public final List<NBTTagCompound> PETS = new ArrayList<>();
+	final List<CompoundNBT> PETS = new ArrayList<>();
 	
-	public ExtendedWorld(String name) {
+	private ExtendedWorld(String name) {
 		super(name);
 	}
 	
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		NBTTagList list = new NBTTagList();
-		for (NBTTagCompound pet : PETS) list.appendTag(pet);
-		nbt.setTag("pets", list);
-		return nbt;
+	public CompoundNBT write(CompoundNBT compound) {
+		ListNBT list = new ListNBT();
+		list.addAll(PETS);
+		compound.put("pets", list);
+		return compound;
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound nbt) {
-		NBTTagList list = nbt.getTagList("pets", NBT.TAG_COMPOUND);
-		for (int i = 0; i < list.tagCount(); i++) PETS.add(list.getCompoundTagAt(i));
+	public void read(CompoundNBT nbt) {
+		ListNBT list = nbt.getList("pets", Constants.NBT.TAG_COMPOUND);
+		for (int i = 0; i < list.size(); i++) PETS.add(list.getCompound(i));
 	}
 	
-	public static ExtendedWorld get(World world) {
-		ExtendedWorld data = (ExtendedWorld) world.getMapStorage().getOrLoadData(ExtendedWorld.class, TAG);
-		if (data == null) {
-			data = new ExtendedWorld(TAG);
-			world.getMapStorage().setData(TAG, data);
-		}
-		return data;
+	static ExtendedWorld get(World world) {
+		return world.getServer().getWorld(DimensionType.field_223227_a_).getSavedData().getOrCreate(() -> new ExtendedWorld(TAG), TAG);
 	}
 	
-	public void addEntity(EntityLivingBase entity) {
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setTag("entity", entity.serializeNBT());
-		tag.setString("class", EntityRegistry.getEntry(entity.getClass()).getRegistryName().toString());
-		tag.setString("uuid", entity.getPersistentID().toString());
-		PETS.add(tag);
-		markDirty();
-	}
-	
-	public boolean containsEntity(EntityLivingBase entity) {
-		for (NBTTagCompound nbt : PETS) if (nbt.getString("uuid").equals(entity.getPersistentID().toString())) return true;
+	boolean containsEntity(LivingEntity entity) {
+		for (CompoundNBT nbt : PETS) if (nbt.getString("uuid").equals(entity.getUniqueID().toString())) return true;
 		return false;
 	}
 	
-	public void trySpawn(World world, EntityPlayer player) {
+	void trySpawn(World world, PlayerEntity player) {
 		for (int i = PETS.size() - 1; i >= 0; i--) {
-			NBTTagCompound tag = PETS.get(i);
-			NBTTagCompound entityTag = tag.getCompoundTag("entity");
-			if (entityTag.getString("OwnerUUID").equals(player.getPersistentID().toString())) {
-				EntityLivingBase entity = (EntityLivingBase) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(tag.getString("class"))).newInstance(world);
+			CompoundNBT tag = PETS.get(i);
+			CompoundNBT entityTag = tag.getCompound("entity");
+			if (entityTag.getString("OwnerUUID").equals(player.getUniqueID().toString())) {
+				LivingEntity entity = (LivingEntity) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(tag.getString("class"))).create(world);
 				entity.deserializeNBT(entityTag);
 				entity.setPositionAndRotation(player.posX, player.posY, player.posZ, world.rand.nextInt(360), 0);
 				entity.extinguish();
 				entity.clearActivePotions();
-				if (world.spawnEntity(entity)) entity.heal(Float.MAX_VALUE);
+				if (world.addEntity(entity)) entity.heal(Float.MAX_VALUE);
 			}
 		}
 	}
