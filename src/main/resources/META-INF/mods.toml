@@ -1,25 +1,19 @@
 modLoader="javafml" #mandatory
-loaderVersion="[26,)" #mandatory (26 is current forge version)
+loaderVersion="[28,)" #mandatory (26 is current forge version)
 issueTrackerURL="https://github.com/MoriyaShiine/Respawnable-Pets/issues" #optional
 [[mods]] #mandatory
 modId="respawnablepets" #mandatory
 version="${file.jarVersion}" #mandatory
 displayName="Respawnable Pets" #mandatory
 displayURL="https://www.curseforge.com/minecraft/mc-mods/respawnable-pets" #optional
+credits="cybercat5555 for textures" #optional
 authors="MoriyaShiine" #optional
 description='''
-Allows your tamed pets to respawn once you next sleep in a bed, with a configurable blacklist.
-Respawning is toggled with a new item, the Etheric Gem, which only works on pets you own. Not much else to say.
+A Minecraft mod that allows your pets to respawn
 '''
-# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.respawnablepets]] #optional
-    # the modid of the dependency
     modId="forge" #mandatory
-    # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
-    # The version range of the dependency
-    versionRange="[27,)" #mandatory
-    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
+    versionRange="[28,)" #mandatory
     ordering="NONE"
-    # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"

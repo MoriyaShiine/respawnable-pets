@@ -13,29 +13,32 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.0.4.2'
+version = '1.0.5'
 group = 'moriyashiine.respawnablepets' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'respawnablepets'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190621-1.14.2'
+    mappings channel: 'snapshot', version: '20190719-1.14.3'
     runs {
         client {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+
             mods {
                 examplemod {
                     source sourceSets.main
                 }
             }
         }
+
         server {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+
             mods {
                 examplemod {
                     source sourceSets.main
@@ -47,7 +50,9 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+
             args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
+
             mods {
                 examplemod {
                     source sourceSets.main
@@ -58,15 +63,16 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.0.2'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.55'
 }
 
+// Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
         attributes([
             "Specification-Title": "respawnablepets",
             "Specification-Vendor": "moriyashiine",
-            "Specification-Version": "1",
+            "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"moriyashiine",
@@ -75,6 +81,10 @@ jar {
     }
 }
 
+// Example configuration to allow publishing using the maven-publish task
+// we define a custom artifact that is sourced from the reobfJar output task
+// and then declare that to be published
+// Note you'll need to add a repository here
 def reobfFile = file("$buildDir/reobfJar/output.jar")
 def reobfArtifact = artifacts.add('default', reobfFile) {
     type 'jar'
