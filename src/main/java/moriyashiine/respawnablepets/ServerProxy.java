@@ -2,6 +2,7 @@ package moriyashiine.respawnablepets;
 
 import net.minecraft.item.Item;
 
+@SuppressWarnings("WeakerAccess")
 public class ServerProxy {
-	public void registerTexture(Item item) {}
+	void registerTexture(Item item) {}
 }
