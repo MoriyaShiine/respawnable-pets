@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @SuppressWarnings({"unused", "WeakerAccess"})
 @Mod(modid = RespawnablePets.MODID, name = RespawnablePets.NAME, version = RespawnablePets.VERSION)
 public class RespawnablePets {
-	static final String MODID = "respawnablepets", NAME = "Respawnable Pets", VERSION = "1.0.5";
+	static final String MODID = "respawnablepets", NAME = "Respawnable Pets", VERSION = "1.0.5.1";
 	
 	@SidedProxy(serverSide = "moriyashiine.respawnablepets.ServerProxy", clientSide = "moriyashiine.respawnablepets.ClientProxy")
 	static ServerProxy proxy;

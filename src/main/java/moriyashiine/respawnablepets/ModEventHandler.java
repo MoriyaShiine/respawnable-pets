@@ -45,7 +45,7 @@ public class ModEventHandler {
 	public void livingDamage(LivingDamageEvent event) {
 		EntityLivingBase entity = event.getEntityLiving();
 		World world = entity.world;
-		if (!world.isRemote) {
+		if (!world.isRemote && !(entity instanceof EntityPlayer)) {
 			UUID owner = Util.getOwner(entity);
 			ExtendedWorld ext = ExtendedWorld.get();
 			if (owner != null && entity.getHealth() - event.getAmount() <= 0 && ext.containsEntity(entity)) {
