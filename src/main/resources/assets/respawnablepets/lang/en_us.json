@@ -1,6 +1,6 @@
 {
   "item.respawnablepets.etheric_gem": "Etheric Gem",
-  "respawnablepets.tooltip": "Allows you to toggle pet respawning by right clicking",
+  "respawnablepets.tooltip": "Allows you to toggle pet respawning by punching",
   "respawnablepets.enable_respawn": "%s will now respawn on death",
   "respawnablepets.disable_respawn": "%s will no longer respawn on death",
   "respawnablepets.not_owner": "%s does not belong to you",

@@ -7,18 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Config {
-	static final Config COMMON;
+	static final Config INSTANCE;
 	static final ForgeConfigSpec COMMON_SPEC;
 	
 	static {
 		final Pair<Config, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Config::new);
+		INSTANCE = specPair.getLeft();
 		COMMON_SPEC = specPair.getRight();
-		COMMON = specPair.getLeft();
 	}
 	
 	final ForgeConfigSpec.ConfigValue<List<String>> blacklist;
 	
 	private Config(ForgeConfigSpec.Builder builder) {
-		blacklist = builder.comment("Entities listed here will be excluded from respawning. Example: 'minecraft:wolf'").define("core.blacklist", new ArrayList<>());
+		blacklist = builder.comment("Entities listed here will be excluded from respawning. Example: 'minecraft:wolf'").define("blacklist", new ArrayList<>());
 	}
 }

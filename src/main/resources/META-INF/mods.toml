@@ -17,3 +17,9 @@ A Minecraft mod that allows your pets to respawn
     versionRange="[28,)" #mandatory
     ordering="NONE"
     side="BOTH"
+[[dependencies.respawnablepets]]
+        modId="minecraft"
+        mandatory=true
+        versionRange="[1.14.4]"
+        ordering="NONE"
+        side="BOTH"

@@ -8,12 +8,13 @@ import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class ExtendedWorld extends WorldSavedData {
-	private static final String TAG = "respawnablepets.world_data";
+	private static final String TAG = RespawnablePets.MODID + ".world_data";
 	
 	final List<CompoundNBT> pets = new ArrayList<>();
 	
@@ -22,6 +23,7 @@ public class ExtendedWorld extends WorldSavedData {
 	}
 	
 	@Override
+	@Nonnull
 	public CompoundNBT write(CompoundNBT compound) {
 		ListNBT list = new ListNBT();
 		list.addAll(pets);
