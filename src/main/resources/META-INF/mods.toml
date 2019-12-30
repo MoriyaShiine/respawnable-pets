@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[28,)" #mandatory (26 is current forge version)
+loaderVersion="[30,)" #mandatory
 issueTrackerURL="https://github.com/MoriyaShiine/Respawnable-Pets/issues" #optional
 [[mods]] #mandatory
 modId="respawnablepets" #mandatory
@@ -8,18 +8,16 @@ displayName="Respawnable Pets" #mandatory
 displayURL="https://www.curseforge.com/minecraft/mc-mods/respawnable-pets" #optional
 credits="cybercat5555 for textures" #optional
 authors="MoriyaShiine" #optional
-description='''
-A Minecraft mod that allows your pets to respawn
-'''
+description='''A Minecraft mod that allows your pets to respawn'''
 [[dependencies.respawnablepets]] #optional
     modId="forge" #mandatory
     mandatory=true #mandatory
-    versionRange="[28,)" #mandatory
+    versionRange="[30,)" #mandatory
     ordering="NONE"
     side="BOTH"
 [[dependencies.respawnablepets]]
         modId="minecraft"
         mandatory=true
-        versionRange="[1.14.4]"
+        versionRange="[1.15.1]"
         ordering="NONE"
         side="BOTH"

@@ -6,6 +6,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -57,7 +58,8 @@ public class ModEventHandler {
 					LivingEntity entity = (LivingEntity) Objects.requireNonNull(ForgeRegistries.ENTITIES.getValue(new ResourceLocation(tag.getString("id")))).create(world);
 					if (entity != null) {
 						entity.deserializeNBT(tag);
-						entity.setPositionAndRotation(player.posX, player.posY, player.posZ, world.rand.nextInt(360), 0);
+						BlockPos playerPos = player.getPosition();
+						entity.setPositionAndRotation(playerPos.getX(), playerPos.getY(), playerPos.getZ(), world.rand.nextInt(360), 0);
 						if (world.addEntity(entity)) {
 							entity.heal(Float.MAX_VALUE);
 							entity.extinguish();
