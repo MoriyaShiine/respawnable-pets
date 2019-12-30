@@ -40,7 +40,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.0'
+    minecraft 'net.minecraftforge:forge:1.15.1-30.0.0'
 }
 
 jar {
@@ -48,7 +48,7 @@ jar {
         attributes([
             "Specification-Title": "respawnablepets",
             "Specification-Vendor": "moriyashiine",
-            "Specification-Version": "1", // We are version 1 of ourselves
+            "Specification-Version": "1",
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"moriyashiine",
