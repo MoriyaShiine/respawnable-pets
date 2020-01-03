@@ -1,0 +1,8 @@
+{
+    "item.respawnablepets.etheric_gem": "Etherische edelsteen",
+    "respawnablepets.tooltip": "Hiermee kunt u het respawnen van huisdieren in of uitschakelen door te slaan",
+    "respawnablepets.enable_respawn": "%s het respawnen als je dood gaat is nu ingeschakeld",
+    "respawnablepets.disable_respawn": "%s het respawnen als je dood gaat is nu uitgeschakeled",
+    "respawnablepets.not_owner": "%s is niet van jou",
+    "respawnablepets.blacklisted": "%s is een entiteit op de zwarte lijst"
+}
