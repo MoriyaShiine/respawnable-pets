@@ -38,7 +38,7 @@ public class ExtendedWorld extends WorldSavedData {
 	}
 	
 	static ExtendedWorld get(World world) {
-		return Objects.requireNonNull(world.getServer()).getWorld(DimensionType.OVERWORLD).getSavedData().getOrCreate(() -> new ExtendedWorld(TAG), TAG);
+		return Objects.requireNonNull(world.getServer()).func_71218_a(DimensionType.OVERWORLD).getSavedData().getOrCreate(() -> new ExtendedWorld(TAG), TAG);
 	}
 	
 	boolean containsEntity(LivingEntity entity) {
