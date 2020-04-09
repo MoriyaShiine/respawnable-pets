@@ -2,14 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
 	"N N",
-	"NEN",
+	"NPN",
 	" N "
   ],
   "key": {
 	"N": {
 	  "tag": "forge:nuggets/gold"
 	},
-	"E": {
+	"P": {
 	  "tag": "forge:ender_pearls"
 	}
   },

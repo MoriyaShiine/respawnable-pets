@@ -1,18 +1,18 @@
-modLoader="javafml" #mandatory
-loaderVersion="[31,)" #mandatory
-issueTrackerURL="https://github.com/MoriyaShiine/respawnable-pets/issues" #optional
-[[mods]] #mandatory
-modId="respawnablepets" #mandatory
-version="${file.jarVersion}" #mandatory
-displayName="Respawnable Pets" #mandatory
-displayURL="https://www.curseforge.com/minecraft/mc-mods/respawnable-pets" #optional
-logoFile="icon.png" #optional
-authors="MoriyaShiine, cybercat5555" #optional
-description='''A Minecraft mod that allows your pets to respawn'''
-[[dependencies.respawnablepets]] #optional
-    modId="forge" #mandatory
-    mandatory=true #mandatory
-    versionRange="[31,)" #mandatory
+modLoader="javafml"
+loaderVersion="[31,)"
+issueTrackerURL="https://github.com/MoriyaShiine/respawnable-pets/issues"
+[[mods]]
+modId="respawnablepets"
+version="${file.jarVersion}"
+displayName="Respawnable Pets"
+displayURL="https://minecraft.curseforge.com/projects/respawnable-pets"
+logoFile="icon.png"
+authors="MoriyaShiine, cybercat5555"
+description='''A simple mod that allows your pets to respawn after death when you next sleep using a new item, the Etheric Gem.'''
+[[dependencies.respawnablepets]]
+    modId="forge"
+    mandatory=true
+    versionRange="[31,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.respawnablepets]]

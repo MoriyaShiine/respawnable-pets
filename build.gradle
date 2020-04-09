@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        maven { url = "https://files.minecraftforge.net/maven" }
+        maven { url = "https://files.minecraftforge.net/maven/" }
         jcenter()
         mavenCentral()
     }
@@ -9,13 +9,16 @@ buildscript {
     }
 }
 apply plugin: "net.minecraftforge.gradle"
+apply plugin: "eclipse"
 
-version = "1.0.6.4"
+version = "1.1"
 group = "moriyashiine.respawnablepets"
 archivesBaseName = "respawnablepets"
 
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = "1.8"
+
 minecraft {
-    mappings channel: "stable", version: "60-1.15"
+    mappings channel: "snapshot", version: "20200328-mixed-1.15.2"
     runs {
         client {
             workingDirectory project.file("run")
@@ -35,6 +38,13 @@ minecraft {
                 }
             }
         }
+    }
+}
+
+repositories {
+    maven {
+        name "better_mappings"
+        url "https://maven.tterrag.com/"
     }
 }
 

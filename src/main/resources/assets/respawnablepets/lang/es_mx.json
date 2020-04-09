@@ -1,8 +1,8 @@
 {
   "item.respawnablepets.etheric_gem": "Gema etérica",
-  "respawnablepets.tooltip": "Te permite activar o desactivar la reaparición de tu mascota con pegarle",
-  "respawnablepets.enable_respawn": "%s reaparecerá al morir",
-  "respawnablepets.disable_respawn": "%s ya no reaparecerá al morir",
-  "respawnablepets.not_owner": "%s no te pertenece",
-  "respawnablepets.blacklisted": "%s no es una entidad permitida"
+  "tooltip.respawnablepets.etheric_gem": "Te permite activar o desactivar la reaparición de tu mascota con pegarle",
+  "message.respawnablepets.enable_respawn": "%s reaparecerá al morir",
+  "message.respawnablepets.disable_respawn": "%s ya no reaparecerá al morir",
+  "message.respawnablepets.not_owner": "%s no te pertenece",
+  "message.respawnablepets.blacklisted": "%s no es una entidad permitida"
 }
