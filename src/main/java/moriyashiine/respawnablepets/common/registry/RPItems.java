@@ -1,4 +1,4 @@
-package moriyashiine.respawnablepets.registry;
+package moriyashiine.respawnablepets.common.registry;
 
 import moriyashiine.respawnablepets.RespawnablePets;
 import net.minecraft.client.util.ITooltipFlag;
@@ -32,7 +32,7 @@ public class RPItems {
 	}.setRegistryName("etheric_gem");
 	
 	@SubscribeEvent
-	public static void registerItems(final RegistryEvent.Register<Item> event) {
+	public static void registerItems(RegistryEvent.Register<Item> event) {
 		event.getRegistry().register(etheric_gem);
 	}
 }

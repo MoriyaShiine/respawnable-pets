@@ -1,4 +1,4 @@
-package moriyashiine.respawnablepets.world;
+package moriyashiine.respawnablepets.common.world;
 
 import moriyashiine.respawnablepets.RespawnablePets;
 import net.minecraft.nbt.CompoundNBT;

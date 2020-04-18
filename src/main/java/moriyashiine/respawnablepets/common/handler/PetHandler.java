@@ -1,8 +1,8 @@
-package moriyashiine.respawnablepets.handler;
+package moriyashiine.respawnablepets.common.handler;
 
 import moriyashiine.respawnablepets.RespawnablePets;
-import moriyashiine.respawnablepets.registry.RPItems;
-import moriyashiine.respawnablepets.world.RPWorld;
+import moriyashiine.respawnablepets.common.registry.RPItems;
+import moriyashiine.respawnablepets.common.world.RPWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -37,7 +37,7 @@ public class PetHandler {
 	private static final EntityTypeTags.Wrapper BLACKLISTED = new EntityTypeTags.Wrapper(new ResourceLocation(RespawnablePets.MODID, "blacklisted"));
 	
 	@SubscribeEvent
-	public void togglePetRespawn(final LivingAttackEvent event) {
+	public void togglePetRespawn(LivingAttackEvent event) {
 		LivingEntity entity = event.getEntityLiving();
 		World world = entity.world;
 		if (!world.isRemote && !(entity instanceof PlayerEntity)) {
@@ -76,7 +76,7 @@ public class PetHandler {
 	
 	@SuppressWarnings("deprecation")
 	@SubscribeEvent
-	public void respawnPets(final PlayerWakeUpEvent event) {
+	public void respawnPets(PlayerWakeUpEvent event) {
 		PlayerEntity player = event.getPlayer();
 		World world = player.world;
 		if (!world.isRemote) {
@@ -104,7 +104,7 @@ public class PetHandler {
 	}
 	
 	@SubscribeEvent
-	public void storePet(final LivingDamageEvent event) {
+	public void storePet(LivingDamageEvent event) {
 		LivingEntity entity = event.getEntityLiving();
 		World world = entity.world;
 		if (!world.isRemote && !(entity instanceof PlayerEntity)) {
