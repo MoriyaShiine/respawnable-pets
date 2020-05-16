@@ -20,7 +20,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-/** File created by mason on 4/9/20 **/
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RPItems {
 	public static final Item etheric_gem = new Item(new Item.Properties().group(ItemGroup.MISC).rarity(Rarity.RARE).maxStackSize(1)) {
