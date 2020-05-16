@@ -6,7 +6,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-/** File created by mason on 4/9/20 **/
 @Mod(RespawnablePets.MODID)
 public class RespawnablePets {
 	public static final String MODID = "respawnablepets";
