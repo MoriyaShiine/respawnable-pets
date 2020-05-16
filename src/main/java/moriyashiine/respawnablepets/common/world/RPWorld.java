@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-/** File created by mason on 4/9/20 **/
 public class RPWorld extends WorldSavedData {
 	private static final String NAME = RespawnablePets.MODID + ".world_data";
 	
