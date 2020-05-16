@@ -25,7 +25,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
 
-/** File created by mason on 4/9/20 **/
 public class PetHandler {
 	private static final ITeleporter NO_PORTAL = new ITeleporter() {
 		@Override
