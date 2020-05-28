@@ -97,6 +97,7 @@ public class PetHandler {
 						pet.heal(Float.MAX_VALUE);
 						pet.extinguish();
 						pet.clearActivePotions();
+						pet.fallDistance = 0;
 						world.addEntity(pet);
 						rpworld.storedPets.remove(i);
 						rpworld.markDirty();
