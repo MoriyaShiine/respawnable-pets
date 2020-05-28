@@ -71,7 +71,9 @@ public class PetHandler {
 							}
 						}
 					}
-					else player.sendStatusMessage(new TranslationTextComponent("message." + RespawnablePets.MODID + ".not_owner", entity.getDisplayName()), true);
+					else {
+						player.sendStatusMessage(new TranslationTextComponent("message." + RespawnablePets.MODID + ".not_owner", entity.getDisplayName()), true);
+					}
 				}
 			}
 		}
@@ -121,7 +123,9 @@ public class PetHandler {
 				world.playSound(null, entity.getPosition(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 1, 1);
 				entity.remove();
 				PlayerEntity owner = findPlayer(world, UUID.fromString(entity.serializeNBT().getString("OwnerUUID")));
-				if (owner != null && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) { owner.sendMessage(entity.getCombatTracker().getDeathMessage()); }
+				if (owner != null && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {
+					owner.sendMessage(entity.getCombatTracker().getDeathMessage());
+				}
 			}
 		}
 	}
@@ -129,7 +133,9 @@ public class PetHandler {
 	private static PlayerEntity findPlayer(World world, UUID uuid) {
 		for (ServerWorld serverWorld : Objects.requireNonNull(world.getServer()).getWorlds()) {
 			PlayerEntity player = serverWorld.getPlayerByUuid(uuid);
-			if (player != null) return player;
+			if (player != null) {
+				return player;
+			}
 		}
 		return null;
 	}
