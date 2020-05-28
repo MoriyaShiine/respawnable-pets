@@ -1,6 +1,7 @@
 package moriyashiine.respawnablepets.common.handler;
 
 import moriyashiine.respawnablepets.RespawnablePets;
+import moriyashiine.respawnablepets.common.network.SmokePuffMessage;
 import moriyashiine.respawnablepets.common.registry.RPItems;
 import moriyashiine.respawnablepets.common.world.RPWorld;
 import net.minecraft.entity.Entity;
@@ -9,6 +10,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
@@ -19,6 +22,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Objects;
@@ -112,9 +116,11 @@ public class PetHandler {
 				event.setCanceled(true);
 				rpworld.storedPets.add(entity.serializeNBT());
 				rpworld.markDirty();
+				RespawnablePets.NETWORK_CHANNEL.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(entity.getPosX(), entity.getPosY(), entity.getPosZ(), 32, entity.dimension)), new SmokePuffMessage(entity.getEntityId()));
+				world.playSound(null, entity.getPosition(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 1, 1);
 				entity.remove();
 				PlayerEntity owner = findPlayer(world, UUID.fromString(entity.serializeNBT().getString("OwnerUUID")));
-				if (owner != null && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) owner.sendMessage(entity.getCombatTracker().getDeathMessage());
+				if (owner != null && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) { owner.sendMessage(entity.getCombatTracker().getDeathMessage()); }
 			}
 		}
 	}
