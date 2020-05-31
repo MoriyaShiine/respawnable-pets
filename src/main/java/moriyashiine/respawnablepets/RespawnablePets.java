@@ -22,7 +22,7 @@ public class RespawnablePets {
 	}
 	
 	private void setup(FMLCommonSetupEvent event) {
-		NETWORK_CHANNEL.registerMessage(0, SmokePuffMessage.class, SmokePuffMessage::encode, SmokePuffMessage::decode, new SmokePuffMessage.Handler());
+		NETWORK_CHANNEL.registerMessage(0, SmokePuffMessage.class, SmokePuffMessage::encode, SmokePuffMessage::decode, SmokePuffMessage::handle);
 		MinecraftForge.EVENT_BUS.register(new PetHandler());
 	}
 }

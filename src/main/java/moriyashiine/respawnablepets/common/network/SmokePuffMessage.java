@@ -7,7 +7,6 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class SmokePuffMessage {
@@ -25,22 +24,27 @@ public class SmokePuffMessage {
 		return new SmokePuffMessage(buffer.readInt());
 	}
 	
-	public static class Handler implements BiConsumer<SmokePuffMessage, Supplier<NetworkEvent.Context>> {
-		@Override
-		public void accept(SmokePuffMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
-			NetworkEvent.Context context = contextSupplier.get();
-			context.enqueueWork(() -> {
-				World world = Minecraft.getInstance().world;
-				if (world != null) {
-					Entity entity = world.getEntityByID(message.entityId);
-					if (entity != null) {
-						for (int i = 0; i < 64; i++) {
-							world.addParticle(ParticleTypes.SMOKE, entity.getPosXRandom(1), entity.getPosYRandom(), entity.getPosZRandom(1), 0, 0, 0);
+	@SuppressWarnings("Convert2Lambda")
+	public static void handle(SmokePuffMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
+		NetworkEvent.Context context = contextSupplier.get();
+		if (context.getDirection().getReceptionSide().isClient())
+		{
+			//big dumb
+			context.enqueueWork(new Runnable() {
+				@Override
+				public void run() {
+					World world = Minecraft.getInstance().world;
+					if (world != null) {
+						Entity entity = world.getEntityByID(message.entityId);
+						if (entity != null) {
+							for (int i = 0; i < 64; i++) {
+								world.addParticle(ParticleTypes.SMOKE, entity.getPosXRandom(1), entity.getPosYRandom(), entity.getPosZRandom(1), 0, 0, 0);
+							}
 						}
 					}
 				}
 			});
-			context.setPacketHandled(true);
 		}
+		context.setPacketHandled(true);
 	}
 }
