@@ -12,7 +12,6 @@ import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -92,11 +91,10 @@ public class PetHandler {
 					LivingEntity pet = (LivingEntity) Objects.requireNonNull(ForgeRegistries.ENTITIES.getValue(new ResourceLocation(nbt.getString("id")))).create(world);
 					if (pet != null) {
 						pet.deserializeNBT(nbt);
-						BlockPos playerPos = player.getPosition();
 						pet.changeDimension(player.dimension, NO_PORTAL);
-						pet.setPositionAndRotation(playerPos.getX(), playerPos.getY(), playerPos.getZ(), world.rand.nextInt(360), 0);
+						pet.setPositionAndRotation(player.getPosX() + 0.5, player.getPosY() + 0.5, player.getPosZ() + 0.5, world.rand.nextInt(360), 0);
 						pet.removed = false;
-						pet.heal(Float.MAX_VALUE);
+						pet.setHealth(pet.getMaxHealth());
 						pet.extinguish();
 						pet.clearActivePotions();
 						pet.fallDistance = 0;
