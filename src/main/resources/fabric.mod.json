@@ -3,7 +3,7 @@
   "id": "respawnablepets",
   "version": "${version}",
   "name": "Respawnable Pets",
-  "description": "A simple Minecraft mod that allows your pets to respawn after death when you next sleep using a new item, the Etheric Gem ",
+  "description": "A simple Minecraft mod that allows your pets to respawn after death when you next sleep using a new item, the Etheric Gem",
   "authors": [
 	"MoriyaShiine",
 	"cybercat5555"
