@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
@@ -16,13 +17,13 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -32,50 +33,56 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Mixin(LivingEntity.class)
-public class PetHandler {
+public abstract class PetHandler extends Entity {
 	private static final Tag<EntityType<?>> BLACKLIST = TagRegistry.entityType(new Identifier(RespawnablePets.MODID, "blacklisted"));
+	
+	@Shadow
+	public abstract DamageTracker getDamageTracker();
+	
+	@Shadow
+	public abstract float getHealth();
+	
+	public PetHandler(EntityType<?> type, World world) {
+		super(type, world);
+	}
 	
 	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
 	private void toggleRespawn(DamageSource source, float amount, CallbackInfoReturnable<Boolean> callbackInfo) {
-		Object obj = this;
-		//noinspection ConstantConditions
-		if (obj instanceof LivingEntity) {
-			LivingEntity thisObj = (LivingEntity) obj;
-			World world = thisObj.world;
-			if (!world.isClient) {
-				Entity attacker = source.getSource();
-				if (attacker instanceof PlayerEntity) {
-					PlayerEntity player = (PlayerEntity) attacker;
-					if (player.getStackInHand(Hand.MAIN_HAND).getItem() == RespawnablePets.etheric_gem) {
-						CompoundTag stored = thisObj.toTag(new CompoundTag());
-						if (stored.containsUuid("Owner") && player.getUuid().equals(stored.getUuid("Owner"))) {
-							if (BLACKLIST.contains(thisObj.getType())) {
-								player.sendMessage(new TranslatableText("message." + RespawnablePets.MODID + ".blacklisted", thisObj.getDisplayName()), true);
-							}
-							else {
-								RPWorldState rpWorldState = RPWorldState.get(world);
-								if (isPetRespawnable(rpWorldState, thisObj)) {
-									player.sendMessage(new TranslatableText("message." + RespawnablePets.MODID + ".disable_respawn", thisObj.getDisplayName()), true);
-									for (int i = rpWorldState.petsToRespawn.size() - 1; i >= 0; i--) {
-										if (rpWorldState.petsToRespawn.get(i).equals(thisObj.getUuid())) {
-											rpWorldState.petsToRespawn.remove(i);
-											rpWorldState.markDirty();
-										}
-									}
-								}
-								else {
-									player.sendMessage(new TranslatableText("message." + RespawnablePets.MODID + ".enable_respawn", thisObj.getDisplayName()), true);
-									rpWorldState.petsToRespawn.add(thisObj.getUuid());
-									rpWorldState.markDirty();
-								}
-								
-							}
+		if (!world.isClient) {
+			Entity attacker = source.getSource();
+			if (attacker instanceof PlayerEntity) {
+				PlayerEntity player = (PlayerEntity) attacker;
+				if (player.getMainHandStack().getItem() == RespawnablePets.etheric_gem) {
+					CompoundTag stored = toTag(new CompoundTag());
+					if (stored.containsUuid("Owner") && player.getUuid().equals(stored.getUuid("Owner"))) {
+						if (BLACKLIST.contains(getType())) {
+							player.sendMessage(new TranslatableText("message." + RespawnablePets.MODID + ".blacklisted", getDisplayName()), true);
 						}
 						else {
-							player.sendMessage(new TranslatableText("message." + RespawnablePets.MODID + ".not_owner", thisObj.getDisplayName()), true);
+							RPWorldState rpWorldState = RPWorldState.get(world);
+							Object obj = this;
+							//noinspection ConstantConditions
+							if (isPetRespawnable(rpWorldState, (LivingEntity) obj)) {
+								player.sendMessage(new TranslatableText("message." + RespawnablePets.MODID + ".disable_respawn", getDisplayName()), true);
+								for (int i = rpWorldState.petsToRespawn.size() - 1; i >= 0; i--) {
+									if (rpWorldState.petsToRespawn.get(i).equals(getUuid())) {
+										rpWorldState.petsToRespawn.remove(i);
+										rpWorldState.markDirty();
+									}
+								}
+							}
+							else {
+								player.sendMessage(new TranslatableText("message." + RespawnablePets.MODID + ".enable_respawn", getDisplayName()), true);
+								rpWorldState.petsToRespawn.add(getUuid());
+								rpWorldState.markDirty();
+							}
+							
 						}
-						callbackInfo.cancel();
 					}
+					else {
+						player.sendMessage(new TranslatableText("message." + RespawnablePets.MODID + ".not_owner", getDisplayName()), true);
+					}
+					callbackInfo.cancel();
 				}
 			}
 		}
@@ -87,21 +94,20 @@ public class PetHandler {
 		//noinspection ConstantConditions
 		if (obj instanceof LivingEntity) {
 			LivingEntity thisObj = (LivingEntity) obj;
-			World world = thisObj.world;
 			if (!world.isClient) {
 				RPWorldState rpWorldState = RPWorldState.get(world);
-				if (thisObj.getHealth() - amount <= 0 && isPetRespawnable(rpWorldState, thisObj)) {
+				if (getHealth() - amount <= 0 && isPetRespawnable(rpWorldState, thisObj)) {
 					CompoundTag stored = new CompoundTag();
-					thisObj.saveSelfToTag(stored);
+					saveSelfToTag(stored);
 					rpWorldState.storedPets.add(stored);
 					rpWorldState.markDirty();
-					BlockPos pos = thisObj.getBlockPos();
-					PlayerStream.around(world, pos, 32).forEach(foundPlayer -> SmokePuffMessage.send(foundPlayer, thisObj.getEntityId()));
+					BlockPos pos = getBlockPos();
+					PlayerStream.around(world, pos, 32).forEach(foundPlayer -> SmokePuffMessage.send(foundPlayer, getEntityId()));
 					world.playSound(null, pos, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 1, 1);
-					thisObj.remove();
+					remove();
 					PlayerEntity owner = findPlayer(world, stored.getUuid("Owner"));
 					if (owner != null && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {
-						owner.sendMessage(thisObj.getDamageTracker().getDeathMessage(), false);
+						owner.sendMessage(getDamageTracker().getDeathMessage(), false);
 					}
 					callbackInfo.cancel();
 				}
@@ -111,20 +117,17 @@ public class PetHandler {
 	
 	@Inject(method = "wakeUp", at = @At("HEAD"))
 	private void respawnPets(CallbackInfo callbackInfo) {
-		Object obj = this;
-		//noinspection ConstantConditions
-		if (obj instanceof LivingEntity) {
-			LivingEntity thisObj = (LivingEntity) obj;
-			World world = thisObj.world;
-			if (!world.isClient) {
-				RPWorldState rpWorldState = RPWorldState.get(world);
-				for (int i = rpWorldState.storedPets.size() - 1; i >= 0; i--) {
-					CompoundTag nbt = rpWorldState.storedPets.get(i);
-					if (thisObj.getUuid().equals(nbt.getUuid("Owner"))) {
-						LivingEntity pet = (LivingEntity) Registry.ENTITY_TYPE.get(new Identifier(nbt.getString("id"))).create(world);
+		if (!world.isClient) {
+			RPWorldState rpWorldState = RPWorldState.get(world);
+			for (int i = rpWorldState.storedPets.size() - 1; i >= 0; i--) {
+				CompoundTag nbt = rpWorldState.storedPets.get(i);
+				if (getUuid().equals(nbt.getUuid("Owner"))) {
+					LivingEntity pet = (LivingEntity) Registry.ENTITY_TYPE.get(new Identifier(nbt.getString("id"))).create(world);
+					if (pet != null)
+					{
 						pet.fromTag(nbt);
 						pet.setWorld(world);
-						pet.teleport(thisObj.getX() + 0.5, thisObj.getY() + 0.5, thisObj.getZ() + 0.5);
+						pet.teleport(getX() + 0.5, getY() + 0.5, getZ() + 0.5);
 						pet.removed = false;
 						pet.setHealth(pet.getMaxHealth());
 						pet.extinguish();

@@ -24,11 +24,11 @@ public class RPWorldState extends PersistentState {
 	
 	@Override
 	public void fromTag(CompoundTag tag) {
-		ListTag storedPets = tag.getList("storedPets", NbtType.COMPOUND);
+		ListTag storedPets = tag.getList("StoredPets", NbtType.COMPOUND);
 		for (int i = 0; i < storedPets.size(); i++) {
 			this.storedPets.add(storedPets.getCompound(i));
 		}
-		ListTag petsToRespawn = tag.getList("petsToRespawn", NbtType.COMPOUND);
+		ListTag petsToRespawn = tag.getList("PetsToRespawn", NbtType.COMPOUND);
 		for (int i = 0; i < petsToRespawn.size(); i++) {
 			this.petsToRespawn.add(petsToRespawn.getCompound(i).getUuid("UUID"));
 		}
@@ -38,14 +38,14 @@ public class RPWorldState extends PersistentState {
 	public CompoundTag toTag(CompoundTag tag) {
 		ListTag storedPets = new ListTag();
 		storedPets.addAll(this.storedPets);
-		tag.put("storedPets", storedPets);
+		tag.put("StoredPets", storedPets);
 		ListTag petsToRespawn = new ListTag();
 		for (UUID uuid : this.petsToRespawn) {
 			CompoundTag pet = new CompoundTag();
 			pet.putUuid("UUID", uuid);
 			petsToRespawn.add(pet);
 		}
-		tag.put("petsToRespawn", petsToRespawn);
+		tag.put("PetsToRespawn", petsToRespawn);
 		return tag;
 	}
 	
