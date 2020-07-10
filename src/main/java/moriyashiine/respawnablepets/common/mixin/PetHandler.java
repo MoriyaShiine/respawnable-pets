@@ -32,6 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Objects;
 import java.util.UUID;
 
+@SuppressWarnings("ConstantConditions")
 @Mixin(LivingEntity.class)
 public abstract class PetHandler extends Entity {
 	private static final Tag<EntityType<?>> BLACKLIST = TagRegistry.entityType(new Identifier(RespawnablePets.MODID, "blacklisted"));
@@ -61,7 +62,6 @@ public abstract class PetHandler extends Entity {
 						else {
 							RPWorldState rpWorldState = RPWorldState.get(world);
 							Object obj = this;
-							//noinspection ConstantConditions
 							if (isPetRespawnable(rpWorldState, (LivingEntity) obj)) {
 								player.sendMessage(new TranslatableText("message." + RespawnablePets.MODID + ".disable_respawn", getDisplayName()), true);
 								for (int i = rpWorldState.petsToRespawn.size() - 1; i >= 0; i--) {
@@ -90,27 +90,23 @@ public abstract class PetHandler extends Entity {
 	
 	@Inject(method = "applyDamage", at = @At("HEAD"), cancellable = true)
 	private void storeToWorld(DamageSource source, float amount, CallbackInfo callbackInfo) {
-		Object obj = this;
-		//noinspection ConstantConditions
-		if (obj instanceof LivingEntity) {
-			LivingEntity thisObj = (LivingEntity) obj;
-			if (!world.isClient) {
-				RPWorldState rpWorldState = RPWorldState.get(world);
-				if (getHealth() - amount <= 0 && isPetRespawnable(rpWorldState, thisObj)) {
-					CompoundTag stored = new CompoundTag();
-					saveSelfToTag(stored);
-					rpWorldState.storedPets.add(stored);
-					rpWorldState.markDirty();
-					BlockPos pos = getBlockPos();
-					PlayerStream.around(world, pos, 32).forEach(foundPlayer -> SmokePuffMessage.send(foundPlayer, getEntityId()));
-					world.playSound(null, pos, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 1, 1);
-					remove();
-					PlayerEntity owner = findPlayer(world, stored.getUuid("Owner"));
-					if (owner != null && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {
-						owner.sendMessage(getDamageTracker().getDeathMessage(), false);
-					}
-					callbackInfo.cancel();
+		if (!world.isClient) {
+			RPWorldState rpWorldState = RPWorldState.get(world);
+			Object obj = this;
+			if (getHealth() - amount <= 0 && isPetRespawnable(rpWorldState, (LivingEntity) obj)) {
+				CompoundTag stored = new CompoundTag();
+				saveSelfToTag(stored);
+				rpWorldState.storedPets.add(stored);
+				rpWorldState.markDirty();
+				BlockPos pos = getBlockPos();
+				PlayerStream.watching(this).forEach(foundPlayer -> SmokePuffMessage.send(foundPlayer, getEntityId()));
+				world.playSound(null, pos, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 1, 1);
+				remove();
+				PlayerEntity owner = findPlayer(world, stored.getUuid("Owner"));
+				if (owner != null && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {
+					owner.sendMessage(getDamageTracker().getDeathMessage(), false);
 				}
+				callbackInfo.cancel();
 			}
 		}
 	}
