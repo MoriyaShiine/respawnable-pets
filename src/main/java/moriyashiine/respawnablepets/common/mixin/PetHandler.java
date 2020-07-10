@@ -18,7 +18,6 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -98,9 +97,8 @@ public abstract class PetHandler extends Entity {
 				saveSelfToTag(stored);
 				rpWorldState.storedPets.add(stored);
 				rpWorldState.markDirty();
-				BlockPos pos = getBlockPos();
 				PlayerStream.watching(this).forEach(foundPlayer -> SmokePuffMessage.send(foundPlayer, getEntityId()));
-				world.playSound(null, pos, SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 1, 1);
+				world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 1, 1);
 				remove();
 				PlayerEntity owner = findPlayer(world, stored.getUuid("Owner"));
 				if (owner != null && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {
