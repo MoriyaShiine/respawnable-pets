@@ -20,7 +20,7 @@ import java.util.List;
 public class RespawnablePets implements ModInitializer {
 	public static final String MODID = "respawnablepets";
 	
-	public static final Item etheric_gem = new Item(new Item.Settings().group(ItemGroup.MISC).rarity(Rarity.RARE).maxCount(1)) {
+	public static final Item ETHERIC_GEM = new Item(new Item.Settings().group(ItemGroup.MISC).rarity(Rarity.RARE).maxCount(1)) {
 		@Override
 		@Environment(EnvType.CLIENT)
 		public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
@@ -30,6 +30,6 @@ public class RespawnablePets implements ModInitializer {
 	
 	@Override
 	public void onInitialize() {
-		Registry.register(Registry.ITEM, new Identifier(MODID, "etheric_gem"), etheric_gem);
+		Registry.register(Registry.ITEM, new Identifier(MODID, "etheric_gem"), ETHERIC_GEM);
 	}
 }

@@ -52,7 +52,7 @@ public abstract class PetHandler extends Entity {
 			Entity attacker = source.getSource();
 			if (attacker instanceof PlayerEntity) {
 				PlayerEntity player = (PlayerEntity) attacker;
-				if (player.getMainHandStack().getItem() == RespawnablePets.etheric_gem) {
+				if (player.getMainHandStack().getItem() == RespawnablePets.ETHERIC_GEM) {
 					CompoundTag stored = toTag(new CompoundTag());
 					if (stored.containsUuid("Owner") && player.getUuid().equals(stored.getUuid("Owner"))) {
 						if (BLACKLIST.contains(getType())) {
@@ -117,8 +117,7 @@ public abstract class PetHandler extends Entity {
 				CompoundTag nbt = rpWorldState.storedPets.get(i);
 				if (getUuid().equals(nbt.getUuid("Owner"))) {
 					LivingEntity pet = (LivingEntity) Registry.ENTITY_TYPE.get(new Identifier(nbt.getString("id"))).create(world);
-					if (pet != null)
-					{
+					if (pet != null) {
 						pet.fromTag(nbt);
 						pet.setWorld(world);
 						pet.teleport(getX() + 0.5, getY() + 0.5, getZ() + 0.5);
