@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "moriyashiine.respawnablepets.common.mixin",
+  "package": "moriyashiine.respawnablepets.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
 	"PetHandler"

@@ -1,4 +1,4 @@
-package moriyashiine.respawnablepets.common.mixin;
+package moriyashiine.respawnablepets.mixin;
 
 import moriyashiine.respawnablepets.client.network.message.SmokePuffMessage;
 import moriyashiine.respawnablepets.common.RespawnablePets;
