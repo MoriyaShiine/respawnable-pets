@@ -1,0 +1,8 @@
+{
+  "item.respawnablepets.etheric_gem": "以太宝珠",
+  "tooltip.respawnablepets.etheric_gem": "拿它敲一下你的宠物以赋予其重生的能力",
+  "message.respawnablepets.enable_respawn": "%s 现在会于去世后重生",
+  "message.respawnablepets.disable_respawn": "%s 现在无法于去世后重生",
+  "message.respawnablepets.not_owner": "%s 并不属于你",
+  "message.respawnablepets.blacklisted": "%s 是被加入黑名单的生物"
+}
