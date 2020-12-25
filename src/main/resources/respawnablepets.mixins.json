@@ -4,7 +4,7 @@
   "package": "moriyashiine.respawnablepets.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-	"PetHandler"
+	"LivingEntityMixin"
   ],
   "injectors": {
 	"defaultRequire": 1

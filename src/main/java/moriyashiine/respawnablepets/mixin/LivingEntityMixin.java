@@ -31,9 +31,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Objects;
 import java.util.UUID;
 
-@SuppressWarnings("ConstantConditions")
 @Mixin(LivingEntity.class)
-public abstract class PetHandler extends Entity {
+public abstract class LivingEntityMixin extends Entity {
 	private static final Tag<EntityType<?>> BLACKLIST = TagRegistry.entityType(new Identifier(RespawnablePets.MODID, "blacklisted"));
 	
 	@Shadow
@@ -42,7 +41,7 @@ public abstract class PetHandler extends Entity {
 	@Shadow
 	public abstract float getHealth();
 	
-	public PetHandler(EntityType<?> type, World world) {
+	public LivingEntityMixin(EntityType<?> type, World world) {
 		super(type, world);
 	}
 	
@@ -60,8 +59,7 @@ public abstract class PetHandler extends Entity {
 						}
 						else {
 							RPWorldState rpWorldState = RPWorldState.get(world);
-							Object obj = this;
-							if (isPetRespawnable(rpWorldState, (LivingEntity) obj)) {
+							if (isPetRespawnable(rpWorldState, (LivingEntity) (Object) this)) {
 								player.sendMessage(new TranslatableText("message." + RespawnablePets.MODID + ".disable_respawn", getDisplayName()), true);
 								for (int i = rpWorldState.petsToRespawn.size() - 1; i >= 0; i--) {
 									if (rpWorldState.petsToRespawn.get(i).equals(getUuid())) {
@@ -91,8 +89,7 @@ public abstract class PetHandler extends Entity {
 	private void storeToWorld(DamageSource source, float amount, CallbackInfo callbackInfo) {
 		if (!world.isClient) {
 			RPWorldState rpWorldState = RPWorldState.get(world);
-			Object obj = this;
-			if (getHealth() - amount <= 0 && isPetRespawnable(rpWorldState, (LivingEntity) obj)) {
+			if (getHealth() - amount <= 0 && isPetRespawnable(rpWorldState, (LivingEntity) (Object) this)) {
 				CompoundTag stored = new CompoundTag();
 				saveSelfToTag(stored);
 				rpWorldState.storedPets.add(stored);
