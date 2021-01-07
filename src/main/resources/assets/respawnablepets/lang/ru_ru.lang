@@ -1,0 +1,8 @@
+item.respawnablepets.etheric_gem.name=Эфирный камень
+
+respawnablepets.tooltip=Позволяет переключать возрождение питомца, ударив его
+
+respawnablepets.enable_respawn=%s теперь возрождается после смерти
+respawnablepets.disable_respawn=%s больше не будет возрождаться после смерти
+respawnablepets.not_owner=%s не принадлежит тебе
+respawnablepets.blacklisted=%s находится в чёрном списке
