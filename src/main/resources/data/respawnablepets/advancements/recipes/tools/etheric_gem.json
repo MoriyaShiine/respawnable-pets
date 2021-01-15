@@ -1,0 +1,32 @@
+{
+  "parent": "recipes/root",
+  "rewards": {
+	"recipes": [
+	  "respawnablepets:etheric_gem"
+	]
+  },
+  "criteria": {
+	"has_item": {
+	  "trigger": "inventory_changed",
+	  "conditions": {
+		"items": [
+		  {
+			"item": "ender_pearl"
+		  }
+		]
+	  }
+	},
+	"has_the_recipe": {
+	  "trigger": "recipe_unlocked",
+	  "conditions": {
+		"recipe": "respawnablepets:etheric_gem"
+	  }
+	}
+  },
+  "requirements": [
+	[
+	  "has_item",
+	  "has_the_recipe"
+	]
+  ]
+}

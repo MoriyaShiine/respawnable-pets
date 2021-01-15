@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "crafting_shaped",
   "pattern": [
 	"N N",
 	"NPN",
@@ -7,10 +7,10 @@
   ],
   "key": {
 	"N": {
-	  "item": "minecraft:gold_nugget"
+	  "item": "gold_nugget"
 	},
 	"P": {
-	  "item": "minecraft:ender_pearl"
+	  "item": "ender_pearl"
 	}
   },
   "result": {
