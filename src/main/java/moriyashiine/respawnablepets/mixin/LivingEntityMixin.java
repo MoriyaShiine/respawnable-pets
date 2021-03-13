@@ -1,9 +1,9 @@
 package moriyashiine.respawnablepets.mixin;
 
-import moriyashiine.respawnablepets.client.network.message.SmokePuffMessage;
+import moriyashiine.respawnablepets.client.network.message.SpawnSmokeParticlesPacket;
 import moriyashiine.respawnablepets.common.RespawnablePets;
 import moriyashiine.respawnablepets.common.world.RPWorldState;
-import net.fabricmc.fabric.api.server.PlayerStream;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -25,12 +25,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Objects;
 import java.util.UUID;
 
+@SuppressWarnings("ConstantConditions")
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
 	private static final Tag<EntityType<?>> BLACKLIST = TagRegistry.entityType(new Identifier(RespawnablePets.MODID, "blacklisted"));
@@ -46,7 +47,7 @@ public abstract class LivingEntityMixin extends Entity {
 	}
 	
 	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
-	private void toggleRespawn(DamageSource source, float amount, CallbackInfoReturnable<Boolean> callbackInfo) {
+	private void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> callbackInfo) {
 		if (!world.isClient) {
 			Entity attacker = source.getSource();
 			if (attacker instanceof PlayerEntity) {
@@ -55,29 +56,29 @@ public abstract class LivingEntityMixin extends Entity {
 					CompoundTag stored = toTag(new CompoundTag());
 					if (stored.containsUuid("Owner") && player.getUuid().equals(stored.getUuid("Owner"))) {
 						if (BLACKLIST.contains(getType())) {
-							player.sendMessage(new TranslatableText("message." + RespawnablePets.MODID + ".blacklisted", getDisplayName()), true);
+							player.sendMessage(new TranslatableText(RespawnablePets.MODID + ".message.blacklisted", getDisplayName()), true);
 						}
 						else {
-							RPWorldState rpWorldState = RPWorldState.get(world);
-							if (isPetRespawnable(rpWorldState, (LivingEntity) (Object) this)) {
-								player.sendMessage(new TranslatableText("message." + RespawnablePets.MODID + ".disable_respawn", getDisplayName()), true);
-								for (int i = rpWorldState.petsToRespawn.size() - 1; i >= 0; i--) {
-									if (rpWorldState.petsToRespawn.get(i).equals(getUuid())) {
-										rpWorldState.petsToRespawn.remove(i);
-										rpWorldState.markDirty();
+							RPWorldState worldState = RPWorldState.get(world);
+							if (isPetRespawnable(worldState, this)) {
+								player.sendMessage(new TranslatableText(RespawnablePets.MODID + ".message.disable_respawn", getDisplayName()), true);
+								for (int i = worldState.petsToRespawn.size() - 1; i >= 0; i--) {
+									if (worldState.petsToRespawn.get(i).equals(getUuid())) {
+										worldState.petsToRespawn.remove(i);
+										worldState.markDirty();
 									}
 								}
 							}
 							else {
-								player.sendMessage(new TranslatableText("message." + RespawnablePets.MODID + ".enable_respawn", getDisplayName()), true);
-								rpWorldState.petsToRespawn.add(getUuid());
-								rpWorldState.markDirty();
+								player.sendMessage(new TranslatableText(RespawnablePets.MODID + ".message.enable_respawn", getDisplayName()), true);
+								worldState.petsToRespawn.add(getUuid());
+								worldState.markDirty();
 							}
 							
 						}
 					}
 					else {
-						player.sendMessage(new TranslatableText("message." + RespawnablePets.MODID + ".not_owner", getDisplayName()), true);
+						player.sendMessage(new TranslatableText(RespawnablePets.MODID + ".message.not_owner", getDisplayName()), true);
 					}
 					callbackInfo.cancel();
 				}
@@ -85,33 +86,34 @@ public abstract class LivingEntityMixin extends Entity {
 		}
 	}
 	
-	@Inject(method = "applyDamage", at = @At("HEAD"), cancellable = true)
-	private void storeToWorld(DamageSource source, float amount, CallbackInfo callbackInfo) {
+	@ModifyVariable(method = "applyDamage", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/entity/LivingEntity;getHealth()F"))
+	private float applyDamage(float amount, DamageSource source) {
 		if (!world.isClient) {
-			RPWorldState rpWorldState = RPWorldState.get(world);
-			if (getHealth() - amount <= 0 && isPetRespawnable(rpWorldState, (LivingEntity) (Object) this)) {
+			RPWorldState worldState = RPWorldState.get(world);
+			if (getHealth() - amount <= 0 && isPetRespawnable(worldState, this)) {
 				CompoundTag stored = new CompoundTag();
 				saveSelfToTag(stored);
-				rpWorldState.storedPets.add(stored);
-				rpWorldState.markDirty();
-				PlayerStream.watching(this).forEach(foundPlayer -> SmokePuffMessage.send(foundPlayer, getEntityId()));
+				worldState.storedPets.add(stored);
+				worldState.markDirty();
+				PlayerLookup.tracking(this).forEach(foundPlayer -> SpawnSmokeParticlesPacket.send(foundPlayer, this));
 				world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 1, 1);
-				remove();
+				removed = true;
 				PlayerEntity owner = findPlayer(world, stored.getUuid("Owner"));
 				if (owner != null && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {
 					owner.sendMessage(getDamageTracker().getDeathMessage(), false);
 				}
-				callbackInfo.cancel();
+				return 0;
 			}
 		}
+		return amount;
 	}
 	
 	@Inject(method = "wakeUp", at = @At("HEAD"))
-	private void respawnPets(CallbackInfo callbackInfo) {
+	private void wakeUp(CallbackInfo callbackInfo) {
 		if (!world.isClient) {
-			RPWorldState rpWorldState = RPWorldState.get(world);
-			for (int i = rpWorldState.storedPets.size() - 1; i >= 0; i--) {
-				CompoundTag nbt = rpWorldState.storedPets.get(i);
+			RPWorldState worldState = RPWorldState.get(world);
+			for (int i = worldState.storedPets.size() - 1; i >= 0; i--) {
+				CompoundTag nbt = worldState.storedPets.get(i);
 				if (getUuid().equals(nbt.getUuid("Owner"))) {
 					LivingEntity pet = (LivingEntity) Registry.ENTITY_TYPE.get(new Identifier(nbt.getString("id"))).create(world);
 					if (pet != null) {
@@ -124,8 +126,8 @@ public abstract class LivingEntityMixin extends Entity {
 						pet.clearStatusEffects();
 						pet.fallDistance = 0;
 						world.spawnEntity(pet);
-						rpWorldState.storedPets.remove(i);
-						rpWorldState.markDirty();
+						worldState.storedPets.remove(i);
+						worldState.markDirty();
 					}
 				}
 			}
@@ -133,7 +135,7 @@ public abstract class LivingEntityMixin extends Entity {
 	}
 	
 	private static PlayerEntity findPlayer(World world, UUID uuid) {
-		for (ServerWorld serverWorld : Objects.requireNonNull(world.getServer()).getWorlds()) {
+		for (ServerWorld serverWorld : world.getServer().getWorlds()) {
 			PlayerEntity player = serverWorld.getPlayerByUuid(uuid);
 			if (player != null) {
 				return player;
@@ -142,8 +144,8 @@ public abstract class LivingEntityMixin extends Entity {
 		return null;
 	}
 	
-	private static boolean isPetRespawnable(RPWorldState rpWorldState, LivingEntity entity) {
-		for (UUID uuid : rpWorldState.petsToRespawn) {
+	private static boolean isPetRespawnable(RPWorldState worldState, Entity entity) {
+		for (UUID uuid : worldState.petsToRespawn) {
 			if (entity.getUuid().equals(uuid)) {
 				return true;
 			}

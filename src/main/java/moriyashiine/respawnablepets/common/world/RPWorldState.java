@@ -4,17 +4,15 @@ import moriyashiine.respawnablepets.common.RespawnablePets;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 public class RPWorldState extends PersistentState {
-	public static final String KEY = RespawnablePets.MODID;
-	
 	public final List<CompoundTag> storedPets = new ArrayList<>();
 	public final List<UUID> petsToRespawn = new ArrayList<>();
 	
@@ -50,6 +48,6 @@ public class RPWorldState extends PersistentState {
 	}
 	
 	public static RPWorldState get(World world) {
-		return Objects.requireNonNull(Objects.requireNonNull(world.getServer()).getWorld(World.OVERWORLD)).getPersistentStateManager().getOrCreate(() -> new RPWorldState(KEY), KEY);
+		return ((ServerWorld) world).getServer().getOverworld().getPersistentStateManager().getOrCreate(() -> new RPWorldState(RespawnablePets.MODID), RespawnablePets.MODID);
 	}
 }

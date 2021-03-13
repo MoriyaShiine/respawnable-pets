@@ -24,7 +24,7 @@ public class RespawnablePets implements ModInitializer {
 		@Override
 		@Environment(EnvType.CLIENT)
 		public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
-			tooltip.add(new TranslatableText("tooltip." + RespawnablePets.MODID + ".etheric_gem").formatted(Formatting.GRAY));
+			tooltip.add(new TranslatableText(RespawnablePets.MODID + ".tooltip.etheric_gem").formatted(Formatting.GRAY));
 		}
 	};
 	
