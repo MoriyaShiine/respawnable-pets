@@ -12,7 +12,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -27,9 +26,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.UUID;
-
-@SuppressWarnings("ConstantConditions")
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
 	private static final Tag<EntityType<?>> BLACKLIST = TagRegistry.entityType(new Identifier(RespawnablePets.MODID, "blacklisted"));
@@ -72,7 +68,7 @@ public abstract class LivingEntityMixin extends Entity {
 						}
 						else {
 							RPWorldState worldState = RPWorldState.get(world);
-							if (isPetRespawnable(worldState, this)) {
+							if (RespawnablePets.isPetRespawnable(worldState, this)) {
 								player.sendMessage(new TranslatableText(RespawnablePets.MODID + ".message.disable_respawn", getDisplayName()), true);
 								for (int i = worldState.petsToRespawn.size() - 1; i >= 0; i--) {
 									if (worldState.petsToRespawn.get(i).equals(getUuid())) {
@@ -102,7 +98,7 @@ public abstract class LivingEntityMixin extends Entity {
 	private float applyDamage(float amount, DamageSource source) {
 		if (!world.isClient) {
 			RPWorldState worldState = RPWorldState.get(world);
-			if (getHealth() - amount <= 0 && isPetRespawnable(worldState, this)) {
+			if (getHealth() - amount <= 0 && RespawnablePets.isPetRespawnable(worldState, this)) {
 				CompoundTag stored = new CompoundTag();
 				saveSelfToTag(stored);
 				worldState.storedPets.add(stored);
@@ -110,7 +106,7 @@ public abstract class LivingEntityMixin extends Entity {
 				PlayerLookup.tracking(this).forEach(foundPlayer -> SpawnSmokeParticlesPacket.send(foundPlayer, this));
 				world.playSound(null, getBlockPos(), RespawnablePets.ENTITY_GENERIC_TELEPORT, getSoundCategory(), getSoundVolume(), getSoundPitch());
 				removed = true;
-				PlayerEntity owner = findPlayer(world, stored.getUuid("Owner"));
+				PlayerEntity owner = RespawnablePets.findOwner(world, stored.getUuid("Owner"));
 				if (owner != null && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {
 					owner.sendMessage(getDamageTracker().getDeathMessage(), false);
 				}
@@ -150,24 +146,5 @@ public abstract class LivingEntityMixin extends Entity {
 				}
 			}
 		}
-	}
-	
-	private static PlayerEntity findPlayer(World world, UUID uuid) {
-		for (ServerWorld serverWorld : world.getServer().getWorlds()) {
-			PlayerEntity player = serverWorld.getPlayerByUuid(uuid);
-			if (player != null) {
-				return player;
-			}
-		}
-		return null;
-	}
-	
-	private static boolean isPetRespawnable(RPWorldState worldState, Entity entity) {
-		for (UUID uuid : worldState.petsToRespawn) {
-			if (entity.getUuid().equals(uuid)) {
-				return true;
-			}
-		}
-		return false;
 	}
 }
