@@ -1,5 +1,7 @@
 package moriyashiine.respawnablepets.common;
 
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
@@ -21,6 +23,8 @@ import java.util.List;
 public class RespawnablePets implements ModInitializer {
 	public static final String MODID = "respawnablepets";
 	
+	public static RPConfig config;
+	
 	public static final Item ETHERIC_GEM = new Item(new Item.Settings().group(ItemGroup.MISC).rarity(Rarity.RARE).maxCount(1)) {
 		@Override
 		@Environment(EnvType.CLIENT)
@@ -33,6 +37,8 @@ public class RespawnablePets implements ModInitializer {
 	
 	@Override
 	public void onInitialize() {
+		AutoConfig.register(RPConfig.class, GsonConfigSerializer::new);
+		config = AutoConfig.getConfigHolder(RPConfig.class).getConfig();
 		Registry.register(Registry.ITEM, new Identifier(MODID, "etheric_gem"), ETHERIC_GEM);
 		Registry.register(Registry.SOUND_EVENT, new Identifier(MODID, "entity.generic.teleport"), ENTITY_GENERIC_TELEPORT);
 	}

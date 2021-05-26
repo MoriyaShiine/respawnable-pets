@@ -50,6 +50,14 @@ public abstract class LivingEntityMixin extends Entity {
 		super(type, world);
 	}
 	
+	@Inject(method = "tick", at = @At("TAIL"))
+	private void tick(CallbackInfo callbackInfo) {
+		int timeToRespawn = RespawnablePets.config.timeToRespawn;
+		if (timeToRespawn >= 0 && world.getTimeOfDay() % 24000 == timeToRespawn) {
+			respawnPets();
+		}
+	}
+	
 	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
 	private void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> callbackInfo) {
 		if (!world.isClient) {
@@ -114,6 +122,12 @@ public abstract class LivingEntityMixin extends Entity {
 	
 	@Inject(method = "wakeUp", at = @At("HEAD"))
 	private void wakeUp(CallbackInfo callbackInfo) {
+		if (RespawnablePets.config.timeToRespawn < 0) {
+			respawnPets();
+		}
+	}
+	
+	private void respawnPets() {
 		if (!world.isClient) {
 			RPWorldState worldState = RPWorldState.get(world);
 			for (int i = worldState.storedPets.size() - 1; i >= 0; i--) {
