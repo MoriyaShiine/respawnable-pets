@@ -7,6 +7,7 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -28,8 +29,11 @@ public class RespawnablePets implements ModInitializer {
 		}
 	};
 	
+	public static final SoundEvent ENTITY_GENERIC_TELEPORT = new SoundEvent(new Identifier(MODID, "entity.generic.teleport"));
+	
 	@Override
 	public void onInitialize() {
 		Registry.register(Registry.ITEM, new Identifier(MODID, "etheric_gem"), ETHERIC_GEM);
+		Registry.register(Registry.SOUND_EVENT, new Identifier(MODID, "entity.generic.teleport"), ENTITY_GENERIC_TELEPORT);
 	}
 }

@@ -1,0 +1,9 @@
+{
+  "entity.generic.teleport": {
+	"sounds": [
+	  "mob/endermen/portal",
+	  "mob/endermen/portal2"
+	],
+	"subtitle": "subtitles.respawnablepets.entity.generic.teleport"
+  }
+}

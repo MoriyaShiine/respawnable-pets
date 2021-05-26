@@ -13,8 +13,6 @@ import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -41,6 +39,12 @@ public abstract class LivingEntityMixin extends Entity {
 	
 	@Shadow
 	public abstract float getHealth();
+	
+	@Shadow
+	protected abstract float getSoundVolume();
+	
+	@Shadow
+	protected abstract float getSoundPitch();
 	
 	public LivingEntityMixin(EntityType<?> type, World world) {
 		super(type, world);
@@ -96,7 +100,7 @@ public abstract class LivingEntityMixin extends Entity {
 				worldState.storedPets.add(stored);
 				worldState.markDirty();
 				PlayerLookup.tracking(this).forEach(foundPlayer -> SpawnSmokeParticlesPacket.send(foundPlayer, this));
-				world.playSound(null, getBlockPos(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 1, 1);
+				world.playSound(null, getBlockPos(), RespawnablePets.ENTITY_GENERIC_TELEPORT, getSoundCategory(), getSoundVolume(), getSoundPitch());
 				removed = true;
 				PlayerEntity owner = findPlayer(world, stored.getUuid("Owner"));
 				if (owner != null && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {

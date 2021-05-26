@@ -1,5 +1,6 @@
 {
   "item.respawnablepets.etheric_gem": "Etheric Gem",
+  "subtitles.respawnablepets.entity.generic.teleport": "Entity teleports",
   "respawnablepets.tooltip.etheric_gem": "Allows you to toggle pet respawning by punching",
   "respawnablepets.message.enable_respawn": "%s will now respawn on death",
   "respawnablepets.message.disable_respawn": "%s will no longer respawn on death",
