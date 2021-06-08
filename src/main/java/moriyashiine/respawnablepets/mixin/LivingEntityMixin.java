@@ -11,7 +11,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -40,7 +41,7 @@ public abstract class LivingEntityMixin extends Entity {
 	protected abstract float getSoundVolume();
 	
 	@Shadow
-	protected abstract float getSoundPitch();
+	public abstract float getSoundPitch();
 	
 	public LivingEntityMixin(EntityType<?> type, World world) {
 		super(type, world);
@@ -58,10 +59,9 @@ public abstract class LivingEntityMixin extends Entity {
 	private void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> callbackInfo) {
 		if (!world.isClient) {
 			Entity attacker = source.getSource();
-			if (attacker instanceof PlayerEntity) {
-				PlayerEntity player = (PlayerEntity) attacker;
+			if (attacker instanceof PlayerEntity player) {
 				if (player.getMainHandStack().getItem() == RespawnablePets.ETHERIC_GEM) {
-					CompoundTag stored = toTag(new CompoundTag());
+					NbtCompound stored = writeNbt(new NbtCompound());
 					if (stored.containsUuid("Owner") && player.getUuid().equals(stored.getUuid("Owner"))) {
 						if (BLACKLIST.contains(getType())) {
 							player.sendMessage(new TranslatableText(RespawnablePets.MODID + ".message.blacklisted", getDisplayName()), true);
@@ -94,18 +94,18 @@ public abstract class LivingEntityMixin extends Entity {
 		}
 	}
 	
-	@ModifyVariable(method = "applyDamage", at = @At(value = "INVOKE", shift = At.Shift.BEFORE, target = "Lnet/minecraft/entity/LivingEntity;getHealth()F"))
-	private float applyDamage(float amount, DamageSource source) {
+	@ModifyVariable(method = "applyDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;getHealth()F"))
+	private float modifyApplyDamage(float amount, DamageSource source) {
 		if (!world.isClient) {
 			RPWorldState worldState = RPWorldState.get(world);
 			if (getHealth() - amount <= 0 && RespawnablePets.isPetRespawnable(worldState, this)) {
-				CompoundTag stored = new CompoundTag();
-				saveSelfToTag(stored);
+				NbtCompound stored = new NbtCompound();
+				saveSelfNbt(stored);
 				worldState.storedPets.add(stored);
 				worldState.markDirty();
 				PlayerLookup.tracking(this).forEach(foundPlayer -> SpawnSmokeParticlesPacket.send(foundPlayer, this));
 				world.playSound(null, getBlockPos(), RespawnablePets.ENTITY_GENERIC_TELEPORT, getSoundCategory(), getSoundVolume(), getSoundPitch());
-				removed = true;
+				remove(RemovalReason.DISCARDED);
 				PlayerEntity owner = RespawnablePets.findOwner(world, stored.getUuid("Owner"));
 				if (owner != null && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {
 					owner.sendMessage(getDamageTracker().getDeathMessage(), false);
@@ -127,16 +127,16 @@ public abstract class LivingEntityMixin extends Entity {
 		if (!world.isClient) {
 			RPWorldState worldState = RPWorldState.get(world);
 			for (int i = worldState.storedPets.size() - 1; i >= 0; i--) {
-				CompoundTag nbt = worldState.storedPets.get(i);
+				NbtCompound nbt = worldState.storedPets.get(i);
 				if (getUuid().equals(nbt.getUuid("Owner"))) {
 					LivingEntity pet = (LivingEntity) Registry.ENTITY_TYPE.get(new Identifier(nbt.getString("id"))).create(world);
 					if (pet != null) {
-						pet.fromTag(nbt);
-						pet.setWorld(world);
+						pet.readNbt(nbt);
+						pet.moveToWorld((ServerWorld) world);
 						pet.teleport(getX() + 0.5, getY() + 0.5, getZ() + 0.5);
-						pet.removed = false;
 						pet.setHealth(pet.getMaxHealth());
 						pet.extinguish();
+						pet.setFrozenTicks(0);
 						pet.clearStatusEffects();
 						pet.fallDistance = 0;
 						world.spawnEntity(pet);

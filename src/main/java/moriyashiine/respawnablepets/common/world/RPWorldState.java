@@ -2,9 +2,8 @@ package moriyashiine.respawnablepets.common.world;
 
 import moriyashiine.respawnablepets.common.RespawnablePets;
 import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
 
@@ -13,41 +12,39 @@ import java.util.List;
 import java.util.UUID;
 
 public class RPWorldState extends PersistentState {
-	public final List<CompoundTag> storedPets = new ArrayList<>();
+	public final List<NbtCompound> storedPets = new ArrayList<>();
 	public final List<UUID> petsToRespawn = new ArrayList<>();
 	
-	public RPWorldState(String key) {
-		super(key);
-	}
-	
-	@Override
-	public void fromTag(CompoundTag tag) {
-		ListTag storedPets = tag.getList("StoredPets", NbtType.COMPOUND);
+	public static RPWorldState readNbt(NbtCompound nbt) {
+		RPWorldState worldState = new RPWorldState();
+		NbtList storedPets = nbt.getList("StoredPets", NbtType.COMPOUND);
 		for (int i = 0; i < storedPets.size(); i++) {
-			this.storedPets.add(storedPets.getCompound(i));
+			worldState.storedPets.add(storedPets.getCompound(i));
 		}
-		ListTag petsToRespawn = tag.getList("PetsToRespawn", NbtType.COMPOUND);
+		NbtList petsToRespawn = nbt.getList("PetsToRespawn", NbtType.COMPOUND);
 		for (int i = 0; i < petsToRespawn.size(); i++) {
-			this.petsToRespawn.add(petsToRespawn.getCompound(i).getUuid("UUID"));
+			worldState.petsToRespawn.add(petsToRespawn.getCompound(i).getUuid("UUID"));
 		}
+		return worldState;
 	}
 	
 	@Override
-	public CompoundTag toTag(CompoundTag tag) {
-		ListTag storedPets = new ListTag();
+	public NbtCompound writeNbt(NbtCompound nbt) {
+		NbtList storedPets = new NbtList();
 		storedPets.addAll(this.storedPets);
-		tag.put("StoredPets", storedPets);
-		ListTag petsToRespawn = new ListTag();
+		nbt.put("StoredPets", storedPets);
+		NbtList petsToRespawn = new NbtList();
 		for (UUID uuid : this.petsToRespawn) {
-			CompoundTag pet = new CompoundTag();
+			NbtCompound pet = new NbtCompound();
 			pet.putUuid("UUID", uuid);
 			petsToRespawn.add(pet);
 		}
-		tag.put("PetsToRespawn", petsToRespawn);
-		return tag;
+		nbt.put("PetsToRespawn", petsToRespawn);
+		return nbt;
 	}
 	
+	@SuppressWarnings("ConstantConditions")
 	public static RPWorldState get(World world) {
-		return ((ServerWorld) world).getServer().getOverworld().getPersistentStateManager().getOrCreate(() -> new RPWorldState(RespawnablePets.MODID), RespawnablePets.MODID);
+		return world.getServer().getOverworld().getPersistentStateManager().getOrCreate(RPWorldState::readNbt, RPWorldState::new, RespawnablePets.MODID);
 	}
 }
