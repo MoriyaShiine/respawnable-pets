@@ -1,5 +1,5 @@
 {
-  "parent": "recipes/root",
+  "parent": "minecraft:recipes/root",
   "rewards": {
 	"recipes": [
 	  "respawnablepets:etheric_gem"
@@ -7,17 +7,19 @@
   },
   "criteria": {
 	"has_item": {
-	  "trigger": "inventory_changed",
+	  "trigger": "minecraft:inventory_changed",
 	  "conditions": {
 		"items": [
 		  {
-			"item": "ender_pearl"
+			"items": [
+			  "minecraft:ender_pearl"
+			]
 		  }
 		]
 	  }
 	},
 	"has_the_recipe": {
-	  "trigger": "recipe_unlocked",
+	  "trigger": "minecraft:recipe_unlocked",
 	  "conditions": {
 		"recipe": "respawnablepets:etheric_gem"
 	  }
