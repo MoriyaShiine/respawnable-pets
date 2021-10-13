@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class RPWorldState extends PersistentState {
+public class ModWorldState extends PersistentState {
 	public final List<NbtCompound> storedPets = new ArrayList<>();
 	public final List<UUID> petsToRespawn = new ArrayList<>();
 	
-	public static RPWorldState readNbt(NbtCompound nbt) {
-		RPWorldState worldState = new RPWorldState();
+	public static ModWorldState readNbt(NbtCompound nbt) {
+		ModWorldState worldState = new ModWorldState();
 		NbtList storedPets = nbt.getList("StoredPets", NbtType.COMPOUND);
 		for (int i = 0; i < storedPets.size(); i++) {
 			worldState.storedPets.add(storedPets.getCompound(i));
@@ -44,7 +44,7 @@ public class RPWorldState extends PersistentState {
 	}
 	
 	@SuppressWarnings("ConstantConditions")
-	public static RPWorldState get(World world) {
-		return world.getServer().getOverworld().getPersistentStateManager().getOrCreate(RPWorldState::readNbt, RPWorldState::new, RespawnablePets.MODID);
+	public static ModWorldState get(World world) {
+		return world.getServer().getOverworld().getPersistentStateManager().getOrCreate(ModWorldState::readNbt, ModWorldState::new, RespawnablePets.MOD_ID);
 	}
 }

@@ -15,7 +15,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 public class SpawnSmokeParticlesPacket {
-	public static final Identifier ID = new Identifier(RespawnablePets.MODID, "spawn_smoke_particles");
+	public static final Identifier ID = new Identifier(RespawnablePets.MOD_ID, "spawn_smoke_particles");
 	
 	public static void send(PlayerEntity player, Entity entity) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());

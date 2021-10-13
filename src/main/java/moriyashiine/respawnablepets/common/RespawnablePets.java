@@ -2,50 +2,32 @@ package moriyashiine.respawnablepets.common;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
-import moriyashiine.respawnablepets.common.world.RPWorldState;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import moriyashiine.respawnablepets.common.registry.ModItems;
+import moriyashiine.respawnablepets.common.registry.ModSoundEvents;
+import moriyashiine.respawnablepets.common.world.ModWorldState;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.UUID;
 
 public class RespawnablePets implements ModInitializer {
-	public static final String MODID = "respawnablepets";
+	public static final String MOD_ID = "respawnablepets";
 	
-	public static RPConfig config;
-	
-	public static final Item ETHERIC_GEM = new Item(new Item.Settings().group(ItemGroup.MISC).rarity(Rarity.RARE).maxCount(1)) {
-		@Override
-		@Environment(EnvType.CLIENT)
-		public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
-			tooltip.add(new TranslatableText(RespawnablePets.MODID + ".tooltip.etheric_gem").formatted(Formatting.GRAY));
-		}
-	};
-	
-	public static final SoundEvent ENTITY_GENERIC_TELEPORT = new SoundEvent(new Identifier(MODID, "entity.generic.teleport"));
+	public static ModConfig config;
 	
 	@Override
 	public void onInitialize() {
-		AutoConfig.register(RPConfig.class, GsonConfigSerializer::new);
-		config = AutoConfig.getConfigHolder(RPConfig.class).getConfig();
-		Registry.register(Registry.ITEM, new Identifier(MODID, "etheric_gem"), ETHERIC_GEM);
-		Registry.register(Registry.SOUND_EVENT, new Identifier(MODID, "entity.generic.teleport"), ENTITY_GENERIC_TELEPORT);
+		AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
+		config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+		ModItems.init();
+		ModSoundEvents.init();
 	}
 	
 	@SuppressWarnings("ConstantConditions")
@@ -59,12 +41,37 @@ public class RespawnablePets implements ModInitializer {
 		return null;
 	}
 	
-	public static boolean isPetRespawnable(RPWorldState worldState, Entity entity) {
+	public static boolean isPetRespawnable(ModWorldState worldState, Entity entity) {
 		for (UUID uuid : worldState.petsToRespawn) {
 			if (entity.getUuid().equals(uuid)) {
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	public static void respawnPets(World world, Entity entity) {
+		if (!world.isClient) {
+			ModWorldState worldState = ModWorldState.get(world);
+			for (int i = worldState.storedPets.size() - 1; i >= 0; i--) {
+				NbtCompound nbt = worldState.storedPets.get(i);
+				if (entity.getUuid().equals(nbt.getUuid("Owner"))) {
+					LivingEntity pet = (LivingEntity) Registry.ENTITY_TYPE.get(new Identifier(nbt.getString("id"))).create(world);
+					if (pet != null) {
+						pet.readNbt(nbt);
+						pet.moveToWorld((ServerWorld) world);
+						pet.teleport(entity.getX() + 0.5, entity.getY() + 0.5, entity.getZ() + 0.5);
+						pet.setHealth(pet.getMaxHealth());
+						pet.extinguish();
+						pet.setFrozenTicks(0);
+						pet.clearStatusEffects();
+						pet.fallDistance = 0;
+						world.spawnEntity(pet);
+						worldState.storedPets.remove(i);
+						worldState.markDirty();
+					}
+				}
+			}
+		}
 	}
 }
