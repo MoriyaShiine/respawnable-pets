@@ -23,7 +23,7 @@ public class SpawnSmokeParticlesPacket {
 		ServerPlayNetworking.send((ServerPlayerEntity) player, ID, buf);
 	}
 	
-	public static void handle(MinecraftClient client, ClientPlayNetworkHandler network, PacketByteBuf buf, PacketSender sender) {
+	public static void receive(MinecraftClient client, ClientPlayNetworkHandler network, PacketByteBuf buf, PacketSender sender) {
 		int id = buf.readInt();
 		client.execute(() -> {
 			ClientWorld world = client.world;

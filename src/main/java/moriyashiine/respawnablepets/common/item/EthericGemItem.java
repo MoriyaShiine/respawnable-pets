@@ -18,8 +18,8 @@ public class EthericGemItem extends Item {
 		super(settings);
 	}
 	
-	@Override
 	@Environment(EnvType.CLIENT)
+	@Override
 	public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
 		tooltip.add(new TranslatableText(RespawnablePets.MOD_ID + ".tooltip.etheric_gem").formatted(Formatting.GRAY));
 	}

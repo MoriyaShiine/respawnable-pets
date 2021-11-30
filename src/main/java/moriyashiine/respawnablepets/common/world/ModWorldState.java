@@ -4,6 +4,7 @@ import moriyashiine.respawnablepets.common.RespawnablePets;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
 
@@ -21,9 +22,9 @@ public class ModWorldState extends PersistentState {
 		for (int i = 0; i < storedPets.size(); i++) {
 			worldState.storedPets.add(storedPets.getCompound(i));
 		}
-		NbtList petsToRespawn = nbt.getList("PetsToRespawn", NbtType.COMPOUND);
+		NbtList petsToRespawn = nbt.getList("PetsToRespawn", NbtType.STRING);
 		for (int i = 0; i < petsToRespawn.size(); i++) {
-			worldState.petsToRespawn.add(petsToRespawn.getCompound(i).getUuid("UUID"));
+			worldState.petsToRespawn.add(UUID.fromString(petsToRespawn.getString(i)));
 		}
 		return worldState;
 	}
@@ -35,9 +36,7 @@ public class ModWorldState extends PersistentState {
 		nbt.put("StoredPets", storedPets);
 		NbtList petsToRespawn = new NbtList();
 		for (UUID uuid : this.petsToRespawn) {
-			NbtCompound pet = new NbtCompound();
-			pet.putUuid("UUID", uuid);
-			petsToRespawn.add(pet);
+			petsToRespawn.add(NbtString.of(uuid.toString()));
 		}
 		nbt.put("PetsToRespawn", petsToRespawn);
 		return nbt;

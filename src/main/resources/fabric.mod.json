@@ -10,7 +10,8 @@
   ],
   "contact": {
 	"homepage": "https://www.curseforge.com/minecraft/mc-mods/respawnable-pets",
-	"sources": "https://github.com/MoriyaShiine/respawnable-pets"
+	"sources": "https://github.com/MoriyaShiine/respawnable-pets",
+	"issues": "https://github.com/MoriyaShiine/respawnable-pets/issues"
   },
   "license": "CC BY-NC-ND 4.0",
   "icon": "assets/respawnablepets/icon.png",
@@ -27,10 +28,10 @@
 	"respawnablepets.mixins.json"
   ],
   "depends": {
-	"fabricloader": "*",
-	"fabric": "*",
-	"minecraft": "1.17.x",
-	"cloth-config2": "*",
-	"java": ">=16"
+	"fabricloader": ">=0.12.6",
+	"fabric": ">=0.43.1",
+	"minecraft": "1.18.x",
+	"java": ">=17",
+	"cloth-config2": ">=6.0.42"
   }
 }

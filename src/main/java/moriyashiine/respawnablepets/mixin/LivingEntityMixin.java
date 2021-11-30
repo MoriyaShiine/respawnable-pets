@@ -14,16 +14,21 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.UUID;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -44,15 +49,15 @@ public abstract class LivingEntityMixin extends Entity {
 	}
 	
 	@Inject(method = "tick", at = @At("TAIL"))
-	private void tick(CallbackInfo callbackInfo) {
+	private void respawnPetsOnTick(CallbackInfo ci) {
 		int timeToRespawn = RespawnablePets.config.timeToRespawn;
 		if (timeToRespawn >= 0 && world.getTimeOfDay() % 24000 == timeToRespawn) {
-			RespawnablePets.respawnPets(world, this);
+			respawnPets();
 		}
 	}
 	
 	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
-	private void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> callbackInfo) {
+	private void togglePetRespawning(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
 		if (!world.isClient) {
 			Entity attacker = source.getSource();
 			if (attacker instanceof PlayerEntity player) {
@@ -64,7 +69,7 @@ public abstract class LivingEntityMixin extends Entity {
 						}
 						else {
 							ModWorldState worldState = ModWorldState.get(world);
-							if (RespawnablePets.isPetRespawnable(worldState, this)) {
+							if (canRespawn(worldState)) {
 								player.sendMessage(new TranslatableText(RespawnablePets.MOD_ID + ".message.disable_respawn", getDisplayName()), true);
 								for (int i = worldState.petsToRespawn.size() - 1; i >= 0; i--) {
 									if (worldState.petsToRespawn.get(i).equals(getUuid())) {
@@ -84,38 +89,85 @@ public abstract class LivingEntityMixin extends Entity {
 					else {
 						player.sendMessage(new TranslatableText(RespawnablePets.MOD_ID + ".message.not_owner", getDisplayName()), true);
 					}
-					callbackInfo.cancel();
+					cir.cancel();
 				}
 			}
 		}
 	}
 	
-	@ModifyVariable(method = "applyDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;getHealth()F"))
-	private float modifyApplyDamage(float amount, DamageSource source) {
+	@Inject(method = "wakeUp", at = @At("HEAD"))
+	private void respawnPetsOnWake(CallbackInfo ci) {
+		if (RespawnablePets.config.timeToRespawn < 0) {
+			respawnPets();
+		}
+	}
+	
+	@Inject(method = "applyDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;getHealth()F"), cancellable = true)
+	private void storePetOnDeath(DamageSource source, float amount, CallbackInfo ci) {
 		if (!world.isClient) {
 			ModWorldState worldState = ModWorldState.get(world);
-			if (getHealth() - amount <= 0 && RespawnablePets.isPetRespawnable(worldState, this)) {
+			if (getHealth() - amount <= 0 && canRespawn(worldState)) {
 				NbtCompound stored = new NbtCompound();
 				saveSelfNbt(stored);
 				worldState.storedPets.add(stored);
 				worldState.markDirty();
 				PlayerLookup.tracking(this).forEach(foundPlayer -> SpawnSmokeParticlesPacket.send(foundPlayer, this));
-				world.playSound(null, getBlockPos(), ModSoundEvents.ENTITY_GENERIC_TELEPORT, getSoundCategory(), getSoundVolume(), getSoundPitch());
+				playSound(ModSoundEvents.ENTITY_GENERIC_TELEPORT, getSoundVolume(), getSoundPitch());
 				remove(RemovalReason.DISCARDED);
-				PlayerEntity owner = RespawnablePets.findOwner(world, stored.getUuid("Owner"));
+				PlayerEntity owner = findOwnerByUUID(stored.getUuid("Owner"));
 				if (owner != null && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {
 					owner.sendMessage(getDamageTracker().getDeathMessage(), false);
 				}
-				return 0;
+				ci.cancel();
 			}
 		}
-		return amount;
 	}
 	
-	@Inject(method = "wakeUp", at = @At("HEAD"))
-	private void wakeUp(CallbackInfo callbackInfo) {
-		if (RespawnablePets.config.timeToRespawn < 0) {
-			RespawnablePets.respawnPets(world, this);
+	@SuppressWarnings("ConstantConditions")
+	@Unique
+	private PlayerEntity findOwnerByUUID(UUID uuid) {
+		for (ServerWorld serverWorld : world.getServer().getWorlds()) {
+			PlayerEntity player = serverWorld.getPlayerByUuid(uuid);
+			if (player != null) {
+				return player;
+			}
+		}
+		return null;
+	}
+	
+	@Unique
+	private boolean canRespawn(ModWorldState worldState) {
+		for (UUID uuid : worldState.petsToRespawn) {
+			if (getUuid().equals(uuid)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Unique
+	private void respawnPets() {
+		if (!world.isClient) {
+			ModWorldState worldState = ModWorldState.get(world);
+			for (int i = worldState.storedPets.size() - 1; i >= 0; i--) {
+				NbtCompound nbt = worldState.storedPets.get(i);
+				if (getUuid().equals(nbt.getUuid("Owner"))) {
+					LivingEntity pet = (LivingEntity) Registry.ENTITY_TYPE.get(new Identifier(nbt.getString("id"))).create(world);
+					if (pet != null) {
+						pet.readNbt(nbt);
+						pet.moveToWorld((ServerWorld) world);
+						pet.teleport(getX() + 0.5, getY() + 0.5, getZ() + 0.5);
+						pet.setHealth(pet.getMaxHealth());
+						pet.extinguish();
+						pet.setFrozenTicks(0);
+						pet.clearStatusEffects();
+						pet.fallDistance = 0;
+						world.spawnEntity(pet);
+						worldState.storedPets.remove(i);
+						worldState.markDirty();
+					}
+				}
+			}
 		}
 	}
 }
