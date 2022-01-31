@@ -1,3 +1,7 @@
+/*
+ * All Rights Reserved (c) 2022 MoriyaShiine
+ */
+
 package moriyashiine.respawnablepets.common.world;
 
 import moriyashiine.respawnablepets.common.RespawnablePets;
@@ -15,7 +19,7 @@ import java.util.UUID;
 public class ModWorldState extends PersistentState {
 	public final List<NbtCompound> storedPets = new ArrayList<>();
 	public final List<UUID> petsToRespawn = new ArrayList<>();
-	
+
 	public static ModWorldState readNbt(NbtCompound nbt) {
 		ModWorldState worldState = new ModWorldState();
 		NbtList storedPets = nbt.getList("StoredPets", NbtType.COMPOUND);
@@ -28,7 +32,7 @@ public class ModWorldState extends PersistentState {
 		}
 		return worldState;
 	}
-	
+
 	@Override
 	public NbtCompound writeNbt(NbtCompound nbt) {
 		NbtList storedPets = new NbtList();
@@ -41,7 +45,7 @@ public class ModWorldState extends PersistentState {
 		nbt.put("PetsToRespawn", petsToRespawn);
 		return nbt;
 	}
-	
+
 	@SuppressWarnings("ConstantConditions")
 	public static ModWorldState get(World world) {
 		return world.getServer().getOverworld().getPersistentStateManager().getOrCreate(ModWorldState::readNbt, ModWorldState::new, RespawnablePets.MOD_ID);

@@ -1,3 +1,7 @@
+/*
+ * All Rights Reserved (c) 2022 MoriyaShiine
+ */
+
 package moriyashiine.respawnablepets.common.registry;
 
 import moriyashiine.respawnablepets.common.RespawnablePets;

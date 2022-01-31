@@ -1,6 +1,10 @@
+/*
+ * All Rights Reserved (c) 2022 MoriyaShiine
+ */
+
 package moriyashiine.respawnablepets.client;
 
-import moriyashiine.respawnablepets.client.network.message.SpawnSmokeParticlesPacket;
+import moriyashiine.respawnablepets.client.packet.SpawnSmokeParticlesPacket;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

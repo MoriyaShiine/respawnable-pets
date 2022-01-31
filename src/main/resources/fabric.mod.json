@@ -13,7 +13,7 @@
 	"sources": "https://github.com/MoriyaShiine/respawnable-pets",
 	"issues": "https://github.com/MoriyaShiine/respawnable-pets/issues"
   },
-  "license": "CC BY-NC-ND 4.0",
+  "license": "All Rights Reserved",
   "icon": "assets/respawnablepets/icon.png",
   "environment": "*",
   "entrypoints": {
@@ -32,6 +32,6 @@
 	"minecraft": "1.18.x",
 	"java": ">=17",
 	"cloth-config2": ">=6.1.48",
-    "fabric": ">=0.45.2"
+	"fabric": ">=0.45.2"
   }
 }

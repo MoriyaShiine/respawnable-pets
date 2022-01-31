@@ -1,3 +1,7 @@
+/*
+ * All Rights Reserved (c) 2022 MoriyaShiine
+ */
+
 package moriyashiine.respawnablepets.common.item;
 
 import moriyashiine.respawnablepets.common.RespawnablePets;
@@ -17,7 +21,7 @@ public class EthericGemItem extends Item {
 	public EthericGemItem(Settings settings) {
 		super(settings);
 	}
-	
+
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
