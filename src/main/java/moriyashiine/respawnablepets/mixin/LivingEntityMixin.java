@@ -6,9 +6,9 @@ package moriyashiine.respawnablepets.mixin;
 
 import moriyashiine.respawnablepets.client.packet.SpawnSmokeParticlesPacket;
 import moriyashiine.respawnablepets.common.RespawnablePets;
+import moriyashiine.respawnablepets.common.registry.ModEntityTypeTags;
 import moriyashiine.respawnablepets.common.registry.ModItems;
 import moriyashiine.respawnablepets.common.registry.ModSoundEvents;
-import moriyashiine.respawnablepets.common.registry.ModTags;
 import moriyashiine.respawnablepets.common.world.ModWorldState;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.Entity;
@@ -66,7 +66,7 @@ public abstract class LivingEntityMixin extends Entity {
 				if (player.getMainHandStack().isOf(ModItems.ETHERIC_GEM)) {
 					NbtCompound stored = writeNbt(new NbtCompound());
 					if (stored.containsUuid("Owner") && player.getUuid().equals(stored.getUuid("Owner"))) {
-						if (ModTags.BLACKLISTED.contains(getType())) {
+						if (getType().isIn(ModEntityTypeTags.BLACKLISTED)) {
 							player.sendMessage(new TranslatableText(RespawnablePets.MOD_ID + ".message.blacklisted", getDisplayName()), true);
 						} else {
 							ModWorldState worldState = ModWorldState.get(world);
