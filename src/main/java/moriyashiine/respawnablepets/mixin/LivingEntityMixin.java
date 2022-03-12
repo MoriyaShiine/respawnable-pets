@@ -88,7 +88,7 @@ public abstract class LivingEntityMixin extends Entity {
 					} else {
 						player.sendMessage(new TranslatableText(RespawnablePets.MOD_ID + ".message.not_owner", getDisplayName()), true);
 					}
-					cir.cancel();
+					cir.setReturnValue(false);
 				}
 			}
 		}
