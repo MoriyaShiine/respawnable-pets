@@ -1,7 +1,6 @@
 {
   "item.respawnablepets.etheric_gem": "Gemme étherique",
   "subtitles.respawnablepets.entity.generic.teleport": "Une entité se teleporte",
-  "respawnablepets.tooltip.etheric_gem": "Vous permet d'activer la réapparition de vos animaux de companie en frappant",
   "respawnablepets.message.enable_respawn": "%s réapparaitra après sa mort",
   "respawnablepets.message.disable_respawn": "%s ne réapparaitra pas après sa mort",
   "respawnablepets.message.not_owner": "%s ne vous appartient pas",

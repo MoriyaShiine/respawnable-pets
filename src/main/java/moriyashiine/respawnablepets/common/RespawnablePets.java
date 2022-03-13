@@ -45,7 +45,7 @@ public class RespawnablePets implements ModInitializer {
 					if (pet != null) {
 						pet.readNbt(nbt);
 						pet.moveToWorld((ServerWorld) living.world);
-						pet.teleport(living.getX() + 0.5, living.getY() + 0.5, living.getZ() + 0.5);
+						pet.teleport(living.getX(), living.getY(), living.getZ());
 						pet.setHealth(pet.getMaxHealth());
 						pet.extinguish();
 						pet.setFrozenTicks(0);
