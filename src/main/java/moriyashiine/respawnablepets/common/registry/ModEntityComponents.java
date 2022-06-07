@@ -14,7 +14,7 @@ import moriyashiine.respawnablepets.common.component.entity.RespawnableComponent
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.Identifier;
 
-public class ModComponents implements EntityComponentInitializer {
+public class ModEntityComponents implements EntityComponentInitializer {
 	public static final ComponentKey<RespawnableComponent> RESPAWNABLE = ComponentRegistry.getOrCreate(new Identifier(RespawnablePets.MOD_ID, "respawnable"), RespawnableComponent.class);
 
 	@Override

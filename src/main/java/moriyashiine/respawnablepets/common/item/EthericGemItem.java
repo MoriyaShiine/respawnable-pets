@@ -5,13 +5,14 @@
 package moriyashiine.respawnablepets.common.item;
 
 import moriyashiine.respawnablepets.common.RespawnablePets;
-import moriyashiine.respawnablepets.common.registry.ModComponents;
+import moriyashiine.respawnablepets.common.component.entity.RespawnableComponent;
+import moriyashiine.respawnablepets.common.registry.ModEntityComponents;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Box;
@@ -29,18 +30,22 @@ public class EthericGemItem extends Item {
 		if (user.isSneaking()) {
 			if (!world.isClient) {
 				List<MobEntity> entities = world.getEntitiesByClass(MobEntity.class, new Box(user.getBlockPos()).expand(9, 3, 9), foundEntity -> {
-					if (!ModComponents.RESPAWNABLE.get(foundEntity).getRespawnable()) {
+					if (!foundEntity.getComponent(ModEntityComponents.RESPAWNABLE).getRespawnable()) {
 						NbtCompound compound = foundEntity.writeNbt(new NbtCompound());
 						return compound.containsUuid("Owner") && user.getUuid().equals(compound.getUuid("Owner"));
 					}
 					return false;
 				});
 				if (!entities.isEmpty()) {
-					entities.forEach(entity -> ModComponents.RESPAWNABLE.get(entity).setRespawnable(true));
+					entities.forEach(entity -> {
+						RespawnableComponent respawnableComponent = entity.getComponent(ModEntityComponents.RESPAWNABLE);
+						respawnableComponent.setRespawnable(true);
+						respawnableComponent.sync();
+					});
 					if (entities.size() == 1) {
-						user.sendMessage(new TranslatableText(RespawnablePets.MOD_ID + ".message.enable_respawn", entities.get(0).getDisplayName()), true);
+						user.sendMessage(Text.translatable(RespawnablePets.MOD_ID + ".message.enable_respawn", entities.get(0).getDisplayName()), true);
 					} else {
-						user.sendMessage(new TranslatableText(RespawnablePets.MOD_ID + ".message.enable_respawn", new TranslatableText("respawnablepets.message.counted_entities", entities.size())), true);
+						user.sendMessage(Text.translatable(RespawnablePets.MOD_ID + ".message.enable_respawn", Text.translatable("respawnablepets.message.counted_entities", entities.size())), true);
 					}
 				}
 			}

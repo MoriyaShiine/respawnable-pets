@@ -4,10 +4,9 @@
 
 package moriyashiine.respawnablepets.common;
 
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
+import eu.midnightdust.lib.config.MidnightConfig;
 
-@Config(name = RespawnablePets.MOD_ID)
-public class ModConfig implements ConfigData {
-	public int timeToRespawn = -1;
+public class ModConfig extends MidnightConfig {
+	@Entry(min = -1, max = 23999)
+	public static int timeToRespawn = -1;
 }

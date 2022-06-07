@@ -5,7 +5,8 @@
 package moriyashiine.respawnablepets.mixin;
 
 import moriyashiine.respawnablepets.common.RespawnablePets;
-import moriyashiine.respawnablepets.common.registry.ModComponents;
+import moriyashiine.respawnablepets.common.component.entity.RespawnableComponent;
+import moriyashiine.respawnablepets.common.registry.ModEntityComponents;
 import moriyashiine.respawnablepets.common.registry.ModEntityTypeTags;
 import moriyashiine.respawnablepets.common.registry.ModItems;
 import net.minecraft.entity.EntityType;
@@ -13,7 +14,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -34,21 +35,21 @@ public abstract class MobEntityMixin extends LivingEntity {
 			if (!world.isClient) {
 				NbtCompound compound = writeNbt(new NbtCompound());
 				if (compound.containsUuid("Owner") && player.getUuid().equals(compound.getUuid("Owner"))) {
-					if (getType().isIn(ModEntityTypeTags.BLACKLISTED)) {
-						player.sendMessage(new TranslatableText(RespawnablePets.MOD_ID + ".message.blacklisted", getDisplayName()), true);
+					if (getType().isIn(ModEntityTypeTags.CANNOT_RESPAWN)) {
+						player.sendMessage(Text.translatable(RespawnablePets.MOD_ID + ".message.cannot_respawn", getDisplayName()), true);
 					} else {
-						ModComponents.RESPAWNABLE.maybeGet(this).ifPresent(respawnableComponent -> {
-							if (respawnableComponent.getRespawnable()) {
-								player.sendMessage(new TranslatableText(RespawnablePets.MOD_ID + ".message.disable_respawn", getDisplayName()), true);
-								respawnableComponent.setRespawnable(false);
-							} else {
-								player.sendMessage(new TranslatableText(RespawnablePets.MOD_ID + ".message.enable_respawn", getDisplayName()), true);
-								respawnableComponent.setRespawnable(true);
-							}
-						});
+						RespawnableComponent respawnableComponent = getComponent(ModEntityComponents.RESPAWNABLE);
+						if (respawnableComponent.getRespawnable()) {
+							player.sendMessage(Text.translatable(RespawnablePets.MOD_ID + ".message.disable_respawn", getDisplayName()), true);
+							respawnableComponent.setRespawnable(false);
+						} else {
+							player.sendMessage(Text.translatable(RespawnablePets.MOD_ID + ".message.enable_respawn", getDisplayName()), true);
+							respawnableComponent.setRespawnable(true);
+						}
+						respawnableComponent.sync();
 					}
 				} else {
-					player.sendMessage(new TranslatableText(RespawnablePets.MOD_ID + ".message.not_owner", getDisplayName()), true);
+					player.sendMessage(Text.translatable(RespawnablePets.MOD_ID + ".message.not_owner", getDisplayName()), true);
 				}
 			}
 			cir.setReturnValue(ActionResult.success(world.isClient));

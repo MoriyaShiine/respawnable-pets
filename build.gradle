@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.11-SNAPSHOT'
+    id 'fabric-loom' version '0.12-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -16,8 +16,12 @@ repositories {
         url "https://ladysnake.jfrog.io/artifactory/mods"
     }
     maven {
-        name "cloth config"
-        url "https://maven.shedaniel.me"
+        name "mod menu"
+        url "https://maven.terraformersmc.com/releases"
+    }
+    maven {
+        name "modrinth"
+        url "https://api.modrinth.com/maven"
     }
 }
 
@@ -30,11 +34,14 @@ dependencies {
     include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cardinal_components_version}"
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cardinal_components_version}"
     include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cardinal_components_version}"
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-world:${cardinal_components_version}"
+    include "dev.onyxstudios.cardinal-components-api:cardinal-components-world:${cardinal_components_version}"
+    modImplementation "maven.modrinth:midnightlib:${midnightlib_version}"
+    include "maven.modrinth:midnightlib:${midnightlib_version}"
 
-    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+
+    modRuntimeOnly "com.terraformersmc:modmenu:${mod_menu_version}"
 }
 
 processResources {

@@ -6,7 +6,7 @@ package moriyashiine.respawnablepets.common.component.entity;
 
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ClientTickingComponent;
-import moriyashiine.respawnablepets.common.registry.ModComponents;
+import moriyashiine.respawnablepets.common.registry.ModEntityComponents;
 import moriyashiine.respawnablepets.common.registry.ModItems;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
@@ -32,18 +32,21 @@ public class RespawnableComponent implements AutoSyncedComponent, ClientTickingC
 		tag.putBoolean("Respawnable", respawnable);
 	}
 
+	public void sync() {
+		obj.syncComponent(ModEntityComponents.RESPAWNABLE);
+	}
+
 	public boolean getRespawnable() {
 		return respawnable;
 	}
 
 	public void setRespawnable(boolean respawnable) {
 		this.respawnable = respawnable;
-		ModComponents.RESPAWNABLE.sync(obj);
 	}
 
 	@Override
 	public void clientTick() {
-		if (getRespawnable() && obj.age % 20 == 0 && MinecraftClient.getInstance().cameraEntity instanceof LivingEntity living) {
+		if (respawnable && obj.age % 20 == 0 && MinecraftClient.getInstance().cameraEntity instanceof LivingEntity living) {
 			if (living.getMainHandStack().isOf(ModItems.ETHERIC_GEM) || living.getOffHandStack().isOf(ModItems.ETHERIC_GEM)) {
 				NbtCompound stored = obj.writeNbt(new NbtCompound());
 				if (stored.containsUuid("Owner") && living.getUuid().equals(stored.getUuid("Owner"))) {

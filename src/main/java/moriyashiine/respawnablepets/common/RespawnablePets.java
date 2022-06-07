@@ -4,11 +4,11 @@
 
 package moriyashiine.respawnablepets.common;
 
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import eu.midnightdust.lib.config.MidnightConfig;
+import moriyashiine.respawnablepets.common.component.world.StoredPetsComponent;
 import moriyashiine.respawnablepets.common.registry.ModItems;
 import moriyashiine.respawnablepets.common.registry.ModSoundEvents;
-import moriyashiine.respawnablepets.common.world.ModWorldState;
+import moriyashiine.respawnablepets.common.registry.ModWorldComponents;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.entity.LivingEntity;
@@ -20,16 +20,13 @@ import net.minecraft.util.registry.Registry;
 public class RespawnablePets implements ModInitializer {
 	public static final String MOD_ID = "respawnablepets";
 
-	public static ModConfig config;
-
 	@Override
 	public void onInitialize() {
-		AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
-		config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+		MidnightConfig.init(MOD_ID, ModConfig.class);
 		ModItems.init();
 		ModSoundEvents.init();
 		EntitySleepEvents.STOP_SLEEPING.register((entity, sleepingPos) -> {
-			if (RespawnablePets.config.timeToRespawn < 0) {
+			if (ModConfig.timeToRespawn < 0) {
 				respawnPets(entity);
 			}
 		});
@@ -37,9 +34,9 @@ public class RespawnablePets implements ModInitializer {
 
 	public static void respawnPets(LivingEntity living) {
 		if (!living.world.isClient) {
-			ModWorldState worldState = ModWorldState.get(living.world);
-			for (int i = worldState.storedPets.size() - 1; i >= 0; i--) {
-				NbtCompound nbt = worldState.storedPets.get(i);
+			StoredPetsComponent storedPetsComponent = living.getServer().getOverworld().getComponent(ModWorldComponents.STORED_PETS);
+			for (int i = storedPetsComponent.getStoredPets().size() - 1; i >= 0; i--) {
+				NbtCompound nbt = storedPetsComponent.getStoredPets().get(i);
 				if (living.getUuid().equals(nbt.getUuid("Owner"))) {
 					LivingEntity pet = (LivingEntity) Registry.ENTITY_TYPE.get(new Identifier(nbt.getString("id"))).create(living.world);
 					if (pet != null) {
@@ -52,8 +49,7 @@ public class RespawnablePets implements ModInitializer {
 						pet.clearStatusEffects();
 						pet.fallDistance = 0;
 						living.world.spawnEntity(pet);
-						worldState.storedPets.remove(i);
-						worldState.markDirty();
+						storedPetsComponent.getStoredPets().remove(i);
 					}
 				}
 			}
