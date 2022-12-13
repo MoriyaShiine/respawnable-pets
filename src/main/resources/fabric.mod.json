@@ -34,10 +34,10 @@
 	"respawnablepets.mixins.json"
   ],
   "depends": {
-	"fabricloader": ">=0.14.6",
-	"minecraft": "1.19.x",
+	"fabricloader": ">=0.14.11",
+	"minecraft": "~1.19.3",
 	"java": ">=17",
-	"fabric": ">=0.55.1"
+	"fabric": ">=0.69.1"
   },
   "custom": {
 	"cardinal-components": [

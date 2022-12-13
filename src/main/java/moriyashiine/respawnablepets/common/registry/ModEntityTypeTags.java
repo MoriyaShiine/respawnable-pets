@@ -6,10 +6,10 @@ package moriyashiine.respawnablepets.common.registry;
 
 import moriyashiine.respawnablepets.common.RespawnablePets;
 import net.minecraft.entity.EntityType;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public class ModEntityTypeTags {
-	public static final TagKey<EntityType<?>> CANNOT_RESPAWN = TagKey.of(Registry.ENTITY_TYPE_KEY, new Identifier(RespawnablePets.MOD_ID, "cannot_respawn"));
+	public static final TagKey<EntityType<?>> CANNOT_RESPAWN = TagKey.of(Registries.ENTITY_TYPE.getKey(), new Identifier(RespawnablePets.MOD_ID, "cannot_respawn"));
 }
