@@ -6,6 +6,7 @@ package moriyashiine.respawnablepets.common;
 
 import eu.midnightdust.lib.config.MidnightConfig;
 import moriyashiine.respawnablepets.common.component.world.StoredPetsComponent;
+import moriyashiine.respawnablepets.common.registry.ModCriterion;
 import moriyashiine.respawnablepets.common.registry.ModItems;
 import moriyashiine.respawnablepets.common.registry.ModSoundEvents;
 import moriyashiine.respawnablepets.common.registry.ModWorldComponents;
@@ -28,11 +29,16 @@ public class RespawnablePets implements ModInitializer {
 		MidnightConfig.init(MOD_ID, ModConfig.class);
 		ModItems.init();
 		ModSoundEvents.init();
+		ModCriterion.init();
 		EntitySleepEvents.STOP_SLEEPING.register((entity, sleepingPos) -> {
 			if (ModConfig.timeToRespawn < 0) {
 				respawnPets(entity);
 			}
 		});
+	}
+
+	public static Identifier id(String value) {
+		return new Identifier(MOD_ID, value);
 	}
 
 	public static void respawnPets(LivingEntity living) {

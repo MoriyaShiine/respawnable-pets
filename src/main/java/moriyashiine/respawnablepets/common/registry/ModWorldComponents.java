@@ -10,10 +10,9 @@ import dev.onyxstudios.cca.api.v3.world.WorldComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.world.WorldComponentInitializer;
 import moriyashiine.respawnablepets.common.RespawnablePets;
 import moriyashiine.respawnablepets.common.component.world.StoredPetsComponent;
-import net.minecraft.util.Identifier;
 
 public class ModWorldComponents implements WorldComponentInitializer {
-	public static final ComponentKey<StoredPetsComponent> STORED_PETS = ComponentRegistry.getOrCreate(new Identifier(RespawnablePets.MOD_ID, "stored_pets"), StoredPetsComponent.class);
+	public static final ComponentKey<StoredPetsComponent> STORED_PETS = ComponentRegistry.getOrCreate(RespawnablePets.id("stored_pets"), StoredPetsComponent.class);
 
 	@Override
 	public void registerWorldComponentFactories(WorldComponentFactoryRegistry registry) {

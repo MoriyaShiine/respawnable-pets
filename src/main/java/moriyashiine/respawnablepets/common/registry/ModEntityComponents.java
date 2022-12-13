@@ -12,10 +12,9 @@ import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import moriyashiine.respawnablepets.common.RespawnablePets;
 import moriyashiine.respawnablepets.common.component.entity.RespawnableComponent;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.util.Identifier;
 
 public class ModEntityComponents implements EntityComponentInitializer {
-	public static final ComponentKey<RespawnableComponent> RESPAWNABLE = ComponentRegistry.getOrCreate(new Identifier(RespawnablePets.MOD_ID, "respawnable"), RespawnableComponent.class);
+	public static final ComponentKey<RespawnableComponent> RESPAWNABLE = ComponentRegistry.getOrCreate(RespawnablePets.id("respawnable"), RespawnableComponent.class);
 
 	@Override
 	public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {

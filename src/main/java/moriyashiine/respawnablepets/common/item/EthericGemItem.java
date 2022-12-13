@@ -6,12 +6,14 @@ package moriyashiine.respawnablepets.common.item;
 
 import moriyashiine.respawnablepets.common.RespawnablePets;
 import moriyashiine.respawnablepets.common.component.entity.RespawnableComponent;
+import moriyashiine.respawnablepets.common.registry.ModCriterion;
 import moriyashiine.respawnablepets.common.registry.ModEntityComponents;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -37,6 +39,7 @@ public class EthericGemItem extends Item {
 					return false;
 				});
 				if (!entities.isEmpty()) {
+					ModCriterion.MAKE_PET_RESPAWNABLE.trigger((ServerPlayerEntity) user);
 					entities.forEach(entity -> {
 						RespawnableComponent respawnableComponent = entity.getComponent(ModEntityComponents.RESPAWNABLE);
 						respawnableComponent.setRespawnable(true);

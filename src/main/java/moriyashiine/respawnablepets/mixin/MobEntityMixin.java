@@ -6,6 +6,7 @@ package moriyashiine.respawnablepets.mixin;
 
 import moriyashiine.respawnablepets.common.RespawnablePets;
 import moriyashiine.respawnablepets.common.component.entity.RespawnableComponent;
+import moriyashiine.respawnablepets.common.registry.ModCriterion;
 import moriyashiine.respawnablepets.common.registry.ModEntityComponents;
 import moriyashiine.respawnablepets.common.registry.ModEntityTypeTags;
 import moriyashiine.respawnablepets.common.registry.ModItems;
@@ -14,6 +15,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -45,6 +47,7 @@ public abstract class MobEntityMixin extends LivingEntity {
 						} else {
 							player.sendMessage(Text.translatable(RespawnablePets.MOD_ID + ".message.enable_respawn", getDisplayName()), true);
 							respawnableComponent.setRespawnable(true);
+							ModCriterion.MAKE_PET_RESPAWNABLE.trigger((ServerPlayerEntity) player);
 						}
 						respawnableComponent.sync();
 					}

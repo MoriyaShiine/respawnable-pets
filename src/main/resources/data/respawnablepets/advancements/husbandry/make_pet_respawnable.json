@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:husbandry/tame_an_animal",
+  "criteria": {
+	"make_pet_respawnable": {
+	  "trigger": "respawnablepets:make_pet_respawnable"
+	}
+  },
+  "display": {
+	"announce_to_chat": true,
+	"description": {
+	  "translate": "advancements.respawnablepets.husbandry.make_pet_respawnable.description"
+	},
+	"frame": "task",
+	"hidden": false,
+	"icon": {
+	  "item": "respawnablepets:etheric_gem"
+	},
+	"show_toast": true,
+	"title": {
+	  "translate": "advancements.respawnablepets.husbandry.make_pet_respawnable.title"
+	}
+  },
+  "requirements": [
+	[
+	  "make_pet_respawnable"
+	]
+  ]
+}
