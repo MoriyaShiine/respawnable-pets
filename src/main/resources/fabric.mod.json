@@ -37,7 +37,7 @@
 	"fabricloader": ">=0.14.11",
 	"minecraft": "~1.19.3",
 	"java": ">=17",
-	"fabric": ">=0.69.1"
+	"fabric-api": ">=0.69.1"
   },
   "custom": {
 	"cardinal-components": [
