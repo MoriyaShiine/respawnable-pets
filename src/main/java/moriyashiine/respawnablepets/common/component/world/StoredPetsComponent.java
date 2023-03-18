@@ -5,8 +5,8 @@
 package moriyashiine.respawnablepets.common.component.world;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class StoredPetsComponent implements Component {
 
 	@Override
 	public void readFromNbt(NbtCompound tag) {
-		NbtList storedPets = tag.getList("StoredPets", NbtType.COMPOUND);
+		NbtList storedPets = tag.getList("StoredPets", NbtElement.COMPOUND_TYPE);
 		for (int i = 0; i < storedPets.size(); i++) {
 			this.storedPets.add(storedPets.getCompound(i));
 		}

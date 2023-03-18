@@ -6,6 +6,8 @@ package moriyashiine.respawnablepets.common;
 
 import eu.midnightdust.lib.config.MidnightConfig;
 import moriyashiine.respawnablepets.common.component.world.StoredPetsComponent;
+import moriyashiine.respawnablepets.common.event.RespawnPetsEvent;
+import moriyashiine.respawnablepets.common.event.StorePetEvent;
 import moriyashiine.respawnablepets.common.registry.ModCriterion;
 import moriyashiine.respawnablepets.common.registry.ModItems;
 import moriyashiine.respawnablepets.common.registry.ModSoundEvents;
@@ -13,6 +15,7 @@ import moriyashiine.respawnablepets.common.registry.ModWorldComponents;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
@@ -30,11 +33,8 @@ public class RespawnablePets implements ModInitializer {
 		ModItems.init();
 		ModSoundEvents.init();
 		ModCriterion.init();
-		EntitySleepEvents.STOP_SLEEPING.register((entity, sleepingPos) -> {
-			if (ModConfig.timeToRespawn < 0) {
-				respawnPets(entity);
-			}
-		});
+		ServerLivingEntityEvents.ALLOW_DEATH.register(new StorePetEvent());
+		EntitySleepEvents.STOP_SLEEPING.register(new RespawnPetsEvent());
 	}
 
 	public static Identifier id(String value) {
@@ -43,7 +43,7 @@ public class RespawnablePets implements ModInitializer {
 
 	public static void respawnPets(LivingEntity living) {
 		if (!living.world.isClient) {
-			StoredPetsComponent storedPetsComponent = living.getServer().getOverworld().getComponent(ModWorldComponents.STORED_PETS);
+			StoredPetsComponent storedPetsComponent = ModWorldComponents.STORED_PETS.get(living.getServer().getOverworld());
 			for (int i = storedPetsComponent.getStoredPets().size() - 1; i >= 0; i--) {
 				NbtCompound nbt = storedPetsComponent.getStoredPets().get(i);
 				if (living.getUuid().equals(nbt.getUuid("Owner"))) {
@@ -51,11 +51,6 @@ public class RespawnablePets implements ModInitializer {
 					if (pet != null) {
 						pet.readNbt(nbt);
 						FabricDimensions.teleport(pet, (ServerWorld) living.world, new TeleportTarget(living.getPos(), Vec3d.ZERO, pet.getHeadYaw(), pet.getPitch()));
-						pet.setHealth(pet.getMaxHealth());
-						pet.extinguish();
-						pet.setFrozenTicks(0);
-						pet.clearStatusEffects();
-						pet.fallDistance = 0;
 						living.world.spawnEntity(pet);
 						storedPetsComponent.getStoredPets().remove(i);
 					}

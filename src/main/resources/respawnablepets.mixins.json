@@ -4,7 +4,6 @@
   "package": "moriyashiine.respawnablepets.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-	"LivingEntityMixin",
 	"MobEntityMixin",
 	"ServerPlayerEntityMixin"
   ],
