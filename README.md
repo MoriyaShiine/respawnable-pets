@@ -7,6 +7,5 @@ only works on pets you own.
 Toggling respawn status is done via interacting [Use Item/Place Block] with a pet. You can also set multiple pets in a
 9x3x9 area to respawn by sneak using with the Etheric Gem.
 
-Recipe:
-
+### Recipe
 ![Recipe](https://i.imgur.com/295uERj.png)
