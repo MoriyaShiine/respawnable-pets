@@ -1,14 +1,14 @@
 plugins {
-    id 'fabric-loom' version '1.1-SNAPSHOT'
+    id 'fabric-loom' version '1.2-SNAPSHOT'
     id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
-archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
 
 repositories {
     maven {
@@ -30,14 +30,10 @@ dependencies {
     mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${loader_version}"
 
-    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cardinal_components_version}"
-    include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cardinal_components_version}"
-    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cardinal_components_version}"
-    include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cardinal_components_version}"
-    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-world:${cardinal_components_version}"
-    include "dev.onyxstudios.cardinal-components-api:cardinal-components-world:${cardinal_components_version}"
-    modImplementation "maven.modrinth:midnightlib:${midnightlib_version}"
-    include "maven.modrinth:midnightlib:${midnightlib_version}"
+    modApi include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cardinal_components_version}")
+    modApi include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cardinal_components_version}")
+    modApi include("dev.onyxstudios.cardinal-components-api:cardinal-components-world:${cardinal_components_version}")
+    modApi include("maven.modrinth:midnightlib:${midnightlib_version}")
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
@@ -58,6 +54,9 @@ tasks.withType(JavaCompile).configureEach {
 
 java {
     withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 jar {

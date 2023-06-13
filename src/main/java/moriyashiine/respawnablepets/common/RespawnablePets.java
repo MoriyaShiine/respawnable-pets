@@ -42,16 +42,16 @@ public class RespawnablePets implements ModInitializer {
 	}
 
 	public static void respawnPets(LivingEntity living) {
-		if (!living.world.isClient) {
+		if (!living.getWorld().isClient) {
 			StoredPetsComponent storedPetsComponent = ModWorldComponents.STORED_PETS.get(living.getServer().getOverworld());
 			for (int i = storedPetsComponent.getStoredPets().size() - 1; i >= 0; i--) {
 				NbtCompound nbt = storedPetsComponent.getStoredPets().get(i);
 				if (living.getUuid().equals(nbt.getUuid("Owner"))) {
-					LivingEntity pet = (LivingEntity) Registries.ENTITY_TYPE.get(new Identifier(nbt.getString("id"))).create(living.world);
+					LivingEntity pet = (LivingEntity) Registries.ENTITY_TYPE.get(new Identifier(nbt.getString("id"))).create(living.getWorld());
 					if (pet != null) {
 						pet.readNbt(nbt);
-						FabricDimensions.teleport(pet, (ServerWorld) living.world, new TeleportTarget(living.getPos(), Vec3d.ZERO, pet.getHeadYaw(), pet.getPitch()));
-						living.world.spawnEntity(pet);
+						FabricDimensions.teleport(pet, (ServerWorld) living.getWorld(), new TeleportTarget(living.getPos(), Vec3d.ZERO, pet.getHeadYaw(), pet.getPitch()));
+						living.getWorld().spawnEntity(pet);
 						storedPetsComponent.getStoredPets().remove(i);
 					}
 				}

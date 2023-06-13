@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Tameable;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -35,9 +36,11 @@ public class StorePetEvent implements ServerLivingEntityEvents.AllowDeath {
 			PlayerLookup.tracking(entity).forEach(foundPlayer -> SpawnSmokeParticlesPacket.send(foundPlayer, entity));
 			entity.playSound(ModSoundEvents.ENTITY_GENERIC_TELEPORT, 1, 1);
 			entity.remove(Entity.RemovalReason.DISCARDED);
-			PlayerEntity owner = findOwnerByUUID(entity.world, stored.getUuid("Owner"));
-			if (owner != null && entity.world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {
-				owner.sendMessage(entity.getDamageTracker().getDeathMessage(), false);
+			if (entity instanceof Tameable tameable && entity.getWorld().getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {
+				PlayerEntity owner = findOwnerByUUID(entity.getWorld(), tameable.getOwnerUuid());
+				if (owner != null) {
+					owner.sendMessage(entity.getDamageTracker().getDeathMessage(), false);
+				}
 			}
 			return false;
 		}

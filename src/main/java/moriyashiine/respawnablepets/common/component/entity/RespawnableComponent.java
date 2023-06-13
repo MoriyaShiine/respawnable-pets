@@ -10,6 +10,7 @@ import moriyashiine.respawnablepets.common.registry.ModEntityComponents;
 import moriyashiine.respawnablepets.common.registry.ModItems;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Tameable;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
@@ -48,10 +49,9 @@ public class RespawnableComponent implements AutoSyncedComponent, ClientTickingC
 	public void clientTick() {
 		if (respawnable && obj.age % 20 == 0 && MinecraftClient.getInstance().cameraEntity instanceof LivingEntity living) {
 			if (living.getMainHandStack().isOf(ModItems.ETHERIC_GEM) || living.getOffHandStack().isOf(ModItems.ETHERIC_GEM)) {
-				NbtCompound stored = obj.writeNbt(new NbtCompound());
-				if (stored.containsUuid("Owner") && living.getUuid().equals(stored.getUuid("Owner"))) {
+				if (obj instanceof Tameable tameable && living.getUuid().equals(tameable.getOwnerUuid())) {
 					for (int i = 0; i < 16; i++) {
-						obj.world.addParticle(ParticleTypes.GLOW, obj.getParticleX(1), obj.getRandomBodyY(), obj.getParticleZ(1), 0, 0, 0);
+						obj.getWorld().addParticle(ParticleTypes.GLOW, obj.getParticleX(1), obj.getRandomBodyY(), obj.getParticleZ(1), 0, 0, 0);
 					}
 				}
 			}

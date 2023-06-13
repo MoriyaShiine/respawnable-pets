@@ -24,7 +24,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	private void respawnablepets$respawnPetsOnTick(CallbackInfo ci) {
-		if (ModConfig.timeToRespawn >= 0 && world.getTimeOfDay() % 24000 == ModConfig.timeToRespawn) {
+		if (ModConfig.timeToRespawn >= 0 && getWorld().getTimeOfDay() % 24000 == ModConfig.timeToRespawn) {
 			RespawnablePets.respawnPets(this);
 		}
 	}

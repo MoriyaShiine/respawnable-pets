@@ -10,11 +10,11 @@ import moriyashiine.respawnablepets.common.registry.ModCriterion;
 import moriyashiine.respawnablepets.common.registry.ModEntityComponents;
 import moriyashiine.respawnablepets.common.registry.ModEntityTypeTags;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Tameable;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -36,8 +36,7 @@ public class EthericGemItem extends Item {
 			if (!world.isClient) {
 				List<MobEntity> entities = world.getEntitiesByClass(MobEntity.class, new Box(user.getBlockPos()).expand(9, 3, 9), foundEntity -> {
 					if (!ModEntityComponents.RESPAWNABLE.get(foundEntity).getRespawnable()) {
-						NbtCompound compound = foundEntity.writeNbt(new NbtCompound());
-						return compound.containsUuid("Owner") && user.getUuid().equals(compound.getUuid("Owner"));
+						return foundEntity instanceof Tameable tameable && user.getUuid().equals(tameable.getOwnerUuid());
 					}
 					return false;
 				});
@@ -61,9 +60,8 @@ public class EthericGemItem extends Item {
 	}
 
 	public static ActionResult useOnEntity(PlayerEntity player, LivingEntity entity) {
-		if (!player.world.isClient) {
-			NbtCompound compound = entity.writeNbt(new NbtCompound());
-			if (compound.containsUuid("Owner") && player.getUuid().equals(compound.getUuid("Owner"))) {
+		if (!player.getWorld().isClient) {
+			if (entity instanceof Tameable tameable && player.getUuid().equals(tameable.getOwnerUuid())) {
 				if (entity.getType().isIn(ModEntityTypeTags.CANNOT_RESPAWN)) {
 					player.sendMessage(Text.translatable(RespawnablePets.MOD_ID + ".message.cannot_respawn", entity.getDisplayName()), true);
 				} else {
@@ -82,6 +80,6 @@ public class EthericGemItem extends Item {
 				player.sendMessage(Text.translatable(RespawnablePets.MOD_ID + ".message.not_owner", entity.getDisplayName()), true);
 			}
 		}
-		return ActionResult.success(player.world.isClient);
+		return ActionResult.success(player.getWorld().isClient);
 	}
 }
