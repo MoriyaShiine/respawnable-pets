@@ -14,6 +14,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 public class RespawnablePetsClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
-		ClientPlayNetworking.registerGlobalReceiver(SpawnSmokeParticlesPacket.ID, SpawnSmokeParticlesPacket::receive);
+		ClientPlayNetworking.registerGlobalReceiver(SpawnSmokeParticlesPacket.ID, new SpawnSmokeParticlesPacket.Receiver());
 	}
 }

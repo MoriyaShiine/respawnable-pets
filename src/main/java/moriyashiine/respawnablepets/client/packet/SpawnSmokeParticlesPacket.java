@@ -6,6 +6,9 @@ package moriyashiine.respawnablepets.client.packet;
 
 import io.netty.buffer.Unpooled;
 import moriyashiine.respawnablepets.common.RespawnablePets;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
@@ -26,18 +29,22 @@ public class SpawnSmokeParticlesPacket {
 		ServerPlayNetworking.send(player, ID, buf);
 	}
 
-	public static void receive(MinecraftClient client, ClientPlayNetworkHandler network, PacketByteBuf buf, PacketSender sender) {
-		int id = buf.readInt();
-		client.execute(() -> {
-			ClientWorld world = client.world;
-			if (world != null) {
-				Entity entity = world.getEntityById(id);
-				if (entity != null) {
-					for (int i = 0; i < 32; i++) {
-						world.addParticle(ParticleTypes.SMOKE, entity.getParticleX(1), entity.getRandomBodyY(), entity.getParticleZ(1), 0, 0, 0);
+	@Environment(EnvType.CLIENT)
+	public static class Receiver implements ClientPlayNetworking.PlayChannelHandler {
+		@Override
+		public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+			int id = buf.readInt();
+			client.execute(() -> {
+				ClientWorld world = client.world;
+				if (world != null) {
+					Entity entity = world.getEntityById(id);
+					if (entity != null) {
+						for (int i = 0; i < 32; i++) {
+							world.addParticle(ParticleTypes.SMOKE, entity.getParticleX(1), entity.getRandomBodyY(), entity.getParticleZ(1), 0, 0, 0);
+						}
 					}
 				}
-			}
-		});
+			});
+		}
 	}
 }
