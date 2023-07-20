@@ -13,7 +13,7 @@ base {
 repositories {
     maven {
         name "cardinal components"
-        url "https://ladysnake.jfrog.io/artifactory/mods"
+        url "https://maven.ladysnake.org/releases"
     }
     maven {
         name "mod menu"
