@@ -1,19 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-	"N N",
-	"NPN",
-	" N "
-  ],
+  "category": "equipment",
   "key": {
+	"E": {
+	  "item": "minecraft:ender_pearl"
+	},
 	"N": {
 	  "item": "minecraft:gold_nugget"
-	},
-	"P": {
-	  "item": "minecraft:ender_pearl"
 	}
   },
+  "pattern": [
+	"N N",
+	"NEN",
+	" N "
+  ],
   "result": {
 	"item": "respawnablepets:etheric_gem"
-  }
+  },
+  "show_notification": true
 }

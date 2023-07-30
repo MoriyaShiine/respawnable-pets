@@ -1,13 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
-  "rewards": {
-	"recipes": [
-	  "respawnablepets:etheric_gem"
-	]
-  },
   "criteria": {
 	"has_ender_pearl": {
-	  "trigger": "minecraft:inventory_changed",
 	  "conditions": {
 		"items": [
 		  {
@@ -16,13 +10,14 @@
 			]
 		  }
 		]
-	  }
+	  },
+	  "trigger": "minecraft:inventory_changed"
 	},
 	"has_the_recipe": {
-	  "trigger": "minecraft:recipe_unlocked",
 	  "conditions": {
 		"recipe": "respawnablepets:etheric_gem"
-	  }
+	  },
+	  "trigger": "minecraft:recipe_unlocked"
 	}
   },
   "requirements": [
@@ -30,5 +25,11 @@
 	  "has_ender_pearl",
 	  "has_the_recipe"
 	]
-  ]
+  ],
+  "rewards": {
+	"recipes": [
+	  "respawnablepets:etheric_gem"
+	]
+  },
+  "sends_telemetry_event": false
 }

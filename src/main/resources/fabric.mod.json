@@ -17,6 +17,9 @@
   "icon": "assets/respawnablepets/icon.png",
   "environment": "*",
   "entrypoints": {
+	"fabric-datagen": [
+	  "moriyashiine.respawnablepets.data.ModDataGenerator"
+	],
 	"main": [
 	  "moriyashiine.respawnablepets.common.RespawnablePets"
 	],
@@ -24,10 +27,10 @@
 	  "moriyashiine.respawnablepets.client.RespawnablePetsClient"
 	],
 	"cardinal-components-entity": [
-	  "moriyashiine.respawnablepets.common.registry.ModEntityComponents"
+	  "moriyashiine.respawnablepets.common.init.ModEntityComponents"
 	],
 	"cardinal-components-world": [
-	  "moriyashiine.respawnablepets.common.registry.ModWorldComponents"
+	  "moriyashiine.respawnablepets.common.init.ModWorldComponents"
 	]
   },
   "mixins": [
