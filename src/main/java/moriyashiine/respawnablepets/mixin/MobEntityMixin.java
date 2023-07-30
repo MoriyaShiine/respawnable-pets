@@ -5,7 +5,7 @@
 package moriyashiine.respawnablepets.mixin;
 
 import moriyashiine.respawnablepets.common.item.EthericGemItem;
-import moriyashiine.respawnablepets.common.registry.ModItems;
+import moriyashiine.respawnablepets.common.init.ModItems;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;

@@ -6,9 +6,9 @@ package moriyashiine.respawnablepets.common.item;
 
 import moriyashiine.respawnablepets.common.RespawnablePets;
 import moriyashiine.respawnablepets.common.component.entity.RespawnableComponent;
-import moriyashiine.respawnablepets.common.registry.ModCriterion;
-import moriyashiine.respawnablepets.common.registry.ModEntityComponents;
-import moriyashiine.respawnablepets.common.registry.ModEntityTypeTags;
+import moriyashiine.respawnablepets.common.init.ModCriterion;
+import moriyashiine.respawnablepets.common.init.ModEntityComponents;
+import moriyashiine.respawnablepets.common.init.ModEntityTypeTags;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Tameable;
 import net.minecraft.entity.mob.MobEntity;

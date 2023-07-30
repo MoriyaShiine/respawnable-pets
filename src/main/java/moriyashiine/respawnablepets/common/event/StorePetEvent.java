@@ -6,9 +6,9 @@ package moriyashiine.respawnablepets.common.event;
 
 import moriyashiine.respawnablepets.client.packet.SpawnSmokeParticlesPacket;
 import moriyashiine.respawnablepets.common.component.entity.RespawnableComponent;
-import moriyashiine.respawnablepets.common.registry.ModEntityComponents;
-import moriyashiine.respawnablepets.common.registry.ModSoundEvents;
-import moriyashiine.respawnablepets.common.registry.ModWorldComponents;
+import moriyashiine.respawnablepets.common.init.ModEntityComponents;
+import moriyashiine.respawnablepets.common.init.ModSoundEvents;
+import moriyashiine.respawnablepets.common.init.ModWorldComponents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.Entity;

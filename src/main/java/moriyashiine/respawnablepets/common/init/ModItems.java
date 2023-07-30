@@ -2,7 +2,7 @@
  * All Rights Reserved (c) MoriyaShiine
  */
 
-package moriyashiine.respawnablepets.common.registry;
+package moriyashiine.respawnablepets.common.init;
 
 import moriyashiine.respawnablepets.common.RespawnablePets;
 import moriyashiine.respawnablepets.common.item.EthericGemItem;

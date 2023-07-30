@@ -6,8 +6,8 @@ package moriyashiine.respawnablepets.common.component.entity;
 
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ClientTickingComponent;
-import moriyashiine.respawnablepets.common.registry.ModEntityComponents;
-import moriyashiine.respawnablepets.common.registry.ModItems;
+import moriyashiine.respawnablepets.common.init.ModEntityComponents;
+import moriyashiine.respawnablepets.common.init.ModItems;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Tameable;
