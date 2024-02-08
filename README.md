@@ -1,5 +1,4 @@
 # Respawnable Pets
-
 This mod allows your tamed pets to respawn once you next sleep in a bed, with a configurable blacklist via
 the `respawnablepets:cannot_respawn` entity_types tag. Respawning is toggled with a new item, the Etheric Gem, which
 only works on pets you own.
