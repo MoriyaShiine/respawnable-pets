@@ -5,9 +5,7 @@
 	  "conditions": {
 		"items": [
 		  {
-			"items": [
-			  "minecraft:ender_pearl"
-			]
+			"items": "minecraft:ender_pearl"
 		  }
 		]
 	  },
@@ -22,14 +20,13 @@
   },
   "requirements": [
 	[
-	  "has_ender_pearl",
-	  "has_the_recipe"
+	  "has_the_recipe",
+	  "has_ender_pearl"
 	]
   ],
   "rewards": {
 	"recipes": [
 	  "respawnablepets:etheric_gem"
 	]
-  },
-  "sends_telemetry_event": false
+  }
 }

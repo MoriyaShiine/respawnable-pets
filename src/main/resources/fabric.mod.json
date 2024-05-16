@@ -9,7 +9,7 @@
 	"cybercat5555"
   ],
   "contact": {
-	"homepage": "https://www.curseforge.com/minecraft/mc-mods/respawnable-pets",
+	"homepage": "https://modrinth.com/mod/respawnable-pets",
 	"sources": "https://github.com/MoriyaShiine/respawnable-pets",
 	"issues": "https://github.com/MoriyaShiine/respawnable-pets/issues"
   },
@@ -23,9 +23,6 @@
 	"main": [
 	  "moriyashiine.respawnablepets.common.RespawnablePets"
 	],
-	"client": [
-	  "moriyashiine.respawnablepets.client.RespawnablePetsClient"
-	],
 	"cardinal-components-entity": [
 	  "moriyashiine.respawnablepets.common.init.ModEntityComponents"
 	],
@@ -38,9 +35,9 @@
   ],
   "depends": {
 	"fabricloader": "*",
-	"minecraft": "~1.20.1",
-	"java": ">=17",
-	"fabric-api": ">=0.83.1"
+	"minecraft": "~1.20.6",
+	"java": ">=21",
+	"fabric-api": "*"
   },
   "custom": {
 	"cardinal-components": [

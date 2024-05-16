@@ -6,7 +6,6 @@ package moriyashiine.respawnablepets.common.init;
 
 import moriyashiine.respawnablepets.common.RespawnablePets;
 import moriyashiine.respawnablepets.common.item.EthericGemItem;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
@@ -16,7 +15,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Rarity;
 
 public class ModItems {
-	public static final Item ETHERIC_GEM = new EthericGemItem(new FabricItemSettings().rarity(Rarity.RARE).maxCount(1));
+	public static final Item ETHERIC_GEM = new EthericGemItem(new Item.Settings().rarity(Rarity.RARE).maxCount(1));
 
 	public static void init() {
 		Registry.register(Registries.ITEM, RespawnablePets.id("etheric_gem"), ETHERIC_GEM);

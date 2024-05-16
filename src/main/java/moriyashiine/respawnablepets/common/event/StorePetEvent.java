@@ -4,19 +4,18 @@
 
 package moriyashiine.respawnablepets.common.event;
 
-import moriyashiine.respawnablepets.client.packet.SpawnSmokeParticlesPacket;
 import moriyashiine.respawnablepets.common.component.entity.RespawnableComponent;
 import moriyashiine.respawnablepets.common.init.ModEntityComponents;
 import moriyashiine.respawnablepets.common.init.ModSoundEvents;
 import moriyashiine.respawnablepets.common.init.ModWorldComponents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Tameable;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -33,7 +32,7 @@ public class StorePetEvent implements ServerLivingEntityEvents.AllowDeath {
 			NbtCompound stored = new NbtCompound();
 			entity.saveSelfNbt(stored);
 			ModWorldComponents.STORED_PETS.get(entity.getServer().getOverworld()).getStoredPets().add(stored);
-			PlayerLookup.tracking(entity).forEach(foundPlayer -> SpawnSmokeParticlesPacket.send(foundPlayer, entity));
+			((ServerWorld) entity.getWorld()).spawnParticles(ParticleTypes.SMOKE, entity.getX(), entity.getY(), entity.getZ(), 32, entity.getWidth() / 2, entity.getHeight() / 2, entity.getWidth() / 2, 0);
 			entity.playSound(ModSoundEvents.ENTITY_GENERIC_TELEPORT, 1, 1);
 			entity.remove(Entity.RemovalReason.DISCARDED);
 			if (entity instanceof Tameable tameable && entity.getWorld().getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {

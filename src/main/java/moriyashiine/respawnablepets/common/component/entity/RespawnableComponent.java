@@ -4,8 +4,6 @@
 
 package moriyashiine.respawnablepets.common.component.entity;
 
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import dev.onyxstudios.cca.api.v3.component.tick.ClientTickingComponent;
 import moriyashiine.respawnablepets.common.init.ModEntityComponents;
 import moriyashiine.respawnablepets.common.init.ModItems;
 import net.minecraft.client.MinecraftClient;
@@ -14,6 +12,9 @@ import net.minecraft.entity.Tameable;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.RegistryWrapper;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.tick.ClientTickingComponent;
 
 public class RespawnableComponent implements AutoSyncedComponent, ClientTickingComponent {
 	private final MobEntity obj;
@@ -24,12 +25,12 @@ public class RespawnableComponent implements AutoSyncedComponent, ClientTickingC
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
+	public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
 		respawnable = tag.getBoolean("Respawnable");
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
+	public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
 		tag.putBoolean("Respawnable", respawnable);
 	}
 
