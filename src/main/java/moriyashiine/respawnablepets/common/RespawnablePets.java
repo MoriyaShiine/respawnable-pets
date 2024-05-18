@@ -16,6 +16,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
@@ -34,7 +35,8 @@ public class RespawnablePets implements ModInitializer {
 		ModSoundEvents.init();
 		ModCriterion.init();
 		ServerLivingEntityEvents.ALLOW_DEATH.register(new StorePetEvent());
-		EntitySleepEvents.STOP_SLEEPING.register(new RespawnPetsEvent());
+		EntitySleepEvents.STOP_SLEEPING.register(new RespawnPetsEvent.Sleep());
+		ServerTickEvents.END_SERVER_TICK.register(new RespawnPetsEvent.Tick());
 	}
 
 	public static Identifier id(String value) {
@@ -42,18 +44,16 @@ public class RespawnablePets implements ModInitializer {
 	}
 
 	public static void respawnPets(LivingEntity living) {
-		if (!living.getWorld().isClient) {
-			StoredPetsComponent storedPetsComponent = ModWorldComponents.STORED_PETS.get(living.getServer().getOverworld());
-			for (int i = storedPetsComponent.getStoredPets().size() - 1; i >= 0; i--) {
-				NbtCompound nbt = storedPetsComponent.getStoredPets().get(i);
-				if (living.getUuid().equals(nbt.getUuid("Owner"))) {
-					LivingEntity pet = (LivingEntity) Registries.ENTITY_TYPE.get(new Identifier(nbt.getString("id"))).create(living.getWorld());
-					if (pet != null) {
-						pet.readNbt(nbt);
-						FabricDimensions.teleport(pet, (ServerWorld) living.getWorld(), new TeleportTarget(living.getPos(), Vec3d.ZERO, pet.getHeadYaw(), pet.getPitch()));
-						living.getWorld().spawnEntity(pet);
-						storedPetsComponent.getStoredPets().remove(i);
-					}
+		StoredPetsComponent storedPetsComponent = ModWorldComponents.STORED_PETS.get(living.getServer().getOverworld());
+		for (int i = storedPetsComponent.getStoredPets().size() - 1; i >= 0; i--) {
+			NbtCompound nbt = storedPetsComponent.getStoredPets().get(i);
+			if (living.getUuid().equals(nbt.getUuid("Owner"))) {
+				LivingEntity pet = (LivingEntity) Registries.ENTITY_TYPE.get(new Identifier(nbt.getString("id"))).create(living.getWorld());
+				if (pet != null) {
+					pet.readNbt(nbt);
+					FabricDimensions.teleport(pet, (ServerWorld) living.getWorld(), new TeleportTarget(living.getPos(), Vec3d.ZERO, pet.getHeadYaw(), pet.getPitch()));
+					living.getWorld().spawnEntity(pet);
+					storedPetsComponent.getStoredPets().remove(i);
 				}
 			}
 		}

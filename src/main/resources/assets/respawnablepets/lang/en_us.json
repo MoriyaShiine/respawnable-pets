@@ -9,5 +9,6 @@
   "respawnablepets.message.cannot_respawn": "%s cannot respawn",
   "respawnablepets.message.counted_entities": "%d entities",
   "respawnablepets.midnightconfig.title": "Respawnable Pets",
-  "respawnablepets.midnightconfig.timeToRespawn": "Time To Respawn"
+  "respawnablepets.midnightconfig.respawnAfterSleep": "Respawn After Sleep",
+  "respawnablepets.midnightconfig.timeOfDayToRespawn": "Time Of Day To Respawn"
 }
