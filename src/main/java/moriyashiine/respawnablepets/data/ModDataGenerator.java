@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) MoriyaShiine. All Rights Reserved.
+ */
 package moriyashiine.respawnablepets.data;
 
 import moriyashiine.respawnablepets.data.provider.ModAdvancementProvider;

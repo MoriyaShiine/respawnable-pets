@@ -1,7 +1,6 @@
 /*
- * All Rights Reserved (c) MoriyaShiine
+ * Copyright (c) MoriyaShiine. All Rights Reserved.
  */
-
 package moriyashiine.respawnablepets.mixin;
 
 import moriyashiine.respawnablepets.common.init.ModItems;
