@@ -5,6 +5,7 @@ package moriyashiine.respawnablepets.common.init;
 
 import moriyashiine.respawnablepets.common.RespawnablePets;
 import moriyashiine.respawnablepets.common.component.world.StoredPetsComponent;
+import net.minecraft.world.World;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
 import org.ladysnake.cca.api.v3.world.WorldComponentFactoryRegistry;
@@ -15,6 +16,6 @@ public class ModWorldComponents implements WorldComponentInitializer {
 
 	@Override
 	public void registerWorldComponentFactories(WorldComponentFactoryRegistry registry) {
-		registry.register(STORED_PETS, world -> new StoredPetsComponent());
+		registry.registerFor(World.OVERWORLD, STORED_PETS, world -> new StoredPetsComponent());
 	}
 }

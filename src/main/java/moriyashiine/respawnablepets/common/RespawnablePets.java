@@ -12,7 +12,6 @@ import moriyashiine.respawnablepets.common.init.ModItems;
 import moriyashiine.respawnablepets.common.init.ModSoundEvents;
 import moriyashiine.respawnablepets.common.init.ModWorldComponents;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -39,7 +38,7 @@ public class RespawnablePets implements ModInitializer {
 	}
 
 	public static Identifier id(String value) {
-		return new Identifier(MOD_ID, value);
+		return Identifier.of(MOD_ID, value);
 	}
 
 	public static void respawnPets(LivingEntity living) {
@@ -47,10 +46,10 @@ public class RespawnablePets implements ModInitializer {
 		for (int i = storedPetsComponent.getStoredPets().size() - 1; i >= 0; i--) {
 			NbtCompound nbt = storedPetsComponent.getStoredPets().get(i);
 			if (living.getUuid().equals(nbt.getUuid("Owner"))) {
-				LivingEntity pet = (LivingEntity) Registries.ENTITY_TYPE.get(new Identifier(nbt.getString("id"))).create(living.getWorld());
+				LivingEntity pet = (LivingEntity) Registries.ENTITY_TYPE.get(Identifier.of(nbt.getString("id"))).create(living.getWorld());
 				if (pet != null) {
 					pet.readNbt(nbt);
-					FabricDimensions.teleport(pet, (ServerWorld) living.getWorld(), new TeleportTarget(living.getPos(), Vec3d.ZERO, pet.getHeadYaw(), pet.getPitch()));
+					pet.teleportTo(new TeleportTarget((ServerWorld) living.getWorld(), living.getPos(), Vec3d.ZERO, pet.getHeadYaw(), pet.getPitch(), TeleportTarget.NO_OP));
 					living.getWorld().spawnEntity(pet);
 					storedPetsComponent.getStoredPets().remove(i);
 				}
