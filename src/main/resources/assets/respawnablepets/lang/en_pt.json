@@ -1,0 +1,14 @@
+{
+  "item.respawnablepets.etheric_gem": "Jewel of Pet Vitality",
+  "advancements.respawnablepets.husbandry.make_pet_respawnable.title": "Fuzzy Crewmates Forever, Forever",
+  "advancements.respawnablepets.husbandry.make_pet_respawnable.description": "Forge a Jewel of Pet Vitality and use it on your right hand pet to allow it to cheat Davy Jones",
+  "subtitles.respawnablepets.entity.generic.teleport": "Pet Sails",
+  "respawnablepets.message.enable_respawn": "%s will now rejoin on dyin'",
+  "respawnablepets.message.disable_respawn": "%s will no longer rejoin on dyin'",
+  "respawnablepets.message.not_owner": "%s is not in yer crew",
+  "respawnablepets.message.cannot_respawn": "%s cannot respawn",
+  "respawnablepets.message.counted_entities": "%d entities",
+  "respawnablepets.midnightconfig.title": "Respawnable Pets",
+  "respawnablepets.midnightconfig.respawnAfterSleep": "Rejoin After a Nap",
+  "respawnablepets.midnightconfig.timeOfDayToRespawn": "Time Of Day To Rejoin"
+}
