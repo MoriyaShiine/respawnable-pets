@@ -1,0 +1,14 @@
+{
+  "item.respawnablepets.etheric_gem": "Эфирный Самоцвет",
+  "advancements.respawnablepets.husbandry.make_pet_respawnable.title": "Друг человека на Века",
+  "advancements.respawnablepets.husbandry.make_pet_respawnable.description": "Создайте Эфирный Самоцвет и используйте его на питомце, чтобы дать ему вторую жизнь",
+  "subtitles.respawnablepets.entity.generic.teleport": "Существо перемещается",
+  "respawnablepets.message.enable_respawn": "%s теперь возродится после смерти",
+  "respawnablepets.message.disable_respawn": "%s больше не возродится после смерти",
+  "respawnablepets.message.not_owner": "%s не принадлежит вам",
+  "respawnablepets.message.cannot_respawn": "%s не может возродиться",
+  "respawnablepets.message.counted_entities": "%d существ",
+  "respawnablepets.midnightconfig.title": "Перерождающиеся питомцы",
+  "respawnablepets.midnightconfig.respawnAfterSleep": "Переродится После Сна",
+  "respawnablepets.midnightconfig.timeOfDayToRespawn": "Время Суток Для Перерождения"
+}
