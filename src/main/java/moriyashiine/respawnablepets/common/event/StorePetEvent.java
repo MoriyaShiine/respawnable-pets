@@ -17,25 +17,22 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
 
 public class StorePetEvent implements ServerLivingEntityEvents.AllowDeath {
 	@Override
 	public boolean allowDeath(LivingEntity entity, DamageSource damageSource, float damageAmount) {
 		RespawnableComponent respawnableComponent = ModEntityComponents.RESPAWNABLE.getNullable(entity);
-		if (respawnableComponent != null && respawnableComponent.getRespawnable()) {
+		if (respawnableComponent != null && respawnableComponent.isRespawnable()) {
+			ServerWorld world = (ServerWorld) entity.getWorld();
 			healPet(entity);
 			NbtCompound stored = new NbtCompound();
 			entity.saveSelfNbt(stored);
 			ModWorldComponents.STORED_PETS.get(entity.getServer().getOverworld()).getStoredPets().add(stored);
-			((ServerWorld) entity.getWorld()).spawnParticles(ParticleTypes.SMOKE, entity.getX(), entity.getY(), entity.getZ(), 32, entity.getWidth() / 2, entity.getHeight() / 2, entity.getWidth() / 2, 0);
+			world.spawnParticles(ParticleTypes.SMOKE, entity.getX(), entity.getY(), entity.getZ(), 32, entity.getWidth() / 2, entity.getHeight() / 2, entity.getWidth() / 2, 0);
 			entity.playSound(ModSoundEvents.ENTITY_GENERIC_TELEPORT, 1, 1);
 			entity.remove(Entity.RemovalReason.DISCARDED);
-			if (entity instanceof Tameable tameable && entity.getWorld().getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {
-				PlayerEntity owner = findOwnerByUUID(entity.getWorld(), tameable.getOwnerUuid());
+			if (entity instanceof Tameable tameable && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {
+				PlayerEntity owner = world.getServer().getPlayerManager().getPlayer(tameable.getOwnerUuid());
 				if (owner != null) {
 					owner.sendMessage(entity.getDamageTracker().getDeathMessage(), false);
 				}
@@ -43,17 +40,6 @@ public class StorePetEvent implements ServerLivingEntityEvents.AllowDeath {
 			return false;
 		}
 		return true;
-	}
-
-	@Nullable
-	private static PlayerEntity findOwnerByUUID(World world, UUID uuid) {
-		for (ServerWorld serverWorld : world.getServer().getWorlds()) {
-			PlayerEntity player = serverWorld.getPlayerByUuid(uuid);
-			if (player != null) {
-				return player;
-			}
-		}
-		return null;
 	}
 
 	private static void healPet(LivingEntity entity) {

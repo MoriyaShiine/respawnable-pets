@@ -3,7 +3,6 @@
  */
 package moriyashiine.respawnablepets.common.component.entity;
 
-import moriyashiine.respawnablepets.common.init.ModEntityComponents;
 import moriyashiine.respawnablepets.common.init.ModItems;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
@@ -33,11 +32,7 @@ public class RespawnableComponent implements AutoSyncedComponent, ClientTickingC
 		tag.putBoolean("Respawnable", respawnable);
 	}
 
-	public void sync() {
-		obj.syncComponent(ModEntityComponents.RESPAWNABLE);
-	}
-
-	public boolean getRespawnable() {
+	public boolean isRespawnable() {
 		return respawnable;
 	}
 
@@ -47,13 +42,9 @@ public class RespawnableComponent implements AutoSyncedComponent, ClientTickingC
 
 	@Override
 	public void clientTick() {
-		if (respawnable && obj.age % 20 == 0 && MinecraftClient.getInstance().cameraEntity instanceof LivingEntity living) {
-			if (living.getMainHandStack().isOf(ModItems.ETHERIC_GEM) || living.getOffHandStack().isOf(ModItems.ETHERIC_GEM)) {
-				if (obj instanceof Tameable tameable && living.getUuid().equals(tameable.getOwnerUuid())) {
-					for (int i = 0; i < 16; i++) {
-						obj.getWorld().addParticle(ParticleTypes.GLOW, obj.getParticleX(1), obj.getRandomBodyY(), obj.getParticleZ(1), 0, 0, 0);
-					}
-				}
+		if (respawnable && obj.age % 20 == 0 && MinecraftClient.getInstance().getCameraEntity() instanceof LivingEntity living && living.isHolding(ModItems.ETHERIC_GEM) && obj instanceof Tameable tameable && tameable.getOwner() == living) {
+			for (int i = 0; i < 16; i++) {
+				obj.getWorld().addParticle(ParticleTypes.GLOW, obj.getParticleX(1), obj.getRandomBodyY(), obj.getParticleZ(1), 0, 0, 0);
 			}
 		}
 	}

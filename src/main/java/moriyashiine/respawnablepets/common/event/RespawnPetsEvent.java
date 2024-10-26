@@ -7,6 +7,7 @@ import moriyashiine.respawnablepets.common.ModConfig;
 import moriyashiine.respawnablepets.common.RespawnablePets;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -29,7 +30,7 @@ public class RespawnPetsEvent {
 		@Override
 		public void onEndTick(MinecraftServer server) {
 			if (ModConfig.timeOfDayToRespawn >= 0) {
-				for (PlayerEntity player : server.getPlayerManager().getPlayerList()) {
+				for (PlayerEntity player : PlayerLookup.all(server)) {
 					if (player.getWorld().getTimeOfDay() % 24000 == ModConfig.timeOfDayToRespawn) {
 						RespawnablePets.respawnPets(player);
 					}

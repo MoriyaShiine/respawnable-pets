@@ -12,6 +12,6 @@ public class ModSoundEvents {
 	public static final SoundEvent ENTITY_GENERIC_TELEPORT = SoundEvent.of(RespawnablePets.id("entity.generic.teleport"));
 
 	public static void init() {
-		Registry.register(Registries.SOUND_EVENT, ENTITY_GENERIC_TELEPORT.getId(), ENTITY_GENERIC_TELEPORT);
+		Registry.register(Registries.SOUND_EVENT, ENTITY_GENERIC_TELEPORT.id(), ENTITY_GENERIC_TELEPORT);
 	}
 }

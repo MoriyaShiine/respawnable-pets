@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
@@ -46,7 +47,7 @@ public class RespawnablePets implements ModInitializer {
 		for (int i = storedPetsComponent.getStoredPets().size() - 1; i >= 0; i--) {
 			NbtCompound nbt = storedPetsComponent.getStoredPets().get(i);
 			if (living.getUuid().equals(nbt.getUuid("Owner"))) {
-				LivingEntity pet = (LivingEntity) Registries.ENTITY_TYPE.get(Identifier.of(nbt.getString("id"))).create(living.getWorld());
+				LivingEntity pet = (LivingEntity) Registries.ENTITY_TYPE.get(Identifier.of(nbt.getString("id"))).create(living.getWorld(), SpawnReason.TRIGGERED);
 				if (pet != null) {
 					pet.readNbt(nbt);
 					pet.teleportTo(new TeleportTarget((ServerWorld) living.getWorld(), living.getPos(), Vec3d.ZERO, pet.getHeadYaw(), pet.getPitch(), TeleportTarget.NO_OP));

@@ -3,6 +3,7 @@
  */
 package moriyashiine.respawnablepets.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import moriyashiine.respawnablepets.common.init.ModItems;
 import moriyashiine.respawnablepets.common.item.EthericGemItem;
 import net.minecraft.entity.EntityType;
@@ -14,8 +15,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MobEntity.class)
 public abstract class MobEntityMixin extends LivingEntity {
@@ -23,10 +22,11 @@ public abstract class MobEntityMixin extends LivingEntity {
 		super(entityType, world);
 	}
 
-	@Inject(method = "interactWithItem", at = @At("TAIL"), cancellable = true)
-	private void respawnablepets$toggleRespawnStatus(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-		if (cir.getReturnValue() == ActionResult.PASS && player.getStackInHand(hand).isOf(ModItems.ETHERIC_GEM)) {
-			cir.setReturnValue(EthericGemItem.useOnEntity(player, this));
+	@ModifyReturnValue(method = "interactWithItem", at = @At("RETURN"))
+	private ActionResult respawnablepets$toggleRespawnStatus(ActionResult original, PlayerEntity player, Hand hand) {
+		if (original == ActionResult.PASS && player.getStackInHand(hand).isOf(ModItems.ETHERIC_GEM)) {
+			return EthericGemItem.useOnEntity(player, this);
 		}
+		return original;
 	}
 }
