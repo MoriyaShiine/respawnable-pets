@@ -4,6 +4,8 @@
 package moriyashiine.respawnablepets.common.component.entity;
 
 import moriyashiine.respawnablepets.common.init.ModItems;
+import moriyashiine.strawberrylib.api.module.SLibClientUtils;
+import moriyashiine.strawberrylib.api.objects.enums.ParticleAnchor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Tameable;
@@ -43,9 +45,7 @@ public class RespawnableComponent implements AutoSyncedComponent, ClientTickingC
 	@Override
 	public void clientTick() {
 		if (respawnable && obj.age % 20 == 0 && MinecraftClient.getInstance().getCameraEntity() instanceof LivingEntity living && living.isHolding(ModItems.ETHERIC_GEM) && obj instanceof Tameable tameable && tameable.getOwner() == living) {
-			for (int i = 0; i < 16; i++) {
-				obj.getWorld().addParticle(ParticleTypes.GLOW, obj.getParticleX(1), obj.getRandomBodyY(), obj.getParticleZ(1), 0, 0, 0);
-			}
+			SLibClientUtils.addParticles(obj, ParticleTypes.GLOW, 16, ParticleAnchor.BODY);
 		}
 	}
 }

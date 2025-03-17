@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.9-SNAPSHOT'
+    id 'fabric-loom' version '1.10-SNAPSHOT'
     id 'io.github.ladysnake.chenille' version '0.14.0'
 }
 
@@ -29,6 +29,7 @@ fabricApi {
 }
 
 repositories {
+    mavenLocal() // todo use actual repo when slib is real
     chenille.repositories.ladysnake()
     chenille.repositories.terraformers()
     chenille.repositories.modrinth()
@@ -39,12 +40,13 @@ dependencies {
     mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${loader_version}"
 
-    modIncludeApi "org.ladysnake.cardinal-components-api:cardinal-components-base:${cardinal_components_version}"
-    modIncludeApi "org.ladysnake.cardinal-components-api:cardinal-components-entity:${cardinal_components_version}"
+    modApi "org.ladysnake.cardinal-components-api:cardinal-components-base:${cardinal_components_version}"
+    modApi "org.ladysnake.cardinal-components-api:cardinal-components-entity:${cardinal_components_version}"
     modIncludeApi "org.ladysnake.cardinal-components-api:cardinal-components-world:${cardinal_components_version}"
     modIncludeApi "maven.modrinth:midnightlib:${midnightlib_version}"
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    modImplementation "moriyashiine:strawberrylib-private:${strawberrylib_version}"
 
     modRuntimeOnly "com.terraformersmc:modmenu:${mod_menu_version}"
 }

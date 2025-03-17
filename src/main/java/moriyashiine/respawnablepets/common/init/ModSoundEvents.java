@@ -3,15 +3,13 @@
  */
 package moriyashiine.respawnablepets.common.init;
 
-import moriyashiine.respawnablepets.common.RespawnablePets;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 
+import static moriyashiine.strawberrylib.api.module.SLibRegistries.registerSoundEvent;
+
 public class ModSoundEvents {
-	public static final SoundEvent ENTITY_GENERIC_TELEPORT = SoundEvent.of(RespawnablePets.id("entity.generic.teleport"));
+	public static final SoundEvent ENTITY_GENERIC_TELEPORT = registerSoundEvent("entity.generic.teleport");
 
 	public static void init() {
-		Registry.register(Registries.SOUND_EVENT, ENTITY_GENERIC_TELEPORT.id(), ENTITY_GENERIC_TELEPORT);
 	}
 }

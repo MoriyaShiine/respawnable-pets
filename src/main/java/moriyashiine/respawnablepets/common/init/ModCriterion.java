@@ -3,15 +3,13 @@
  */
 package moriyashiine.respawnablepets.common.init;
 
-import moriyashiine.respawnablepets.common.RespawnablePets;
 import net.minecraft.advancement.criterion.TickCriterion;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+
+import static moriyashiine.strawberrylib.api.module.SLibRegistries.registerCriterion;
 
 public class ModCriterion {
-	public static TickCriterion MAKE_PET_RESPAWNABLE = new TickCriterion();
+	public static TickCriterion MAKE_PET_RESPAWNABLE = registerCriterion("make_pet_respawnable", new TickCriterion());
 
 	public static void init() {
-		Registry.register(Registries.CRITERION, RespawnablePets.id("make_pet_respawnable"), MAKE_PET_RESPAWNABLE);
 	}
 }

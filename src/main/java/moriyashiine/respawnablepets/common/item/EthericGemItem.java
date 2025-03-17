@@ -40,10 +40,7 @@ public class EthericGemItem extends Item {
 				if (user instanceof ServerPlayerEntity serverPlayer) {
 					ModCriterion.MAKE_PET_RESPAWNABLE.trigger(serverPlayer);
 				}
-				entities.forEach(entity -> {
-					RespawnableComponent respawnableComponent = ModEntityComponents.RESPAWNABLE.get(entity);
-					respawnableComponent.setRespawnable(true);
-				});
+				entities.forEach(entity -> ModEntityComponents.RESPAWNABLE.get(entity).setRespawnable(true));
 				if (entities.size() == 1) {
 					user.sendMessage(Text.translatable(RespawnablePets.MOD_ID + ".message.enable_respawn", entities.getFirst().getDisplayName()), true);
 				} else {
