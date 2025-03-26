@@ -4,7 +4,6 @@
 package moriyashiine.respawnablepets.common.component.world;
 
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.RegistryWrapper;
 import org.ladysnake.cca.api.v3.component.Component;
@@ -17,10 +16,12 @@ public class StoredPetsComponent implements Component {
 
 	@Override
 	public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-		NbtList storedPets = tag.getList("StoredPets", NbtElement.COMPOUND_TYPE);
-		for (int i = 0; i < storedPets.size(); i++) {
-			this.storedPets.add(storedPets.getCompound(i));
-		}
+		tag.getList("StoredPets").ifPresent(storedPets -> {
+					for (int i = 0; i < storedPets.size(); i++) {
+						storedPets.getCompound(i).ifPresent(this.storedPets::add);
+					}
+				}
+		);
 	}
 
 	@Override

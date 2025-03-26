@@ -9,6 +9,7 @@ import moriyashiine.respawnablepets.common.init.ModWorldComponents;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.minecraft.entity.LazyEntityReference;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
@@ -50,15 +51,19 @@ public class RespawnPetsEvent {
 	private static void respawnPets(LivingEntity living) {
 		StoredPetsComponent storedPetsComponent = ModWorldComponents.STORED_PETS.get(living.getServer().getOverworld());
 		for (int i = storedPetsComponent.getStoredPets().size() - 1; i >= 0; i--) {
-			NbtCompound nbt = storedPetsComponent.getStoredPets().get(i);
-			if (living.getUuid().equals(nbt.getUuid("Owner"))) {
-				LivingEntity pet = (LivingEntity) Registries.ENTITY_TYPE.get(Identifier.of(nbt.getString("id"))).create(living.getWorld(), SpawnReason.TRIGGERED);
-				if (pet != null) {
-					pet.readNbt(nbt);
-					pet.teleportTo(new TeleportTarget((ServerWorld) living.getWorld(), living.getPos(), Vec3d.ZERO, pet.getHeadYaw(), pet.getPitch(), TeleportTarget.NO_OP));
-					living.getWorld().spawnEntity(pet);
-					storedPetsComponent.getStoredPets().remove(i);
-				}
+			int index = i;
+			NbtCompound nbt = storedPetsComponent.getStoredPets().get(index);
+			LazyEntityReference<LivingEntity> lazy = LazyEntityReference.fromNbtOrPlayerName(nbt, "Owner", living.getWorld());
+			if (lazy != null && living.getUuid().equals(lazy.getUuid())) {
+				nbt.getString("id").ifPresent(id -> {
+					LivingEntity pet = (LivingEntity) Registries.ENTITY_TYPE.get(Identifier.of(id)).create(living.getWorld(), SpawnReason.TRIGGERED);
+					if (pet != null) {
+						pet.readNbt(nbt);
+						pet.teleportTo(new TeleportTarget((ServerWorld) living.getWorld(), living.getPos(), Vec3d.ZERO, pet.getHeadYaw(), pet.getPitch(), TeleportTarget.NO_OP));
+						living.getWorld().spawnEntity(pet);
+						storedPetsComponent.getStoredPets().remove(index);
+					}
+				});
 			}
 		}
 	}

@@ -26,7 +26,7 @@ public class RespawnableComponent implements AutoSyncedComponent, ClientTickingC
 
 	@Override
 	public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-		respawnable = tag.getBoolean("Respawnable");
+		respawnable = tag.getBoolean("Respawnable", false);
 	}
 
 	@Override

@@ -8,7 +8,7 @@ import net.minecraft.advancement.criterion.TickCriterion;
 import static moriyashiine.strawberrylib.api.module.SLibRegistries.registerCriterion;
 
 public class ModCriterion {
-	public static TickCriterion MAKE_PET_RESPAWNABLE = registerCriterion("make_pet_respawnable", new TickCriterion());
+	public static final TickCriterion MAKE_PET_RESPAWNABLE = registerCriterion("make_pet_respawnable", new TickCriterion());
 
 	public static void init() {
 	}

@@ -14,9 +14,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Tameable;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.GameRules;
 
@@ -33,11 +33,8 @@ public class StorePetEvent implements ServerLivingEntityEvents.AllowDeath {
 			SLibUtils.addParticles(entity, ParticleTypes.SMOKE, 32, ParticleAnchor.BODY);
 			SLibUtils.playSound(entity, ModSoundEvents.ENTITY_GENERIC_TELEPORT);
 			entity.remove(Entity.RemovalReason.DISCARDED);
-			if (entity instanceof Tameable tameable && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES)) {
-				PlayerEntity owner = world.getServer().getPlayerManager().getPlayer(tameable.getOwnerUuid());
-				if (owner != null) {
-					owner.sendMessage(entity.getDamageTracker().getDeathMessage(), false);
-				}
+			if (entity instanceof Tameable tameable && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES) && tameable.getOwner() instanceof ServerPlayerEntity playerOwner) {
+				playerOwner.sendMessage(entity.getDamageTracker().getDeathMessage());
 			}
 			return false;
 		}
