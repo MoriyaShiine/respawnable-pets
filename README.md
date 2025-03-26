@@ -5,14 +5,12 @@ only works on pets you own.
 Toggling respawn status is done via interacting [Use Item/Place Block] with a pet. You can also set multiple pets in a
 9x3x9 area to respawn by sneak using with the Etheric Gem.
 
-### Recipe
-![Recipe](https://i.imgur.com/295uERj.png)
+**Recipe**
+
+![Recipe](https://github.com/MoriyaShiine/respawnable-pets/blob/main/.webassets/recipe.png?raw=true)
 
 ## External Links
-Support me on Ko-fi! I release new versions of my mods early here <3
-
-[![Ko-fi](https://i.imgur.com/6pkJV6h.png)](https://ko-fi.com/moriyashiine)
-
-Join my Discord!
-
-[![Discord](https://i.imgur.com/72QzxP1.png)](https://discord.gg/Am6M8VQ)
+### Support me on Ko-fi! Any amount is appreciated, and you can get cosmetic benefits for doing so <3
+[![Ko-fi](https://github.com/MoriyaShiine/strawberrylib/blob/main/.webassets/kofi.png?raw=true)](https://ko-fi.com/moriyashiine)
+### Join my Discord!
+[![Discord](https://github.com/MoriyaShiine/strawberrylib/blob/main/.webassets/discord.png?raw=true)](https://discord.gg/Am6M8VQ)
