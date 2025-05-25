@@ -15,6 +15,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Tameable;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.Angerable;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -50,6 +51,9 @@ public class StorePetEvent implements ServerLivingEntityEvents.AllowDeath {
 		entity.fallDistance = 0;
 		if (entity instanceof Angerable angerable) {
 			angerable.stopAnger();
+		}
+		if (entity instanceof TameableEntity tameable) {
+			tameable.setSitting(false);
 		}
 	}
 }
