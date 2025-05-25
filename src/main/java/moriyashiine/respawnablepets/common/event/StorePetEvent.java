@@ -14,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Tameable;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.mob.Angerable;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -26,7 +27,7 @@ public class StorePetEvent implements ServerLivingEntityEvents.AllowDeath {
 		RespawnableComponent respawnableComponent = ModEntityComponents.RESPAWNABLE.getNullable(entity);
 		if (respawnableComponent != null && respawnableComponent.isRespawnable()) {
 			ServerWorld world = (ServerWorld) entity.getWorld();
-			healPet(entity);
+			refreshPet(entity);
 			NbtCompound stored = new NbtCompound();
 			entity.saveSelfNbt(stored);
 			ModWorldComponents.STORED_PETS.get(entity.getServer().getOverworld()).getStoredPets().add(stored);
@@ -41,11 +42,14 @@ public class StorePetEvent implements ServerLivingEntityEvents.AllowDeath {
 		return true;
 	}
 
-	private static void healPet(LivingEntity entity) {
+	private static void refreshPet(LivingEntity entity) {
 		entity.setHealth(entity.getMaxHealth());
 		entity.extinguish();
 		entity.setFrozenTicks(0);
 		entity.clearStatusEffects();
 		entity.fallDistance = 0;
+		if (entity instanceof Angerable angerable) {
+			angerable.stopAnger();
+		}
 	}
 }
