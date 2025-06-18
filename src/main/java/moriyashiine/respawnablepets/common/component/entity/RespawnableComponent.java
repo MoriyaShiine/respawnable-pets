@@ -10,9 +10,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Tameable;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 import org.ladysnake.cca.api.v3.component.tick.ClientTickingComponent;
 
@@ -25,13 +25,13 @@ public class RespawnableComponent implements AutoSyncedComponent, ClientTickingC
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-		respawnable = tag.getBoolean("Respawnable", false);
+	public void readData(ReadView readView) {
+		respawnable = readView.getBoolean("Respawnable", false);
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-		tag.putBoolean("Respawnable", respawnable);
+	public void writeData(WriteView writeView) {
+		writeView.putBoolean("Respawnable", respawnable);
 	}
 
 	public boolean isRespawnable() {

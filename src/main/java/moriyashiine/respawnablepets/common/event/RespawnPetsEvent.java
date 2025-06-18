@@ -13,10 +13,12 @@ import net.minecraft.entity.LazyEntityReference;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.NbtReadView;
+import net.minecraft.storage.ReadView;
+import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -52,13 +54,13 @@ public class RespawnPetsEvent {
 		StoredPetsComponent storedPetsComponent = ModWorldComponents.STORED_PETS.get(living.getServer().getOverworld());
 		for (int i = storedPetsComponent.getStoredPets().size() - 1; i >= 0; i--) {
 			int index = i;
-			NbtCompound nbt = storedPetsComponent.getStoredPets().get(index);
-			LazyEntityReference<LivingEntity> lazy = LazyEntityReference.fromNbtOrPlayerName(nbt, "Owner", living.getWorld());
+			ReadView readView = NbtReadView.create(ErrorReporter.EMPTY, living.getRegistryManager(), storedPetsComponent.getStoredPets().get(index));
+			LazyEntityReference<LivingEntity> lazy = LazyEntityReference.fromDataOrPlayerName(readView, "Owner", living.getWorld());
 			if (lazy != null && living.getUuid().equals(lazy.getUuid())) {
-				nbt.getString("id").ifPresent(id -> {
+				readView.getOptionalString("id").ifPresent(id -> {
 					LivingEntity pet = (LivingEntity) Registries.ENTITY_TYPE.get(Identifier.of(id)).create(living.getWorld(), SpawnReason.TRIGGERED);
 					if (pet != null) {
-						pet.readNbt(nbt);
+						pet.readData(readView);
 						pet.teleportTo(new TeleportTarget((ServerWorld) living.getWorld(), living.getPos(), Vec3d.ZERO, pet.getHeadYaw(), pet.getPitch(), TeleportTarget.NO_OP));
 						living.getWorld().spawnEntity(pet);
 						storedPetsComponent.getStoredPets().remove(index);

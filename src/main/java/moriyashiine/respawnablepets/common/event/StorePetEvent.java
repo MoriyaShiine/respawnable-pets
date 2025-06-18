@@ -16,10 +16,11 @@ import net.minecraft.entity.Tameable;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.NbtWriteView;
+import net.minecraft.util.ErrorReporter;
 import net.minecraft.world.GameRules;
 
 public class StorePetEvent implements ServerLivingEntityEvents.AllowDeath {
@@ -29,9 +30,9 @@ public class StorePetEvent implements ServerLivingEntityEvents.AllowDeath {
 		if (respawnableComponent != null && respawnableComponent.isRespawnable()) {
 			ServerWorld world = (ServerWorld) entity.getWorld();
 			refreshPet(entity);
-			NbtCompound stored = new NbtCompound();
-			entity.saveSelfNbt(stored);
-			ModWorldComponents.STORED_PETS.get(entity.getServer().getOverworld()).getStoredPets().add(stored);
+			NbtWriteView stored = NbtWriteView.create(ErrorReporter.EMPTY, entity.getRegistryManager());
+			entity.saveSelfData(stored);
+			ModWorldComponents.STORED_PETS.get(entity.getServer().getOverworld()).getStoredPets().add(stored.getNbt());
 			SLibUtils.addParticles(entity, ParticleTypes.SMOKE, 32, ParticleAnchor.BODY);
 			SLibUtils.playSound(entity, ModSoundEvents.ENTITY_GENERIC_TELEPORT);
 			entity.remove(Entity.RemovalReason.DISCARDED);
