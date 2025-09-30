@@ -11,7 +11,8 @@ base {
 }
 
 chenille {
-    customLicense = rootProject.file("LICENSE")
+    // todo uncomment this when chenille updates
+//    customLicense = rootProject.file("LICENSE")
     github = new URL("https://github.com/MoriyaShiine/respawnable-pets")
     javaVersion = 21
     configurePublishing {
@@ -51,7 +52,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     modImplementation "moriyashiine:strawberrylib:${strawberrylib_version}"
 
-    modLocalRuntime "com.terraformersmc:modmenu:${mod_menu_version}"
+//    modLocalRuntime "com.terraformersmc:modmenu:${mod_menu_version}"
 }
 
 processResources {

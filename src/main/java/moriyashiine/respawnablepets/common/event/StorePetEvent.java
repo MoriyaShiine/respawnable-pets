@@ -8,7 +8,6 @@ import moriyashiine.respawnablepets.common.init.ModEntityComponents;
 import moriyashiine.respawnablepets.common.init.ModSoundEvents;
 import moriyashiine.respawnablepets.common.init.ModWorldComponents;
 import moriyashiine.strawberrylib.api.module.SLibUtils;
-import moriyashiine.strawberrylib.api.objects.enums.ParticleAnchor;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -28,13 +27,13 @@ public class StorePetEvent implements ServerLivingEntityEvents.AllowDeath {
 	public boolean allowDeath(LivingEntity entity, DamageSource damageSource, float damageAmount) {
 		RespawnableComponent respawnableComponent = ModEntityComponents.RESPAWNABLE.getNullable(entity);
 		if (respawnableComponent != null && respawnableComponent.isRespawnable()) {
-			ServerWorld world = (ServerWorld) entity.getWorld();
+			ServerWorld world = (ServerWorld) entity.getEntityWorld();
 			refreshPet(entity);
 			NbtWriteView stored = NbtWriteView.create(ErrorReporter.EMPTY, entity.getRegistryManager());
 			entity.saveSelfData(stored);
-			ModWorldComponents.STORED_PETS.get(entity.getServer().getOverworld()).getStoredPets().add(stored.getNbt());
-			SLibUtils.addParticles(entity, ParticleTypes.SMOKE, 32, ParticleAnchor.BODY);
+			ModWorldComponents.STORED_PETS.get(world.getServer().getOverworld()).getStoredPets().add(stored.getNbt());
 			SLibUtils.playSound(entity, ModSoundEvents.ENTITY_GENERIC_TELEPORT);
+			world.spawnParticles(ParticleTypes.SMOKE, entity.getX(), entity.getY() + entity.getHeight() / 2, entity.getZ(), 32, entity.getWidth() / 2, entity.getHeight() / 2, entity.getWidth() / 2, 0);
 			entity.remove(Entity.RemovalReason.DISCARDED);
 			if (entity instanceof Tameable tameable && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES) && tameable.getOwner() instanceof ServerPlayerEntity playerOwner) {
 				playerOwner.sendMessage(entity.getDamageTracker().getDeathMessage());

@@ -28,8 +28,8 @@ public class RespawnPetsEvent {
 	public static class Sleep implements EntitySleepEvents.StopSleeping {
 		@Override
 		public void onStopSleeping(LivingEntity entity, BlockPos sleepingPos) {
-			if (ModConfig.respawnAfterSleep && !entity.getWorld().isClient) {
-				long time = entity.getWorld().getTimeOfDay() % 24000;
+			if (ModConfig.respawnAfterSleep && !entity.getEntityWorld().isClient()) {
+				long time = entity.getEntityWorld().getTimeOfDay() % 24000;
 				if (time == 0 || time == 23461) {
 					respawnPets(entity);
 				}
@@ -42,7 +42,7 @@ public class RespawnPetsEvent {
 		public void onEndTick(MinecraftServer server) {
 			if (ModConfig.timeOfDayToRespawn >= 0) {
 				for (PlayerEntity player : PlayerLookup.all(server)) {
-					if (player.getWorld().getTimeOfDay() % 24000 == ModConfig.timeOfDayToRespawn) {
+					if (player.getEntityWorld().getTimeOfDay() % 24000 == ModConfig.timeOfDayToRespawn) {
 						respawnPets(player);
 					}
 				}
@@ -51,18 +51,18 @@ public class RespawnPetsEvent {
 	}
 
 	private static void respawnPets(LivingEntity living) {
-		StoredPetsComponent storedPetsComponent = ModWorldComponents.STORED_PETS.get(living.getServer().getOverworld());
+		StoredPetsComponent storedPetsComponent = ModWorldComponents.STORED_PETS.get(living.getEntityWorld().getServer().getOverworld());
 		for (int i = storedPetsComponent.getStoredPets().size() - 1; i >= 0; i--) {
 			int index = i;
 			ReadView readView = NbtReadView.create(ErrorReporter.EMPTY, living.getRegistryManager(), storedPetsComponent.getStoredPets().get(index));
-			LazyEntityReference<LivingEntity> lazy = LazyEntityReference.fromDataOrPlayerName(readView, "Owner", living.getWorld());
+			LazyEntityReference<LivingEntity> lazy = LazyEntityReference.fromDataOrPlayerName(readView, "Owner", living.getEntityWorld());
 			if (lazy != null && living.getUuid().equals(lazy.getUuid())) {
 				readView.getOptionalString("id").ifPresent(id -> {
-					LivingEntity pet = (LivingEntity) Registries.ENTITY_TYPE.get(Identifier.of(id)).create(living.getWorld(), SpawnReason.TRIGGERED);
+					LivingEntity pet = (LivingEntity) Registries.ENTITY_TYPE.get(Identifier.of(id)).create(living.getEntityWorld(), SpawnReason.TRIGGERED);
 					if (pet != null) {
 						pet.readData(readView);
-						pet.teleportTo(new TeleportTarget((ServerWorld) living.getWorld(), living.getPos(), Vec3d.ZERO, pet.getHeadYaw(), pet.getPitch(), TeleportTarget.NO_OP));
-						living.getWorld().spawnEntity(pet);
+						pet.teleportTo(new TeleportTarget((ServerWorld) living.getEntityWorld(), living.getEntityPos(), Vec3d.ZERO, pet.getHeadYaw(), pet.getPitch(), TeleportTarget.NO_OP));
+						living.getEntityWorld().spawnEntity(pet);
 						storedPetsComponent.getStoredPets().remove(index);
 					}
 				});
