@@ -27,7 +27,7 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
 
 	@Override
 	public void generateAdvancement(RegistryWrapper.WrapperLookup registryLookup, Consumer<AdvancementEntry> consumer) {
-		consumer.accept(Advancement.Builder.create()
+		Advancement.Builder.create()
 				.parent(Identifier.tryParse("husbandry/tame_an_animal"))
 				.display(ModItems.ETHERIC_GEM,
 						Text.translatable("advancements.respawnablepets.husbandry.make_pet_respawnable.title"),
@@ -38,6 +38,6 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
 						true,
 						false)
 				.criterion("make_pet_respawnable", ModCriterion.MAKE_PET_RESPAWNABLE.create(new TickCriterion.Conditions(Optional.empty())))
-				.build(consumer, RespawnablePets.id("husbandry/make_pet_respawnable").toString()));
+				.build(consumer, RespawnablePets.id("husbandry/make_pet_respawnable").toString());
 	}
 }
