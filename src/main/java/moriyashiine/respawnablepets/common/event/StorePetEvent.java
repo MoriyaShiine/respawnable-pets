@@ -21,7 +21,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.storage.NbtWriteView;
 import net.minecraft.util.ErrorReporter;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.rule.GameRules;
 
 public class StorePetEvent implements ServerLivingEntityEvents.AllowDeath {
 	@Override
@@ -36,7 +36,7 @@ public class StorePetEvent implements ServerLivingEntityEvents.AllowDeath {
 			SLibUtils.addParticles(entity, ParticleTypes.SMOKE, 32, ParticleAnchor.BODY);
 			SLibUtils.playSound(entity, ModSoundEvents.ENTITY_GENERIC_TELEPORT);
 			entity.remove(Entity.RemovalReason.DISCARDED);
-			if (entity instanceof Tameable tameable && world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES) && tameable.getOwner() instanceof ServerPlayerEntity playerOwner) {
+			if (entity instanceof Tameable tameable && world.getGameRules().getValue(GameRules.SHOW_DEATH_MESSAGES) && tameable.getOwner() instanceof ServerPlayerEntity playerOwner) {
 				playerOwner.sendMessage(entity.getDamageTracker().getDeathMessage());
 			}
 			return false;
