@@ -51,17 +51,17 @@ public class EthericGemItem extends Item {
 		if (entity instanceof Tameable tameable && tameable.getOwner() == user) {
 			if (entity.getType().isIn(ModEntityTypeTags.CANNOT_RESPAWN)) {
 				user.sendMessage(Text.translatable(RespawnablePets.MOD_ID + ".message.cannot_respawn", entity.getDisplayName()), true);
-			} else {
-				RespawnableComponent respawnableComponent = ModEntityComponents.RESPAWNABLE.get(entity);
-				if (!respawnableComponent.isRespawnable() && user instanceof ServerPlayerEntity serverPlayer) {
-					ModCriterion.MAKE_PET_RESPAWNABLE.trigger(serverPlayer);
-				}
-				user.sendMessage(Text.translatable(RespawnablePets.MOD_ID + ".message." + (respawnableComponent.isRespawnable() ? "disable" : "enable") + "_respawn", entity.getDisplayName()), true);
-				respawnableComponent.setRespawnable(!respawnableComponent.isRespawnable());
+				return ActionResult.FAIL;
 			}
-		} else {
-			user.sendMessage(Text.translatable(RespawnablePets.MOD_ID + ".message.not_owner", entity.getDisplayName()), true);
+			RespawnableComponent respawnableComponent = ModEntityComponents.RESPAWNABLE.get(entity);
+			if (!respawnableComponent.isRespawnable() && user instanceof ServerPlayerEntity player) {
+				ModCriterion.MAKE_PET_RESPAWNABLE.trigger(player);
+			}
+			user.sendMessage(Text.translatable(RespawnablePets.MOD_ID + ".message." + (respawnableComponent.isRespawnable() ? "disable" : "enable") + "_respawn", entity.getDisplayName()), true);
+			respawnableComponent.setRespawnable(!respawnableComponent.isRespawnable());
+			return ActionResult.SUCCESS;
 		}
-		return ActionResult.SUCCESS;
+		user.sendMessage(Text.translatable(RespawnablePets.MOD_ID + ".message.not_owner", entity.getDisplayName()), true);
+		return ActionResult.FAIL;
 	}
 }
