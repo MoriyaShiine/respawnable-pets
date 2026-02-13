@@ -1,4 +1,10 @@
 ------------------------------------------------------
+Version 1.21.11-r3
+------------------------------------------------------
+- fix etheric gem mass toggle respawn function not respecting `respawnablepets:cannot_respawn` entity type tag
+- failing to toggle an entity as respawnable no longer swings the player's hand
+
+------------------------------------------------------
 Version 1.21.11-r2
 ------------------------------------------------------
 - update embedded midnightlib to avoid crashing when another mod doesn't have an updated version
