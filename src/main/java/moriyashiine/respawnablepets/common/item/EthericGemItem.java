@@ -30,12 +30,7 @@ public class EthericGemItem extends Item {
 	@Override
 	public ActionResult use(World world, PlayerEntity user, Hand hand) {
 		if (user.isSneaking()) {
-			List<MobEntity> entities = world.getEntitiesByClass(MobEntity.class, new Box(user.getBlockPos()).expand(9, 3, 9), foundEntity -> {
-				if (!ModEntityComponents.RESPAWNABLE.get(foundEntity).isRespawnable()) {
-					return foundEntity instanceof Tameable tameable && tameable.getOwner() == user;
-				}
-				return false;
-			});
+			List<MobEntity> entities = world.getEntitiesByClass(MobEntity.class, new Box(user.getBlockPos()).expand(9, 3, 9), foundEntity -> !foundEntity.getType().isIn(ModEntityTypeTags.CANNOT_RESPAWN) && !ModEntityComponents.RESPAWNABLE.get(foundEntity).isRespawnable() && foundEntity instanceof Tameable tameable && tameable.getOwner() == user);
 			if (!entities.isEmpty()) {
 				if (user instanceof ServerPlayerEntity serverPlayer) {
 					ModCriterion.MAKE_PET_RESPAWNABLE.trigger(serverPlayer);
