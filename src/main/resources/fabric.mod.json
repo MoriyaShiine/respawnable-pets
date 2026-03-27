@@ -26,8 +26,8 @@
 	"cardinal-components-entity": [
 	  "moriyashiine.respawnablepets.common.init.ModEntityComponents"
 	],
-	"cardinal-components-world": [
-	  "moriyashiine.respawnablepets.common.init.ModWorldComponents"
+	"cardinal-components-level": [
+	  "moriyashiine.respawnablepets.common.init.ModLevelComponents"
 	]
   },
   "mixins": [
@@ -35,8 +35,8 @@
   ],
   "depends": {
 	"fabricloader": "*",
-	"minecraft": "~1.21.11",
-	"java": ">=21",
+	"minecraft": "~26.1",
+	"java": ">=25",
 	"fabric-api": "*",
 	"strawberrylib": "*"
   },

@@ -1,11 +1,14 @@
 {
   "required": true,
   "package": "moriyashiine.respawnablepets.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [
-	"MobEntityMixin"
+	"MobMixin"
   ],
   "injectors": {
 	"defaultRequire": 1
+  },
+  "overwrites": {
+	"requireAnnotations": true
   }
 }

@@ -10,7 +10,6 @@
 	  "translate": "advancements.respawnablepets.husbandry.make_pet_respawnable.description"
 	},
 	"icon": {
-	  "count": 1,
 	  "id": "respawnablepets:etheric_gem"
 	},
 	"title": {

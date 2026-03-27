@@ -1,43 +1,44 @@
 /*
  * Copyright (c) MoriyaShiine. All Rights Reserved.
  */
+
 package moriyashiine.respawnablepets.data.provider;
 
 import moriyashiine.respawnablepets.common.RespawnablePets;
-import moriyashiine.respawnablepets.common.init.ModCriterion;
 import moriyashiine.respawnablepets.common.init.ModItems;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import moriyashiine.respawnablepets.common.init.ModTriggers;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
-import net.minecraft.advancement.Advancement;
-import net.minecraft.advancement.AdvancementEntry;
-import net.minecraft.advancement.AdvancementFrame;
-import net.minecraft.advancement.criterion.TickCriterion;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementType;
+import net.minecraft.advancements.criterion.PlayerTrigger;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class ModAdvancementProvider extends FabricAdvancementProvider {
-	public ModAdvancementProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
-		super(output, registryLookup);
+	public ModAdvancementProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+		super(output, registriesFuture);
 	}
 
 	@Override
-	public void generateAdvancement(RegistryWrapper.WrapperLookup registryLookup, Consumer<AdvancementEntry> consumer) {
-		Advancement.Builder.create()
+	public void generateAdvancement(HolderLookup.Provider registries, Consumer<AdvancementHolder> consumer) {
+		Advancement.Builder.advancement()
 				.parent(Identifier.tryParse("husbandry/tame_an_animal"))
 				.display(ModItems.ETHERIC_GEM,
-						Text.translatable("advancements.respawnablepets.husbandry.make_pet_respawnable.title"),
-						Text.translatable("advancements.respawnablepets.husbandry.make_pet_respawnable.description"),
+						Component.translatable("advancements.respawnablepets.husbandry.make_pet_respawnable.title"),
+						Component.translatable("advancements.respawnablepets.husbandry.make_pet_respawnable.description"),
 						null,
-						AdvancementFrame.TASK,
+						AdvancementType.TASK,
 						true,
 						true,
 						false)
-				.criterion("make_pet_respawnable", ModCriterion.MAKE_PET_RESPAWNABLE.create(new TickCriterion.Conditions(Optional.empty())))
-				.build(consumer, RespawnablePets.id("husbandry/make_pet_respawnable").toString());
+				.addCriterion("make_pet_respawnable", ModTriggers.MAKE_PET_RESPAWNABLE.createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty())))
+				.save(consumer, RespawnablePets.id("husbandry/make_pet_respawnable").toString());
 	}
 }

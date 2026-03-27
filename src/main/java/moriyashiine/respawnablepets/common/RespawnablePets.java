@@ -1,20 +1,21 @@
 /*
  * Copyright (c) MoriyaShiine. All Rights Reserved.
  */
+
 package moriyashiine.respawnablepets.common;
 
 import eu.midnightdust.lib.config.MidnightConfig;
 import moriyashiine.respawnablepets.common.event.RespawnPetsEvent;
 import moriyashiine.respawnablepets.common.event.StorePetEvent;
-import moriyashiine.respawnablepets.common.init.ModCriterion;
 import moriyashiine.respawnablepets.common.init.ModItems;
 import moriyashiine.respawnablepets.common.init.ModSoundEvents;
+import moriyashiine.respawnablepets.common.init.ModTriggers;
 import moriyashiine.strawberrylib.api.SLib;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 
 public class RespawnablePets implements ModInitializer {
 	public static final String MOD_ID = "respawnablepets";
@@ -28,13 +29,13 @@ public class RespawnablePets implements ModInitializer {
 	}
 
 	public static Identifier id(String value) {
-		return Identifier.of(MOD_ID, value);
+		return Identifier.fromNamespaceAndPath(MOD_ID, value);
 	}
 
 	private void initRegistries() {
 		ModItems.init();
+		ModTriggers.init();
 		ModSoundEvents.init();
-		ModCriterion.init();
 	}
 
 	private void initEvents() {
