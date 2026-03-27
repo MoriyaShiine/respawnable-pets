@@ -40,7 +40,7 @@ public class RespawnablePets implements ModInitializer {
 
 	private void initEvents() {
 		ServerLivingEntityEvents.ALLOW_DEATH.register(new StorePetEvent());
-		EntitySleepEvents.STOP_SLEEPING.register(new RespawnPetsEvent.Sleep());
+		EntitySleepEvents.STOP_SLEEPING.register(new RespawnPetsEvent.StopSleeping());
 		ServerTickEvents.END_SERVER_TICK.register(new RespawnPetsEvent.Tick());
 	}
 }
