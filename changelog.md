@@ -1,4 +1,12 @@
 ------------------------------------------------------
+Version 26.1-r1
+------------------------------------------------------
+- update to 26.1
+- respawning pets from sleeping no longer requires fully skipping to day, just staying in bed for 5 seconds
+  - fix https://github.com/MoriyaShiine/respawnable-pets/issues/43
+  - fix https://github.com/MoriyaShiine/respawnable-pets/issues/44
+
+------------------------------------------------------
 Version 1.21.11-r3
 ------------------------------------------------------
 - fix etheric gem mass toggle respawn function not respecting `respawnablepets:cannot_respawn` entity type tag
