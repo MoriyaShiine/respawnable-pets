@@ -1,8 +1,10 @@
 {
   "entity.generic.teleport": {
 	"sounds": [
-	  "mob/endermen/portal",
-	  "mob/endermen/portal2"
+	  {
+		"type": "event",
+		"name": "minecraft:entity.enderman.teleport"
+	  }
 	],
 	"subtitle": "subtitles.respawnablepets.entity.generic.teleport"
   }
