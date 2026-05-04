@@ -31,8 +31,8 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
 		Advancement.Builder.advancement()
 				.parent(Identifier.tryParse("husbandry/tame_an_animal"))
 				.display(ModItems.ETHERIC_GEM,
-						Component.translatable("advancements.respawnablepets.husbandry.make_pet_respawnable.title"),
-						Component.translatable("advancements.respawnablepets.husbandry.make_pet_respawnable.description"),
+						Component.translatable("advancements." + RespawnablePets.MOD_ID + ".husbandry.make_pet_respawnable.title"),
+						Component.translatable("advancements." + RespawnablePets.MOD_ID + ".husbandry.make_pet_respawnable.description"),
 						null,
 						AdvancementType.TASK,
 						true,

@@ -1,0 +1,8 @@
+{
+  "item.respawnable-pets.etheric_gem": "Gemme étherique",
+  "subtitles.respawnable-pets.entity.generic.teleport": "Une entité se teleporte",
+  "respawnable-pets.message.enable_respawn": "%s réapparaitra après sa mort",
+  "respawnable-pets.message.disable_respawn": "%s ne réapparaitra pas après sa mort",
+  "respawnable-pets.message.not_owner": "%s ne vous appartient pas",
+  "respawnable-pets.message.blacklisted": "%s est une entité dans la liste noire"
+}

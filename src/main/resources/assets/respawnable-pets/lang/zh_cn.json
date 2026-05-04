@@ -1,0 +1,7 @@
+{
+  "item.respawnable-pets.etheric_gem": "以太宝珠",
+  "respawnable-pets.message.enable_respawn": "%s 现在会于去世后重生",
+  "respawnable-pets.message.disable_respawn": "%s 现在无法于去世后重生",
+  "respawnable-pets.message.not_owner": "%s 并不属于你",
+  "respawnable-pets.message.blacklisted": "%s 是被加入黑名单的生物"
+}

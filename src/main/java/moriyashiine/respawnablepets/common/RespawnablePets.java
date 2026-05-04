@@ -18,7 +18,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.resources.Identifier;
 
 public class RespawnablePets implements ModInitializer {
-	public static final String MOD_ID = "respawnablepets";
+	public static final String MOD_ID = "respawnable-pets";
 
 	@Override
 	public void onInitialize() {

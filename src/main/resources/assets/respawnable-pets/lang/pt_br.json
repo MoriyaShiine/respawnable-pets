@@ -1,0 +1,7 @@
+{
+  "item.respawnable-pets.etheric_gem": "Gema etérica",
+  "respawnable-pets.message.enable_respawn": "%s agora irá reaparecer ao morrer",
+  "respawnable-pets.message.disable_respawn": "%s não irá mais reaparecer ao morrer",
+  "respawnable-pets.message.not_owner": "Você não é o dono de %s",
+  "respawnable-pets.message.blacklisted": "%s é uma entidade na lista negra"
+}

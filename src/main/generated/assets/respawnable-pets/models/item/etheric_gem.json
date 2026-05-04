@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-	"layer0": "respawnablepets:item/etheric_gem"
+	"layer0": "respawnable-pets:item/etheric_gem"
   }
 }

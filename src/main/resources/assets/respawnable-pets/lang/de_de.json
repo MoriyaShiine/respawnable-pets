@@ -1,0 +1,14 @@
+{
+  "item.respawnable-pets.etheric_gem": "Etherischer Edelstein",
+  "advancements.respawnable-pets.husbandry.make_pet_respawnable.title": "Beste Freunde für immer und ewig",
+  "advancements.respawnable-pets.husbandry.make_pet_respawnable.description": "Stelle einen Etherischen Edelstein her und verwende ihn an einem gezähmten Haustier, um dem Tier zu erlauben, wiederbelebt zu werden",
+  "subtitles.respawnable-pets.entity.generic.teleport": "Kreatur teleportiert",
+  "respawnable-pets.message.enable_respawn": "%s wird nun beim Tod wiederbelebt",
+  "respawnable-pets.message.disable_respawn": "%s wird nicht mehr beim Tod wiederbelebt",
+  "respawnable-pets.message.not_owner": "%s gehört dir nicht",
+  "respawnable-pets.message.cannot_respawn": "%s kann nicht wiederbelebt werden",
+  "respawnable-pets.message.counted_entities": "%d Kreaturen",
+  "respawnable-pets.midnightconfig.title": "Wiederbelebbare Haustiere",
+  "respawnable-pets.midnightconfig.respawnAfterSleep": "Wiederbeleben nach Schlaf",
+  "respawnable-pets.midnightconfig.timeOfDayToRespawn": "Tageszeit zum wiederbeleben"
+}

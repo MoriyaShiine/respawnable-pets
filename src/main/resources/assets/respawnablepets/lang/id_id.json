@@ -1,8 +1,0 @@
-{
-  "item.respawnablepets.etheric_gem": "Permata Eterik",
-  "subtitles.respawnablepets.entity.generic.teleport": "Entitas berteleportasi",
-  "respawnablepets.message.enable_respawn": "%s sekarang akan hidup kembali saat mati",
-  "respawnablepets.message.disable_respawn": "%s tidak akan hidup kembali saat mati",
-  "respawnablepets.message.not_owner": "%s bukan peliharaanmu",
-  "respawnablepets.message.blacklisted": "%s merupakan entitas yang masuk daftar hitam"
-}
