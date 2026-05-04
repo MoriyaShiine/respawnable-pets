@@ -2,12 +2,12 @@
  * Copyright (c) MoriyaShiine. All Rights Reserved.
  */
 
-package moriyashiine.respawnablepets.data;
+package moriyashiine.respawnablepets.datagen;
 
-import moriyashiine.respawnablepets.data.provider.ModAdvancementProvider;
-import moriyashiine.respawnablepets.data.provider.ModModelProvider;
-import moriyashiine.respawnablepets.data.provider.ModRecipeProvider;
-import moriyashiine.respawnablepets.data.provider.ModSoundsProvider;
+import moriyashiine.respawnablepets.datagen.provider.ModAdvancementProvider;
+import moriyashiine.respawnablepets.datagen.provider.ModModelProvider;
+import moriyashiine.respawnablepets.datagen.provider.ModRecipeProvider;
+import moriyashiine.respawnablepets.datagen.provider.ModSoundsProvider;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 

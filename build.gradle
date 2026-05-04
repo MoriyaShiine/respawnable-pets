@@ -6,10 +6,6 @@ plugins {
 version = project.mod_version
 group = project.maven_group
 
-base {
-    archivesName = project.archives_base_name
-}
-
 chenille {
     customLicense = rootProject.file("LICENSE")
     github = new URL("https://github.com/MoriyaShiine/respawnable-pets")
@@ -25,6 +21,7 @@ chenille {
 fabricApi {
     configureDataGeneration() {
         client = true
+        modId = project.archives_base_name
     }
 }
 
@@ -39,10 +36,8 @@ dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${loader_version}"
 
-    implementation "org.ladysnake.cardinal-components-api:cardinal-components-base:${cardinal_components_version}"
-    implementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:${cardinal_components_version}"
-    includeImplementation "org.ladysnake.cardinal-components-api:cardinal-components-level:${cardinal_components_version}"
-    includeImplementation "maven.modrinth:midnightlib:${midnightlib_version}"
+    includeApi "org.ladysnake.cardinal-components-api:cardinal-components-level:${cardinal_components_version}"
+    includeApi "maven.modrinth:midnightlib:${midnightlib_version}"
 
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
     implementation "moriyashiine:strawberrylib:${strawberrylib_version}"
@@ -51,10 +46,11 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version
+    def version = project.version
+    inputs.property "version", version
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": version
     }
 }
 
@@ -70,9 +66,16 @@ java {
 }
 
 jar {
-    inputs.property "archivesName", project.base.archivesName
+    def projectName = project.name
+    inputs.property "projectName", projectName
 
     from("LICENSE") {
-        rename { "${it}_${inputs.properties.archivesName}"}
+        rename { "${it}_$projectName"}
     }
+
+    exclude "*/*/datagen/"
+}
+
+sourcesJar {
+    exclude "/*/*/datagen/"
 }

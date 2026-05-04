@@ -18,7 +18,7 @@
   "environment": "*",
   "entrypoints": {
 	"fabric-datagen": [
-	  "moriyashiine.respawnablepets.data.ModDataGenerator"
+	  "moriyashiine.respawnablepets.datagen.ModDataGenerator"
 	],
 	"main": [
 	  "moriyashiine.respawnablepets.common.RespawnablePets"

@@ -2,7 +2,7 @@
  * Copyright (c) MoriyaShiine. All Rights Reserved.
  */
 
-package moriyashiine.respawnablepets.data.provider;
+package moriyashiine.respawnablepets.datagen.provider;
 
 import moriyashiine.respawnablepets.common.init.ModItems;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
