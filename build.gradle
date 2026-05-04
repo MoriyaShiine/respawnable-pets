@@ -72,10 +72,4 @@ jar {
     from("LICENSE") {
         rename { "${it}_$projectName"}
     }
-
-    exclude "*/*/datagen/"
-}
-
-sourcesJar {
-    exclude "/*/*/datagen/"
 }
