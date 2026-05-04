@@ -4,7 +4,6 @@
 
 package moriyashiine.respawnablepets.common.world.item;
 
-import moriyashiine.respawnablepets.common.RespawnablePets;
 import moriyashiine.respawnablepets.common.component.entity.RespawnableComponent;
 import moriyashiine.respawnablepets.common.init.ModEntityComponents;
 import moriyashiine.respawnablepets.common.init.ModTriggers;
@@ -38,9 +37,9 @@ public class EthericGemItem extends Item {
 				}
 				entities.forEach(entity -> ModEntityComponents.RESPAWNABLE.get(entity).setRespawnable(true));
 				if (entities.size() == 1) {
-					player.sendOverlayMessage(Component.translatable(RespawnablePets.MOD_ID + ".message.enable_respawn", entities.getFirst().getDisplayName()));
+					player.sendOverlayMessage(Component.translatable("respawnable-pets.message.enable_respawn", entities.getFirst().getDisplayName()));
 				} else {
-					player.sendOverlayMessage(Component.translatable(RespawnablePets.MOD_ID + ".message.enable_respawn", Component.translatable("respawnablepets.message.counted_entities", entities.size())));
+					player.sendOverlayMessage(Component.translatable("respawnable-pets.message.enable_respawn", Component.translatable("respawnable-pets.message.counted_entities", entities.size())));
 				}
 				return InteractionResult.SUCCESS;
 			}
@@ -51,18 +50,18 @@ public class EthericGemItem extends Item {
 	public static InteractionResult useOnEntity(Player user, LivingEntity entity) {
 		if (entity instanceof OwnableEntity tameable && tameable.getOwner() == user) {
 			if (entity.is(ModEntityTypeTags.CANNOT_RESPAWN)) {
-				user.sendOverlayMessage(Component.translatable(RespawnablePets.MOD_ID + ".message.cannot_respawn", entity.getDisplayName()));
+				user.sendOverlayMessage(Component.translatable("respawnable-pets.message.cannot_respawn", entity.getDisplayName()));
 				return InteractionResult.FAIL;
 			}
 			RespawnableComponent respawnableComponent = ModEntityComponents.RESPAWNABLE.get(entity);
 			if (!respawnableComponent.isRespawnable() && user instanceof ServerPlayer player) {
 				ModTriggers.MAKE_PET_RESPAWNABLE.trigger(player);
 			}
-			user.sendOverlayMessage(Component.translatable(RespawnablePets.MOD_ID + ".message." + (respawnableComponent.isRespawnable() ? "disable" : "enable") + "_respawn", entity.getDisplayName()));
+			user.sendOverlayMessage(Component.translatable(respawnableComponent.isRespawnable() ? "respawnable-pets.message.disable_respawn" : "respawnable-pets.message.enable_respawn", entity.getDisplayName()));
 			respawnableComponent.setRespawnable(!respawnableComponent.isRespawnable());
 			return InteractionResult.SUCCESS;
 		}
-		user.sendOverlayMessage(Component.translatable(RespawnablePets.MOD_ID + ".message.not_owner", entity.getDisplayName()));
+		user.sendOverlayMessage(Component.translatable("respawnable-pets.message.not_owner", entity.getDisplayName()));
 		return InteractionResult.FAIL;
 	}
 }
