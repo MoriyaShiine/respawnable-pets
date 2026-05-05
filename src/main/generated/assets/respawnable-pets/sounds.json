@@ -6,6 +6,6 @@
 		"name": "minecraft:entity.enderman.teleport"
 	  }
 	],
-	"subtitle": "subtitles.respawnablepets.entity.generic.teleport"
+	"subtitle": "subtitles.respawnable-pets.entity.generic.teleport"
   }
 }
