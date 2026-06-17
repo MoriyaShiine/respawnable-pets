@@ -7,14 +7,11 @@ package moriyashiine.respawnablepets.common;
 import eu.midnightdust.lib.config.MidnightConfig;
 import moriyashiine.respawnablepets.common.event.RespawnPetsEvent;
 import moriyashiine.respawnablepets.common.event.StorePetEvent;
-import moriyashiine.respawnablepets.common.init.ModItems;
-import moriyashiine.respawnablepets.common.init.ModSoundEvents;
-import moriyashiine.respawnablepets.common.init.ModTriggers;
+import moriyashiine.respawnablepets.common.init.RespawnablePetsItems;
+import moriyashiine.respawnablepets.common.init.RespawnablePetsSoundEvents;
+import moriyashiine.respawnablepets.common.init.RespawnablePetsTriggers;
 import moriyashiine.strawberrylib.api.SLib;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.resources.Identifier;
 
 public class RespawnablePets implements ModInitializer {
@@ -22,7 +19,7 @@ public class RespawnablePets implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		MidnightConfig.init(MOD_ID, ModConfig.class);
+		MidnightConfig.init(MOD_ID, RespawnablePetsConfig.class);
 		SLib.init(MOD_ID);
 		initRegistries();
 		initEvents();
@@ -33,14 +30,13 @@ public class RespawnablePets implements ModInitializer {
 	}
 
 	private void initRegistries() {
-		ModItems.init();
-		ModTriggers.init();
-		ModSoundEvents.init();
+		RespawnablePetsItems.init();
+		RespawnablePetsTriggers.init();
+		RespawnablePetsSoundEvents.init();
 	}
 
 	private void initEvents() {
-		ServerLivingEntityEvents.ALLOW_DEATH.register(new StorePetEvent());
-		EntitySleepEvents.STOP_SLEEPING.register(new RespawnPetsEvent.StopSleeping());
-		ServerTickEvents.END_SERVER_TICK.register(new RespawnPetsEvent.Tick());
+		RespawnPetsEvent.init();
+		StorePetEvent.init();
 	}
 }

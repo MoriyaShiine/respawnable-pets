@@ -13,7 +13,7 @@ import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
 import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
 
-public class ModEntityComponents implements EntityComponentInitializer {
+public class RespawnablePetsEntityComponents implements EntityComponentInitializer {
 	public static final ComponentKey<RespawnableComponent> RESPAWNABLE = ComponentRegistry.getOrCreate(RespawnablePets.id("respawnable"), RespawnableComponent.class);
 
 	@Override

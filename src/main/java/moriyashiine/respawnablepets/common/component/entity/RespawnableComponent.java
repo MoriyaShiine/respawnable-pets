@@ -4,7 +4,7 @@
 
 package moriyashiine.respawnablepets.common.component.entity;
 
-import moriyashiine.respawnablepets.common.init.ModItems;
+import moriyashiine.respawnablepets.common.init.RespawnablePetsItems;
 import moriyashiine.strawberrylib.api.module.SLibClientUtils;
 import moriyashiine.strawberrylib.api.objects.enums.ParticleAnchor;
 import net.minecraft.client.Minecraft;
@@ -45,7 +45,7 @@ public class RespawnableComponent implements AutoSyncedComponent, ClientTickingC
 
 	@Override
 	public void clientTick() {
-		if (respawnable && obj.tickCount % 20 == 0 && Minecraft.getInstance().getCameraEntity() instanceof LivingEntity living && living.isHolding(ModItems.ETHERIC_GEM) && obj instanceof OwnableEntity ownable && ownable.getOwner() == living) {
+		if (respawnable && obj.tickCount % 20 == 0 && Minecraft.getInstance().getCameraEntity() instanceof LivingEntity living && living.isHolding(RespawnablePetsItems.ETHERIC_GEM) && obj instanceof OwnableEntity ownable && ownable.getOwner() == living) {
 			SLibClientUtils.addParticles(obj, ParticleTypes.GLOW, 16, ParticleAnchor.BODY);
 		}
 	}

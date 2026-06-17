@@ -5,9 +5,9 @@
 package moriyashiine.respawnablepets.common.world.item;
 
 import moriyashiine.respawnablepets.common.component.entity.RespawnableComponent;
-import moriyashiine.respawnablepets.common.init.ModEntityComponents;
-import moriyashiine.respawnablepets.common.init.ModTriggers;
-import moriyashiine.respawnablepets.common.tag.ModEntityTypeTags;
+import moriyashiine.respawnablepets.common.init.RespawnablePetsEntityComponents;
+import moriyashiine.respawnablepets.common.init.RespawnablePetsTriggers;
+import moriyashiine.respawnablepets.common.tag.RespawnablePetsEntityTypeTags;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -23,19 +23,19 @@ import net.minecraft.world.phys.AABB;
 import java.util.List;
 
 public class EthericGemItem extends Item {
-	public EthericGemItem(Properties settings) {
-		super(settings);
+	public EthericGemItem(Properties properties) {
+		super(properties);
 	}
 
 	@Override
 	public InteractionResult use(Level level, Player player, InteractionHand hand) {
 		if (player.isShiftKeyDown()) {
-			List<Mob> entities = level.getEntitiesOfClass(Mob.class, new AABB(player.blockPosition()).inflate(9, 3, 9), foundEntity -> !foundEntity.is(ModEntityTypeTags.CANNOT_RESPAWN) && !ModEntityComponents.RESPAWNABLE.get(foundEntity).isRespawnable() && foundEntity instanceof OwnableEntity ownable && ownable.getOwner() == player);
+			List<Mob> entities = level.getEntitiesOfClass(Mob.class, new AABB(player.blockPosition()).inflate(9, 3, 9), foundEntity -> !foundEntity.is(RespawnablePetsEntityTypeTags.CANNOT_RESPAWN) && !RespawnablePetsEntityComponents.RESPAWNABLE.get(foundEntity).isRespawnable() && foundEntity instanceof OwnableEntity ownable && ownable.getOwner() == player);
 			if (!entities.isEmpty()) {
 				if (player instanceof ServerPlayer serverPlayer) {
-					ModTriggers.MAKE_PET_RESPAWNABLE.trigger(serverPlayer);
+					RespawnablePetsTriggers.MAKE_PET_RESPAWNABLE.trigger(serverPlayer);
 				}
-				entities.forEach(entity -> ModEntityComponents.RESPAWNABLE.get(entity).setRespawnable(true));
+				entities.forEach(entity -> RespawnablePetsEntityComponents.RESPAWNABLE.get(entity).setRespawnable(true));
 				if (entities.size() == 1) {
 					player.sendOverlayMessage(Component.translatable("respawnable-pets.message.enable_respawn", entities.getFirst().getDisplayName()));
 				} else {
@@ -48,17 +48,17 @@ public class EthericGemItem extends Item {
 	}
 
 	public static InteractionResult useOnEntity(Player user, LivingEntity entity) {
-		if (entity instanceof OwnableEntity tameable && tameable.getOwner() == user) {
-			if (entity.is(ModEntityTypeTags.CANNOT_RESPAWN)) {
+		if (entity instanceof OwnableEntity ownable && ownable.getOwner() == user) {
+			if (entity.is(RespawnablePetsEntityTypeTags.CANNOT_RESPAWN)) {
 				user.sendOverlayMessage(Component.translatable("respawnable-pets.message.cannot_respawn", entity.getDisplayName()));
 				return InteractionResult.FAIL;
 			}
-			RespawnableComponent respawnableComponent = ModEntityComponents.RESPAWNABLE.get(entity);
-			if (!respawnableComponent.isRespawnable() && user instanceof ServerPlayer player) {
-				ModTriggers.MAKE_PET_RESPAWNABLE.trigger(player);
+			RespawnableComponent respawnable = RespawnablePetsEntityComponents.RESPAWNABLE.get(entity);
+			if (!respawnable.isRespawnable() && user instanceof ServerPlayer player) {
+				RespawnablePetsTriggers.MAKE_PET_RESPAWNABLE.trigger(player);
 			}
-			user.sendOverlayMessage(Component.translatable(respawnableComponent.isRespawnable() ? "respawnable-pets.message.disable_respawn" : "respawnable-pets.message.enable_respawn", entity.getDisplayName()));
-			respawnableComponent.setRespawnable(!respawnableComponent.isRespawnable());
+			user.sendOverlayMessage(Component.translatable(respawnable.isRespawnable() ? "respawnable-pets.message.disable_respawn" : "respawnable-pets.message.enable_respawn", entity.getDisplayName()));
+			respawnable.setRespawnable(!respawnable.isRespawnable());
 			return InteractionResult.SUCCESS;
 		}
 		user.sendOverlayMessage(Component.translatable("respawnable-pets.message.not_owner", entity.getDisplayName()));

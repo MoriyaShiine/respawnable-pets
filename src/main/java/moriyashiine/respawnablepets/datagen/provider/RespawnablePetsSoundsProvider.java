@@ -5,7 +5,7 @@
 package moriyashiine.respawnablepets.datagen.provider;
 
 import moriyashiine.respawnablepets.common.RespawnablePets;
-import moriyashiine.respawnablepets.common.init.ModSoundEvents;
+import moriyashiine.respawnablepets.common.init.RespawnablePetsSoundEvents;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricSoundsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -16,14 +16,14 @@ import java.util.concurrent.CompletableFuture;
 import static net.fabricmc.fabric.api.client.datagen.v1.builder.SoundTypeBuilder.RegistrationBuilder.ofEvent;
 import static net.fabricmc.fabric.api.client.datagen.v1.builder.SoundTypeBuilder.of;
 
-public class ModSoundsProvider extends FabricSoundsProvider {
-	public ModSoundsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+public class RespawnablePetsSoundsProvider extends FabricSoundsProvider {
+	public RespawnablePetsSoundsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
 		super(output, registriesFuture);
 	}
 
 	@Override
 	protected void configure(HolderLookup.Provider registries, SoundExporter exporter) {
-		exporter.add(ModSoundEvents.ENTITY_GENERIC_TELEPORT, of().subtitle("subtitles.respawnable-pets.entity.generic.teleport")
+		exporter.add(RespawnablePetsSoundEvents.GENERIC_TELEPORT, of().subtitle("subtitles.respawnable-pets.entity.generic.teleport")
 				.sound(ofEvent(SoundEvents.ENDERMAN_TELEPORT)));
 	}
 

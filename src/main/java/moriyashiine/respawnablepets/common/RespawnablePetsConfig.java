@@ -6,7 +6,7 @@ package moriyashiine.respawnablepets.common;
 
 import eu.midnightdust.lib.config.MidnightConfig;
 
-public class ModConfig extends MidnightConfig {
+public class RespawnablePetsConfig extends MidnightConfig {
 	@Entry
 	public static boolean respawnAfterSleep = true;
 

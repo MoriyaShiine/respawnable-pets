@@ -5,7 +5,7 @@
 package moriyashiine.respawnablepets.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import moriyashiine.respawnablepets.common.init.ModItems;
+import moriyashiine.respawnablepets.common.init.RespawnablePetsItems;
 import moriyashiine.respawnablepets.common.world.item.EthericGemItem;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class MobMixin {
 	@ModifyReturnValue(method = "checkAndHandleImportantInteractions", at = @At("RETURN"))
 	private InteractionResult respawnablepets$toggleRespawnStatus(InteractionResult original, Player player, InteractionHand hand) {
-		if (original == InteractionResult.PASS && player.getItemInHand(hand).is(ModItems.ETHERIC_GEM)) {
+		if (original == InteractionResult.PASS && player.getItemInHand(hand).is(RespawnablePetsItems.ETHERIC_GEM)) {
 			return EthericGemItem.useOnEntity(player, (Mob) (Object) this);
 		}
 		return original;

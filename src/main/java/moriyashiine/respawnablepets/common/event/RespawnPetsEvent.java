@@ -4,9 +4,9 @@
 
 package moriyashiine.respawnablepets.common.event;
 
-import moriyashiine.respawnablepets.common.ModConfig;
+import moriyashiine.respawnablepets.common.RespawnablePetsConfig;
 import moriyashiine.respawnablepets.common.component.level.StoredPetsComponent;
-import moriyashiine.respawnablepets.common.init.ModLevelComponents;
+import moriyashiine.respawnablepets.common.init.RespawnablePetsLevelComponents;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -25,21 +25,26 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.phys.Vec3;
 
 public class RespawnPetsEvent {
-	public static class StopSleeping implements EntitySleepEvents.StopSleeping {
+	public static void init() {
+		EntitySleepEvents.STOP_SLEEPING.register(new StopSleeping());
+		ServerTickEvents.END_SERVER_TICK.register(new Tick());
+	}
+
+	private static class StopSleeping implements EntitySleepEvents.StopSleeping {
 		@Override
 		public void onStopSleeping(LivingEntity entity, BlockPos sleepingPos) {
-			if (ModConfig.respawnAfterSleep && entity instanceof ServerPlayer player && player.isSleepingLongEnough()) {
+			if (RespawnablePetsConfig.respawnAfterSleep && entity instanceof ServerPlayer player && player.isSleepingLongEnough()) {
 				respawnPets(player.level().getServer(), player);
 			}
 		}
 	}
 
-	public static class Tick implements ServerTickEvents.EndTick {
+	private static class Tick implements ServerTickEvents.EndTick {
 		@Override
 		public void onEndTick(MinecraftServer server) {
-			if (ModConfig.timeOfDayToRespawn >= 0) {
+			if (RespawnablePetsConfig.timeOfDayToRespawn >= 0) {
 				for (ServerPlayer player : PlayerLookup.all(server)) {
-					if (player.level().getDefaultClockTime() % 24000 == ModConfig.timeOfDayToRespawn) {
+					if (player.level().getDefaultClockTime() % 24000 == RespawnablePetsConfig.timeOfDayToRespawn) {
 						respawnPets(server, player);
 					}
 				}
@@ -48,10 +53,10 @@ public class RespawnPetsEvent {
 	}
 
 	private static void respawnPets(MinecraftServer server, ServerPlayer player) {
-		StoredPetsComponent storedPetsComponent = ModLevelComponents.STORED_PETS.get(server.overworld());
-		for (int i = storedPetsComponent.getStoredPets().size() - 1; i >= 0; i--) {
+		StoredPetsComponent storedPets = RespawnablePetsLevelComponents.STORED_PETS.get(server.overworld());
+		for (int i = storedPets.getStoredPets().size() - 1; i >= 0; i--) {
 			int index = i;
-			ValueInput input = TagValueInput.create(ProblemReporter.DISCARDING, player.registryAccess(), storedPetsComponent.getStoredPets().get(index));
+			ValueInput input = TagValueInput.create(ProblemReporter.DISCARDING, player.registryAccess(), storedPets.getStoredPets().get(index));
 			EntityReference<LivingEntity> owner = EntityReference.readWithOldOwnerConversion(input, "Owner", player.level());
 			if (owner != null && player.getUUID().equals(owner.getUUID())) {
 				input.getString("id").ifPresent(id -> {
@@ -60,7 +65,7 @@ public class RespawnPetsEvent {
 						pet.load(input);
 						pet.teleport(new TeleportTransition(player.level(), player.position(), Vec3.ZERO, pet.getYHeadRot(), pet.getXRot(), TeleportTransition.DO_NOTHING));
 						player.level().addFreshEntity(pet);
-						storedPetsComponent.getStoredPets().remove(index);
+						storedPets.getStoredPets().remove(index);
 					}
 				});
 			}

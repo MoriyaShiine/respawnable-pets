@@ -5,9 +5,9 @@
 package moriyashiine.respawnablepets.common.event;
 
 import moriyashiine.respawnablepets.common.component.entity.RespawnableComponent;
-import moriyashiine.respawnablepets.common.init.ModEntityComponents;
-import moriyashiine.respawnablepets.common.init.ModLevelComponents;
-import moriyashiine.respawnablepets.common.init.ModSoundEvents;
+import moriyashiine.respawnablepets.common.init.RespawnablePetsEntityComponents;
+import moriyashiine.respawnablepets.common.init.RespawnablePetsLevelComponents;
+import moriyashiine.respawnablepets.common.init.RespawnablePetsSoundEvents;
 import moriyashiine.strawberrylib.api.module.SLibUtils;
 import moriyashiine.strawberrylib.api.objects.enums.ParticleAnchor;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
@@ -21,17 +21,21 @@ import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.storage.TagValueOutput;
 
 public class StorePetEvent implements ServerLivingEntityEvents.AllowDeath {
+	public static void init() {
+		ServerLivingEntityEvents.ALLOW_DEATH.register(new StorePetEvent());
+	}
+
 	@Override
 	public boolean allowDeath(LivingEntity entity, DamageSource source, float damageAmount) {
-		RespawnableComponent respawnableComponent = ModEntityComponents.RESPAWNABLE.getNullable(entity);
-		if (respawnableComponent != null && respawnableComponent.isRespawnable()) {
+		RespawnableComponent respawnable = RespawnablePetsEntityComponents.RESPAWNABLE.getNullable(entity);
+		if (respawnable != null && respawnable.isRespawnable()) {
 			ServerLevel level = (ServerLevel) entity.level();
 			refreshPet(entity);
 			TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, entity.registryAccess());
 			entity.saveAsPassenger(output);
-			ModLevelComponents.STORED_PETS.get(level.getServer().overworld()).getStoredPets().add(output.buildResult());
+			RespawnablePetsLevelComponents.STORED_PETS.get(level.getServer().overworld()).getStoredPets().add(output.buildResult());
 			SLibUtils.addParticles(entity, ParticleTypes.SMOKE, 32, ParticleAnchor.BODY);
-			SLibUtils.playSound(entity, ModSoundEvents.ENTITY_GENERIC_TELEPORT);
+			SLibUtils.playSound(entity, RespawnablePetsSoundEvents.GENERIC_TELEPORT);
 			entity.remove(Entity.RemovalReason.DISCARDED);
 			if (entity instanceof OwnableEntity ownable && level.getGameRules().get(GameRules.SHOW_DEATH_MESSAGES) && ownable.getOwner() instanceof ServerPlayer player) {
 				player.sendSystemMessage(entity.getCombatTracker().getDeathMessage());
@@ -44,7 +48,7 @@ public class StorePetEvent implements ServerLivingEntityEvents.AllowDeath {
 	private static void refreshPet(LivingEntity entity) {
 		entity.setHealth(entity.getMaxHealth());
 		entity.clearFire();
-		entity.setTicksFrozen(0);
+		entity.clearFreeze();
 		entity.removeAllEffects();
 		entity.fallDistance = 0;
 		if (entity instanceof NeutralMob neutralMob) {
