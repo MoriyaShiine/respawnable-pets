@@ -1,0 +1,7 @@
+{
+  "item.respawnable_pets.etheric_gem": "Etherische edelsteen",
+  "respawnable_pets.message.enable_respawn": "%s het respawnen als je dood gaat is nu ingeschakeld",
+  "respawnable_pets.message.disable_respawn": "%s het respawnen als je dood gaat is nu uitgeschakeled",
+  "respawnable_pets.message.not_owner": "%s is niet van jou",
+  "respawnable_pets.message.blacklisted": "%s is een entiteit op de zwarte lijst"
+}

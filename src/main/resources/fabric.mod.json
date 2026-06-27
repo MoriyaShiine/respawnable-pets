@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "respawnable-pets",
+  "id": "respawnable_pets",
   "version": "${version}",
   "name": "Respawnable Pets",
   "description": "A simple mod that allows your pets to respawn after death when you next sleep using a new item, the Etheric Gem",
@@ -14,7 +14,7 @@
 	"issues": "https://github.com/MoriyaShiine/respawnable-pets/issues"
   },
   "license": "All Rights Reserved",
-  "icon": "assets/respawnable-pets/icon.png",
+  "icon": "assets/respawnable_pets/icon.png",
   "environment": "*",
   "entrypoints": {
 	"fabric-datagen": [
@@ -31,7 +31,7 @@
 	]
   },
   "mixins": [
-	"respawnable-pets.mixins.json"
+	"respawnable_pets.mixins.json"
   ],
   "depends": {
 	"fabricloader": "*",

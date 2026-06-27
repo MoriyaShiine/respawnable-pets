@@ -31,8 +31,8 @@ public class RespawnablePetsAdvancementProvider extends FabricAdvancementProvide
 		Advancement.Builder.advancement()
 				.parent(Identifier.withDefaultNamespace("husbandry/tame_an_animal"))
 				.display(RespawnablePetsItems.ETHERIC_GEM,
-						Component.translatable("advancements.respawnable-pets.husbandry.make_pet_respawnable.title"),
-						Component.translatable("advancements.respawnable-pets.husbandry.make_pet_respawnable.description"),
+						Component.translatable("advancements.respawnable_pets.husbandry.make_pet_respawnable.title"),
+						Component.translatable("advancements.respawnable_pets.husbandry.make_pet_respawnable.description"),
 						null,
 						AdvancementType.TASK,
 						true,

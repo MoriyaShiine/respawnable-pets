@@ -23,7 +23,7 @@ public class RespawnablePetsSoundsProvider extends FabricSoundsProvider {
 
 	@Override
 	protected void configure(HolderLookup.Provider registries, SoundExporter exporter) {
-		exporter.add(RespawnablePetsSoundEvents.GENERIC_TELEPORT, of().subtitle("subtitles.respawnable-pets.entity.generic.teleport")
+		exporter.add(RespawnablePetsSoundEvents.GENERIC_TELEPORT, of().subtitle("subtitles.respawnable_pets.entity.generic.teleport")
 				.sound(ofEvent(SoundEvents.ENDERMAN_TELEPORT)));
 	}
 

@@ -1,0 +1,14 @@
+{
+  "item.respawnable_pets.etheric_gem": "Etheric Gem",
+  "advancements.respawnable_pets.husbandry.make_pet_respawnable.title": "Best Friends Forever, Forever",
+  "advancements.respawnable_pets.husbandry.make_pet_respawnable.description": "Craft an Etheric Gem and use it on a tamed pet to allow it to respawn",
+  "subtitles.respawnable_pets.entity.generic.teleport": "Entity teleports",
+  "respawnable_pets.message.enable_respawn": "%s will now respawn on death",
+  "respawnable_pets.message.disable_respawn": "%s will no longer respawn on death",
+  "respawnable_pets.message.not_owner": "%s does not belong to you",
+  "respawnable_pets.message.cannot_respawn": "%s cannot respawn",
+  "respawnable_pets.message.counted_entities": "%d entities",
+  "respawnable_pets.midnightconfig.title": "Respawnable Pets",
+  "respawnable_pets.midnightconfig.respawnAfterSleep": "Respawn After Sleep",
+  "respawnable_pets.midnightconfig.timeOfDayToRespawn": "Time Of Day To Respawn"
+}

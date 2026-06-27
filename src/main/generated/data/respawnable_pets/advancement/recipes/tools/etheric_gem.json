@@ -13,7 +13,7 @@
 	},
 	"has_the_recipe": {
 	  "conditions": {
-		"recipe": "respawnable-pets:etheric_gem"
+		"recipe": "respawnable_pets:etheric_gem"
 	  },
 	  "trigger": "minecraft:recipe_unlocked"
 	}
@@ -26,7 +26,7 @@
   ],
   "rewards": {
 	"recipes": [
-	  "respawnable-pets:etheric_gem"
+	  "respawnable_pets:etheric_gem"
 	]
   }
 }

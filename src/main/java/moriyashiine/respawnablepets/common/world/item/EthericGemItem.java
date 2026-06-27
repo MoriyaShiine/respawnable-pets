@@ -37,9 +37,9 @@ public class EthericGemItem extends Item {
 				}
 				entities.forEach(entity -> RespawnablePetsEntityComponents.RESPAWNABLE.get(entity).setRespawnable(true));
 				if (entities.size() == 1) {
-					player.sendOverlayMessage(Component.translatable("respawnable-pets.message.enable_respawn", entities.getFirst().getDisplayName()));
+					player.sendOverlayMessage(Component.translatable("respawnable_pets.message.enable_respawn", entities.getFirst().getDisplayName()));
 				} else {
-					player.sendOverlayMessage(Component.translatable("respawnable-pets.message.enable_respawn", Component.translatable("respawnable-pets.message.counted_entities", entities.size())));
+					player.sendOverlayMessage(Component.translatable("respawnable_pets.message.enable_respawn", Component.translatable("respawnable_pets.message.counted_entities", entities.size())));
 				}
 				return InteractionResult.SUCCESS;
 			}
@@ -50,18 +50,18 @@ public class EthericGemItem extends Item {
 	public static InteractionResult useOnEntity(Player user, LivingEntity entity) {
 		if (entity instanceof OwnableEntity ownable && ownable.getOwner() == user) {
 			if (entity.is(RespawnablePetsEntityTypeTags.CANNOT_RESPAWN)) {
-				user.sendOverlayMessage(Component.translatable("respawnable-pets.message.cannot_respawn", entity.getDisplayName()));
+				user.sendOverlayMessage(Component.translatable("respawnable_pets.message.cannot_respawn", entity.getDisplayName()));
 				return InteractionResult.FAIL;
 			}
 			RespawnableComponent respawnable = RespawnablePetsEntityComponents.RESPAWNABLE.get(entity);
 			if (!respawnable.isRespawnable() && user instanceof ServerPlayer player) {
 				RespawnablePetsTriggers.MAKE_PET_RESPAWNABLE.trigger(player);
 			}
-			user.sendOverlayMessage(Component.translatable(respawnable.isRespawnable() ? "respawnable-pets.message.disable_respawn" : "respawnable-pets.message.enable_respawn", entity.getDisplayName()));
+			user.sendOverlayMessage(Component.translatable(respawnable.isRespawnable() ? "respawnable_pets.message.disable_respawn" : "respawnable_pets.message.enable_respawn", entity.getDisplayName()));
 			respawnable.setRespawnable(!respawnable.isRespawnable());
 			return InteractionResult.SUCCESS;
 		}
-		user.sendOverlayMessage(Component.translatable("respawnable-pets.message.not_owner", entity.getDisplayName()));
+		user.sendOverlayMessage(Component.translatable("respawnable_pets.message.not_owner", entity.getDisplayName()));
 		return InteractionResult.FAIL;
 	}
 }

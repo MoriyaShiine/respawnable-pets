@@ -1,6 +1,6 @@
 {
   "model": {
 	"type": "minecraft:model",
-	"model": "respawnable-pets:item/etheric_gem"
+	"model": "respawnable_pets:item/etheric_gem"
   }
 }

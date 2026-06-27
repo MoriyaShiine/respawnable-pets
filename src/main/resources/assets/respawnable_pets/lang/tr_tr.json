@@ -1,0 +1,14 @@
+{
+  "item.respawnable_pets.etheric_gem": "Eterik Mücevher",
+  "advancements.respawnable_pets.husbandry.make_pet_respawnable.title": "Sonsuz Arkadaş",
+  "advancements.respawnable_pets.husbandry.make_pet_respawnable.description": "Bir Eterik Mücevher üretin ve evcil bir hayvan üzerinde kullanarak yeniden doğabilmesini sağlayın",
+  "subtitles.respawnable_pets.entity.generic.teleport": "Varlık ışınlandı",
+  "respawnable_pets.message.enable_respawn": "%s artık yeniden doğacak",
+  "respawnable_pets.message.disable_respawn": "%s artık yeniden doğmayacak",
+  "respawnable_pets.message.not_owner": "%s sizin değil",
+  "respawnable_pets.message.cannot_respawn": "%s yeniden doğamaz",
+  "respawnable_pets.message.counted_entities": "%d varlık",
+  "respawnable_pets.midnightconfig.title": "Respawnable Pets",
+  "respawnable_pets.midnightconfig.respawnAfterSleep": "Uyuduktan Sonra Yeniden Doğma",
+  "respawnable_pets.midnightconfig.timeOfDayToRespawn": "Yeniden Doğulacak Gün Zamanı"
+}

@@ -15,7 +15,7 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.Identifier;
 
 public class RespawnablePets implements ModInitializer {
-	public static final String MOD_ID = "respawnable-pets";
+	public static final String MOD_ID = "respawnable_pets";
 
 	@Override
 	public void onInitialize() {
