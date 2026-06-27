@@ -4,7 +4,7 @@
 
 package moriyashiine.respawnablepets.common.init;
 
-import net.minecraft.advancements.triggers.PlayerTrigger;
+import net.minecraft.advancements.criterion.PlayerTrigger;
 
 import static moriyashiine.strawberrylib.api.module.SLibRegistries.registerTrigger;
 

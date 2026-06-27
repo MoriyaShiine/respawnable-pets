@@ -35,15 +35,15 @@
   ],
   "depends": {
 	"fabricloader": "*",
-	"minecraft": "~26.2",
+	"minecraft": "~26.1",
 	"java": ">=25",
 	"fabric-api": "*",
 	"strawberrylib": "*"
   },
   "custom": {
 	"cardinal-components": [
-	  "respawnable-pets:respawnable",
-	  "respawnable-pets:stored_pets"
+	  "respawnable_pets:respawnable",
+	  "respawnable_pets:stored_pets"
 	]
   }
 }

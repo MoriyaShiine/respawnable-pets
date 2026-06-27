@@ -30,6 +30,7 @@ repositories {
     chenille.repositories.up()
     chenille.repositories.terraformers()
     chenille.repositories.modrinth()
+    mavenLocal()
 }
 
 dependencies {
@@ -40,7 +41,7 @@ dependencies {
     includeApi "maven.modrinth:midnightlib:${midnightlib_version}"
 
     implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
-    implementation "moriyashiine:strawberrylib:${strawberrylib_version}"
+    implementation "moriyashiine.strawberrylib:strawberrylib-fabric:${strawberrylib_version}"
 
     localRuntime "com.terraformersmc:modmenu:${mod_menu_version}"
 }
