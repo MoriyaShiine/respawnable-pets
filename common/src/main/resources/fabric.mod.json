@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": [
+	"MoriyaShiine",
+	"cybercat5555"
+  ],
+  "contact": {
+	"homepage": "https://modrinth.com/mod/${project_name}",
+	"sources": "https://github.com/MoriyaShiine/${project_name}",
+	"issues": "https://github.com/MoriyaShiine/${project_name}/issues"
+  },
+  "license": "All Rights Reserved",
+  "icon": "assets/${mod_id}/icon.png",
+  "environment": "*",
+  "entrypoints": {
+	"fabric-datagen": [
+	  "moriyashiine.respawnablepets.datagen.RespawnablePetsDataGenerator"
+	],
+	"main": [
+	  "moriyashiine.respawnablepets.common.RespawnablePets"
+	],
+	"cardinal-components-entity": [
+	  "moriyashiine.respawnablepets.common.init.RespawnablePetsEntityComponents"
+	],
+	"cardinal-components-level": [
+	  "moriyashiine.respawnablepets.common.init.RespawnablePetsLevelComponents"
+	]
+  },
+  "mixins": [
+	"${mod_id}.mixins.json"
+  ],
+  "depends": {
+	"fabricloader": "*",
+	"minecraft": "~26.1",
+	"java": ">=25",
+	"fabric-api": "*",
+	"strawberrylib": "*"
+  },
+  "custom": {
+	"launchpad:compatible": true,
+	"cardinal-components": [
+	  "${mod_id}:respawnable",
+	  "${mod_id}:stored_pets"
+	]
+  }
+}

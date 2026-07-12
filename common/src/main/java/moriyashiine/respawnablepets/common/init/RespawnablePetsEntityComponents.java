@@ -1,0 +1,19 @@
+package moriyashiine.respawnablepets.common.init;
+
+import moriyashiine.respawnablepets.common.RespawnablePets;
+import moriyashiine.respawnablepets.common.component.entity.RespawnableComponent;
+import net.minecraft.world.entity.Mob;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.ComponentRegistry;
+import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
+import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
+import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
+
+public class RespawnablePetsEntityComponents implements EntityComponentInitializer {
+	public static final ComponentKey<RespawnableComponent> RESPAWNABLE = ComponentRegistry.getOrCreate(RespawnablePets.id("respawnable"), RespawnableComponent.class);
+
+	@Override
+	public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
+		registry.beginRegistration(Mob.class, RESPAWNABLE).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(RespawnableComponent::new);
+	}
+}
