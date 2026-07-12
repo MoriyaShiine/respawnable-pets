@@ -51,7 +51,7 @@ public class EthericGemItem extends Item {
 		if (entity instanceof OwnableEntity ownable && ownable.getOwner() == user) {
 			if (entity.is(RespawnablePetsEntityTypeTags.CANNOT_RESPAWN)) {
 				user.sendOverlayMessage(Component.translatable("respawnable_pets.message.cannot_respawn", entity.getDisplayName()));
-				return InteractionResult.FAIL;
+				return InteractionResult.CONSUME;
 			}
 			RespawnableComponent respawnable = RespawnablePetsEntityComponents.RESPAWNABLE.get(entity);
 			if (!respawnable.isRespawnable() && user instanceof ServerPlayer player) {
@@ -62,6 +62,6 @@ public class EthericGemItem extends Item {
 			return InteractionResult.SUCCESS;
 		}
 		user.sendOverlayMessage(Component.translatable("respawnable_pets.message.not_owner", entity.getDisplayName()));
-		return InteractionResult.FAIL;
+		return InteractionResult.CONSUME;
 	}
 }
