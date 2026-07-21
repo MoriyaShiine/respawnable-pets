@@ -32,7 +32,7 @@ loom {
 	runs {
 		fabricApi.configureDataGeneration {
 			outputDirectory = project(":${rootProject.name}-common").file("src/main/generated")
-			modId = rootProject.name
+			modId = mod_id
 			client = true
 			addToResources = false
 		}
@@ -65,7 +65,7 @@ dependencies {
 	implementation("net.fabricmc:fabric-loader:${loader_version}")
 
 	includeApi("org.ladysnake.cardinal-components-api:cardinal-components-level:${cardinal_components_version}")
-	includeApi("maven.modrinth:midnightlib:${midnightlib_version}")
+	includeApi("maven.modrinth:midnightlib:${midnightlib_version}-fabric")
 
 	implementation("net.fabricmc.fabric-api:fabric-api:${fabric_api_version}")
 	implementation("moriyashiine.strawberrylib:strawberrylib-fabric:${strawberrylib_version}")
