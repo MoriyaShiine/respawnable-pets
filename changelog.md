@@ -1,4 +1,12 @@
 ------------------------------------------------------
+Version 26.2-r2
+------------------------------------------------------
+- **This update changes the mod id! Please be sure to recreate any Etheric Gems and use it on all of your pets again.**
+- compile against latest strawberrylib
+- fix etheric gems being weird with horses
+- camels, camel husks, and skeleton horses are now tamed when ridden
+
+------------------------------------------------------
 Version 26.1-r2
 ------------------------------------------------------
 - **This update changes the mod id! Please be sure to recreate any Etheric Gems and use it on all of your pets again.**
