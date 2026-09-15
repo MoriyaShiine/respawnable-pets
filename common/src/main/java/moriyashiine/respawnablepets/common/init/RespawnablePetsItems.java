@@ -7,10 +7,11 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
+import static moriyashiine.strawberrylib.api.module.SLibRegistries.properties;
 import static moriyashiine.strawberrylib.api.module.SLibRegistries.registerItem;
 
 public class RespawnablePetsItems {
-	public static final Item ETHERIC_GEM = registerItem(RespawnablePetsItemIds.ETHERIC_GEM, EthericGemItem::new, new Item.Properties().stacksTo(1));
+	public static final Item ETHERIC_GEM = registerItem(RespawnablePetsItemIds.ETHERIC_GEM, EthericGemItem::new, properties().stacksTo(1));
 
 	public static void init() {
 		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries -> entries.insertAfter(Items.LEAD, ETHERIC_GEM));

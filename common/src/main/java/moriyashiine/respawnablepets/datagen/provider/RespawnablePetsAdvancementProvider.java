@@ -29,12 +29,11 @@ public class RespawnablePetsAdvancementProvider extends FabricAdvancementProvide
 				.display(RespawnablePetsItems.ETHERIC_GEM,
 						Component.translatable("advancements.respawnable_pets.husbandry.make_pet_respawnable.title"),
 						Component.translatable("advancements.respawnable_pets.husbandry.make_pet_respawnable.description"),
-						null,
 						AdvancementType.TASK,
 						true,
 						true,
 						false)
 				.addCriterion("make_pet_respawnable", RespawnablePetsTriggers.MAKE_PET_RESPAWNABLE.createCriterion(new PlayerTrigger.TriggerInstance(Optional.empty())))
-				.save(consumer, RespawnablePets.id("husbandry/make_pet_respawnable").toString());
+				.save(consumer, RespawnablePets.id("husbandry/make_pet_respawnable"));
 	}
 }
