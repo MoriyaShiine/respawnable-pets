@@ -1,4 +1,9 @@
 ------------------------------------------------------
+Version 26.3-r1
+------------------------------------------------------
+- update to 26.3
+
+------------------------------------------------------
 Version 26.2-r2
 ------------------------------------------------------
 - **This update changes the mod id! Please be sure to recreate any Etheric Gems and use it on all of your pets again.**
